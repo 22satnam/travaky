@@ -72,7 +72,7 @@ export function CustomFooter() {
           <LocaleToggle />
         </div>
 
-      </div> */}
+      </div> 
     </div>
   )
 }
