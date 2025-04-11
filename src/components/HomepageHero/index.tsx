@@ -15,7 +15,8 @@ import { WorldMapDemo } from '@/components/ui/world-map-demo'
 import { Pricing } from "@/components/pricing"
 import { TestimonialsSectionDemo } from "@/components/ui/testimonial-demo"
 import { Footerdemo } from "@/components/ui/footer-section";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 
 export const StackItem = ({
