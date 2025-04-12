@@ -121,9 +121,8 @@ export default async function RootLayout({ children, params }: Props) {
             banner={
               <CustomBanner lang={lang} />
             }
-            navbar={
-              <CustomNavbar lang={lang} />
-            }
+               navbar={<CustomNavbar />}
+           
             lastUpdated={(
               <LastUpdated>
                 { t('lastUpdated') }
