@@ -43,7 +43,7 @@ export default function SchengenCarousel() {
     {
       title: "Austria",
       button: "Explore Country",
-      src: "https://images.unsplash.com/photo-1516550893885-985c994c8609?q=80&w=2070&auto=format&fit=crop",
+      src: "https://images.unsplash.com/photo-1543783207-ec64e4d95325?q=80&w=2070&auto=format&fit=crop",
       url: "https://en.wikipedia.org/wiki/Austria",
     },
     {

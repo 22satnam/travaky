@@ -1,5 +1,5 @@
 'use client'
-
+import 'flag-icons/css/flag-icons.min.css'
 import { PanelParticles } from '@/components/PanelParticles'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { HoverEffect } from '@/components/ui/card-hover-effect'
@@ -7,113 +7,144 @@ import { useLocale } from '@/hooks'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'nextra-theme-docs'
 import { useMemo } from 'react'
+import {  useState} from 'react'
 import Marquee from 'react-fast-marquee'
 import { Section } from './Section'
 import { SetupHero } from './Setup'
 import SchengenCarousel from '@/components/schengen-carousel'
 import { WorldMapDemo } from '@/components/ui/world-map-demo'
-import { Pricing } from "@/components/pricing"
-import { TestimonialsSectionDemo } from "@/components/ui/testimonial-demo"
-import { Footerdemo } from "@/components/ui/footer-section";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/react"
+import { Pricing } from '@/components/pricing'
+import { TestimonialsSectionDemo } from '@/components/ui/testimonial-demo'
+import { FeaturesSectionWithHoverEffects } from '@/components/ui/service'
+import Link from 'next/link'
 
+interface StackItemProps {
+  countryCode: string
+  countryName: string
+}
 
-export const StackItem = ({
-  className,
-}: {
-  className: string
-},
-) => {
+export const StackItem = ({ countryCode, countryName }: StackItemProps) => {
   return (
-    <div className={cn(
-      'mx-6 size-[50px]',
-      'text-neutral-800 dark:text-neutral-100',
-      'transition-all duration-300 transform opacity-75',
-      'hover:scale-125 hover:opacity-100',
-      className,
-    )}
+    <div
+      className={cn(
+        'relative group flex items-center justify-center',
+        'w-[50px] h-[50px] mx-2',
+        'transition-transform duration-300 opacity-80',
+        'hover:scale-125 hover:opacity-100 cursor-pointer'
+      )}
     >
+      <span
+        className={`fi fi-${countryCode.toLowerCase()}`}
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundSize: 'cover',
+          borderRadius: '6px',
+        }}
+      />
+      <div
+        className={cn(
+          'absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-2',
+          'px-2 py-1 text-xs rounded-md bg-black text-white',
+          'opacity-0 group-hover:opacity-100 transition-opacity duration-200',
+          'whitespace-nowrap pointer-events-none'
+        )}
+      >
+        {countryName}
+      </div>
     </div>
   )
 }
 
 export default function HomepageHero() {
   const { t } = useLocale()
-
   const featureList = t('featureList')
   const faqs = t('faqs')
 
-  const { resolvedTheme } = useTheme()
-
   const processedFeatureList = useMemo(() => {
-    const icons = [
-      'icon-[material-symbols--rocket-launch-outline]',
-      'icon-[icon-park-outline--international]',
-      'icon-[nonicons--typescript-16]',
-      'icon-[carbon--face-satisfied] hover:icon-[carbon--face-wink]',
-      'icon-[teenyicons--tailwind-outline]',
-      'icon-[tabler--calendar-code]',
-      'icon-[carbon--color-palette]',
-      'icon-[carbon--ibm-cloud-transit-gateway]',
-      'icon-[carbon--flash]',
-    ]
-    return featureList.map((item, index) => {
-      return {
-        ...item,
-        icon: <span className={icons[index] || icons[0]}></span>,
-      }
-    })
+    return featureList.map((item: any) => ({
+      ...item,
+      backgroundPhoto: item.backgroundPhoto || '/images/default-country.jpg',
+    }))
   }, [featureList])
 
   return (
     <>
       <PanelParticles />
       <SetupHero />
-      <div className="relative z-10 pb-10 md:pb-[100px]">
-        <Section
-          title="Visa Availability"
-          titleProps={{
-            disabledAnimation: true,
-          }}
-        >
+
+      
+
+        {/* Country Services Cards */}
+      <Section title="Choose your country" description={t('featuresDesc')}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          {processedFeatureList.map((feature, index) => (
+            <Link key={index} href={feature.buttonLink} className="block transition-transform hover:scale-105">
+              <div className="rounded-lg overflow-hidden border-2 border-primary flex flex-col bg-white dark:bg-gray-800">
+                <div className="h-40 w-full shadow-md">
+                  <img src={feature.backgroundPhoto} alt={feature.countryName} className="object-cover w-full h-full" />
+                </div>
+                <div className="border-t border-gray-200 dark:border-gray-700" />
+                <div className="p-4">
+                  <h3 className="text-xl font-bold text-foreground">{feature.countryName}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Get visa by {feature.visaVariable} and {feature.cost}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </Section>
+
+
+
+      <Section className="flex min-h-screen flex-col items-center justify-center p-4">
+      <h1 className="text-3xl md:text-4xl font-bold mb-8"> Services Offered</h1>
+      <FeaturesSectionWithHoverEffects />
+      </Section>
+
+      <Section title="Countries we support" titleProps={{ disabledAnimation: true }}>
           <div className="flex justify-center w-full max-w-7xl h-[80px] my-[30px]">
-            <Marquee
-              pauseOnHover
-              autoFill
-              gradient
-              direction="right"
-              gradientColor="var(--background)"
-              speed={60}
-            >
-              <StackItem className="icon-[akar-icons--nextjs-fill]" />
-              <StackItem className="icon-[simple-icons--react]" />
-              <StackItem className="icon-[simple-icons--tailwindcss]" />
-              <StackItem className="icon-[teenyicons--framer-outline]" />
-              <StackItem className="icon-[simple-icons--shadcnui]" />
-              <StackItem className="icon-[simple-icons--typescript]" />
-              <StackItem className="icon-[fa6-brands--sass]" />
-              <StackItem className="icon-[teenyicons--eslint-outline]" />
-              <StackItem className="icon-[simple-icons--postcss]" />
-              <StackItem className="icon-[simple-icons--nextra]" />
-              <StackItem className="icon-[line-md--iconify1]" />
+            <Marquee pauseOnHover autoFill gradient direction="right" gradientColor="var(--background)" speed={60}>
+              <div className="flex flex-wrap justify-center items-center gap-4 overflow-visible">
+                {[
+                  ['fr', 'France'],
+                  ['de', 'Germany'],
+                  ['it', 'Italy'],
+                  ['es', 'Spain'],
+                  ['nl', 'Netherlands'],
+                  ['be', 'Belgium'],
+                  ['lu', 'Luxembourg'],
+                  ['pt', 'Portugal'],
+                  ['at', 'Austria'],
+                  ['se', 'Sweden'],
+                  ['fi', 'Finland'],
+                  ['dk', 'Denmark'],
+                  ['pl', 'Poland'],
+                  ['cz', 'Czech Republic'],
+                  ['hu', 'Hungary'],
+                  ['sk', 'Slovakia'],
+                  ['si', 'Slovenia'],
+                  ['ee', 'Estonia'],
+                  ['lv', 'Latvia'],
+                  ['lt', 'Lithuania'],
+                  ['mt', 'Malta'],
+                  ['hr', 'Croatia'],
+                  ['is', 'Iceland'],
+                  ['no', 'Norway'],
+                  ['ch', 'Switzerland'],
+                  ['li', 'Liechtenstein'],
+                ].map(([code, name]) => (
+                  <StackItem key={code} countryCode={code} countryName={name} />
+                ))}
+              </div>
             </Marquee>
           </div>
         </Section>
-        <Section
-          title="Features"
-          description={t('featuresDesc')}
-        >
-          <div className="flex justify-center w-full max-w-7xl">
-            <HoverEffect items={processedFeatureList} />
-          </div>
-        </Section>
 
-      <Section className="flex min-h-screen flex-col items-center justify-center p-4">
-      <h1 className="text-3xl md:text-4xl font-bold mb-8"> Visa offered for countries</h1>
-      <SchengenCarousel />
-      </Section>
-      
+
+
       <Section className="flex flex-col items-center justify-center">
         <Pricing
           title="Visa Service Packages"
@@ -164,14 +195,19 @@ export default function HomepageHero() {
             },
           ]}
         />
+        </Section>
 
-      </Section>
-      <Section className="flex flex-col items-center justify-center">
-      <TestimonialsSectionDemo />
+    
+        {/* Countries we support */}
 
-      </Section>
 
-        <Section>
+        <Section className="flex flex-col items-center justify-center">
+        <TestimonialsSectionDemo />
+        </Section>
+    
+
+
+        <Section className="flex flex-col items-center justify-center">
         <WorldMapDemo />
         </Section>
 
@@ -199,10 +235,6 @@ export default function HomepageHero() {
             }
           </Accordion>
         </Section>
-
-
-
-      </div>
     </>
   )
 }

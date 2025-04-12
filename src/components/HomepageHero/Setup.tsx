@@ -27,6 +27,8 @@ export function SetupHero(props: Props) {
             {t('badgeTitle')}
           </a>
         </div> */}
+         <br></br>
+         <br></br>
         <h1 className={styles.headline}>
           <MotionWrapperFlash
             disabledAnimation={false}
@@ -84,7 +86,7 @@ export function SetupHero(props: Props) {
             ]}
           />
           <br />
-          with GoVisa.com
+          with Travacky
 
         </div>
         <div className="flex justify-center pt-10">

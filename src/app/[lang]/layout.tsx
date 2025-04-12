@@ -13,6 +13,8 @@ import { getPageMap } from 'nextra/page-map'
 import { getDictionary, getDirection } from '../_dictionaries/get-dictionary'
 
 import { ThemeProvider } from './_components/ThemeProvider'
+import { Header1 } from '@/components/ui/header'
+
 import './styles/index.css'
 
 export const metadata = {
@@ -46,25 +48,33 @@ const CustomBanner = async ({ lang }: I18nLangAsyncProps) => {
 }
 
 
-const CustomNavbar = async ({ lang }: I18nLangAsyncProps) => {
-  const { t } = await useServerLocale(lang)
-  return (
-    <Navbar
-      logo={(
-        <span>{ t('systemTitle') }</span>
-      )}
-      logoLink={`/${lang}`}
-      projectLink={repo}
-    >
-      <>
-        <LocaleToggle className="max-md:hidden" />
-        <ThemeToggle className="max-md:hidden" />
-      </>
+// const CustomNavbar = async ({ lang }: I18nLangAsyncProps) => {
+//   const { t } = await useServerLocale(lang)
+//   return (
+//     <Navbar
+//       logo={(
+//         <span>{ t('systemTitle') }</span>
+//       )}
+//       logoLink={`/${lang}`}
+//       projectLink={repo}
+//     >
+//       <>
+//         <LocaleToggle className="max-md:hidden" />
+//         <ThemeToggle className="max-md:hidden" />
+//       </>
 
-    </Navbar>
+//     </Navbar>
+//   )
+// }
+
+
+export function CustomNavbar() {
+  return (
+    <div className="flex justify-center w-full max-w-7xl">
+      <Header1 />
+    </div>
   )
 }
-
 interface Props {
   children: ReactNode
   params: Promise<{ lang: I18nLangKeys }>
