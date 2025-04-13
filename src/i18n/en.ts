@@ -1,9 +1,9 @@
 export default {
   systemTitle: 'Travaky',
-  // banner: {
-  //   title: '👋 Hey there! Welcome to the Next.js Starter.',
-  //   more: 'Check it out',
-  // },
+  banner: {
+    title: '👋 Hey there! Welcome to Travaky, your visa partner',
+    more: 'Check it out',
+  },
 
   badgeTitle: 'Your Visa On Autopilot',
   featureSupport: `🔥  {{feature}}!`,
@@ -196,11 +196,99 @@ export default {
     // },
 
     {
+      countryName: "Switzerland",
+      backgroundPhoto: "https://images.unsplash.com/photo-1570161766218-f8488ebb8078?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3dpdHplcmxhbmR8ZW58MHx8MHx8fDA%3D",
+      visaVariable: "seamless entry",
+      cost: "₹8200",
+      buttonLink: "/visa/form/switzerland",
+    },
+    // France
+    {
+      countryName: "France",
+      backgroundPhoto: "https://images.unsplash.com/photo-1503917988258-f87a78e3c995?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZnJhbmNlfGVufDB8fDB8fHww",
+      visaVariable: "instant appointment",
+      cost: "₹7500",
+      buttonLink: "/visa/form/france",
+    },
+    // Netherlands
+    {
+      countryName: "Netherlands",
+      backgroundPhoto: "https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bmV0aGVybGFuZHN8ZW58MHx8MHx8fDA%3D",
+      visaVariable: "online booking",
+      cost: "₹8100",
+      buttonLink: "/visa/form/netherlands",
+    },
+    // Germany
+    {
+      countryName: "Germany",
+      backgroundPhoto: "https://images.unsplash.com/photo-1449452198679-05c7fd30f416?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2VybWFueXxlbnwwfHwwfHx8MA%3D%3D",
+      visaVariable: "quick approval",
+      cost: "₹8500",
+      buttonLink: "/visa/form/germany",
+    },
+    // Spain
+    {
+      countryName: "Spain",
+      backgroundPhoto: "https://images.unsplash.com/photo-1558642084-fd07fae5282e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3BhaW58ZW58MHx8MHx8fDA%3D",
+      visaVariable: "priority slots",
+      cost: "₹8000",
+      buttonLink: "/visa/form/spain",
+    },
+    // Greece
+    {
+      countryName: "Greece",
+      backgroundPhoto: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z3JlZWNlfGVufDB8fDB8fHww",
+      visaVariable: "priority slots",
+      cost: "₹8200",
+      buttonLink: "/visa/form/greece",
+    },
+    // Austria
+    {
       countryName: "Austria",
       backgroundPhoto: "https://images.unsplash.com/photo-1597086831879-756db15e81d3?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       visaVariable: "easy process",
       cost: "₹8000",
       buttonLink: "/visa/form/austria",
+    },
+    // Czech Republic
+    {
+      countryName: "Czech Republic",
+      backgroundPhoto: "https://images.unsplash.com/photo-1458150945447-7fb764c11a92?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3plY2glMjByZXB1YmxpY3xlbnwwfHwwfHx8MA%3D%3D",
+      visaVariable: "simple process",
+      cost: "₹8200",
+      buttonLink: "/visa/form/czech-republic",
+    },
+    // Italy
+    {
+      countryName: "Italy",
+      backgroundPhoto: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aXRhbHl8ZW58MHx8MHx8fDA%3D",
+      visaVariable: "priority slots",
+      cost: "₹8000",
+      buttonLink: "/visa/form/italy",
+    },
+    // Finland
+    {
+      countryName: "Finland",
+      backgroundPhoto: "https://images.unsplash.com/photo-1522885147691-06d859633fb8?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmlubGFuZHxlbnwwfHwwfHx8MA%3D%3D",
+      visaVariable: "fast processing",
+      cost: "₹8500",
+      buttonLink: "/visa/form/finland",
+    },
+    // Sweden
+    {
+      countryName: "Sweden",
+      backgroundPhoto: "https://images.unsplash.com/photo-1633430300352-bcb3420c0ed5?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHN3ZWRlbnxlbnwwfHwwfHx8MA%3D%3D",
+      visaVariable: "instant apply",
+      cost: "₹8100",
+      buttonLink: "/visa/form/sweden",
+    },
+    // Portugal
+    {
+      countryName: "Portugal",
+      backgroundPhoto: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHVnYWx8ZW58MHx8MHx8fDA%3D",
+      visaVariable: "priority service",
+      cost: "₹8000",
+      buttonLink: "/visa/form/portugal",
     },
     {
       countryName: "Belgium",
@@ -217,13 +305,6 @@ export default {
       buttonLink: "/visa/form/bulgaria",
     },
     {
-      countryName: "Czech Republic",
-      backgroundPhoto: "https://images.unsplash.com/photo-1458150945447-7fb764c11a92?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3plY2glMjByZXB1YmxpY3xlbnwwfHwwfHx8MA%3D%3D",
-      visaVariable: "simple process",
-      cost: "₹8200",
-      buttonLink: "/visa/form/czech-republic",
-    },
-    {
       countryName: "Denmark",
       backgroundPhoto: "https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVubWFya3xlbnwwfHwwfHx8MA%3D%3D",
       visaVariable: "digital booking",
@@ -238,34 +319,6 @@ export default {
       buttonLink: "/visa/form/estonia",
     },
     {
-      countryName: "Finland",
-      backgroundPhoto: "https://images.unsplash.com/photo-1522885147691-06d859633fb8?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmlubGFuZHxlbnwwfHwwfHx8MA%3D%3D",
-      visaVariable: "fast processing",
-      cost: "₹8500",
-      buttonLink: "/visa/form/finland",
-    },
-    {
-      countryName: "France",
-      backgroundPhoto: "https://images.unsplash.com/photo-1503917988258-f87a78e3c995?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZnJhbmNlfGVufDB8fDB8fHww",
-      visaVariable: "instant appointment",
-      cost: "₹7500",
-      buttonLink: "/visa/form/france",
-    },
-    {
-      countryName: "Germany",
-      backgroundPhoto: "https://images.unsplash.com/photo-1449452198679-05c7fd30f416?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2VybWFueXxlbnwwfHwwfHx8MA%3D%3D",
-      visaVariable: "quick approval",
-      cost: "₹8500",
-      buttonLink: "/visa/form/germany",
-    },
-    {
-      countryName: "Greece",
-      backgroundPhoto: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z3JlZWNlfGVufDB8fDB8fHww",
-      visaVariable: "priority slots",
-      cost: "₹8200",
-      buttonLink: "/visa/form/greece",
-    },
-    {
       countryName: "Hungary",
       backgroundPhoto: "https://images.unsplash.com/photo-1518471152222-d42e38ce6873?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aHVuZ2FyeXxlbnwwfHwwfHx8MA%3D%3D",
       visaVariable: "no hassle",
@@ -278,13 +331,6 @@ export default {
       visaVariable: "rapid processing",
       cost: "₹8800",
       buttonLink: "/visa/form/iceland",
-    },
-    {
-      countryName: "Italy",
-      backgroundPhoto: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aXRhbHl8ZW58MHx8MHx8fDA%3D",
-      visaVariable: "priority slots",
-      cost: "₹8000",
-      buttonLink: "/visa/form/italy",
     },
     {
       countryName: "Latvia",
@@ -322,13 +368,6 @@ export default {
       buttonLink: "/visa/form/malta",
     },
     {
-      countryName: "Netherlands",
-      backgroundPhoto: "https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bmV0aGVybGFuZHN8ZW58MHx8MHx8fDA%3D",
-      visaVariable: "online booking",
-      cost: "₹8100",
-      buttonLink: "/visa/form/netherlands",
-    },
-    {
       countryName: "Norway",
       backgroundPhoto: "https://images.unsplash.com/photo-1475066392170-59d55d96fe51?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bm9yd2F5fGVufDB8fDB8fHww",
       visaVariable: "quick appointment",
@@ -341,13 +380,6 @@ export default {
       visaVariable: "direct slots",
       cost: "₹7900",
       buttonLink: "/visa/form/poland",
-    },
-    {
-      countryName: "Portugal",
-      backgroundPhoto: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHVnYWx8ZW58MHx8MHx8fDA%3D",
-      visaVariable: "priority service",
-      cost: "₹8000",
-      buttonLink: "/visa/form/portugal",
     },
     {
       countryName: "Slovakia",
@@ -364,32 +396,11 @@ export default {
       buttonLink: "/visa/form/slovenia",
     },
     {
-      countryName: "Spain",
-      backgroundPhoto: "https://images.unsplash.com/photo-1558642084-fd07fae5282e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3BhaW58ZW58MHx8MHx8fDA%3D",
-      visaVariable: "priority slots",
-      cost: "₹8000",
-      buttonLink: "/visa/form/spain",
-    },
-    {
-      countryName: "Sweden",
-      backgroundPhoto: "https://images.unsplash.com/photo-1633430300352-bcb3420c0ed5?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHN3ZWRlbnxlbnwwfHwwfHx8MA%3D%3D",
-      visaVariable: "instant apply",
-      cost: "₹8100",
-      buttonLink: "/visa/form/sweden",
-    },
-    {
       countryName: "Switzerland",
       backgroundPhoto: "https://images.unsplash.com/photo-1570161766218-f8488ebb8078?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3dpdHplcmxhbmR8ZW58MHx8MHx8fDA%3D",
       visaVariable: "seamless entry",
       cost: "₹8200",
       buttonLink: "/visa/form/switzerland",
-    },
-    {
-      countryName: "UK",
-      backgroundPhoto: "https://images.unsplash.com/photo-1677078279098-a45f0c3a9051?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGx1eGVtYm9yZnxlbnwwfHwwfHx8MA%3D%3D",
-      visaVariable: "minimal docs",
-      cost: "₹8100",
-      buttonLink: "/visa/form/luxembourg",
     },
   ],
 

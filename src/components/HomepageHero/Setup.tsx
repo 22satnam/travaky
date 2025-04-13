@@ -86,7 +86,7 @@ export function SetupHero(props: Props) {
             ]}
           />
           <br />
-          with Travacky
+          with Travaky
 
         </div>
         <div className="flex justify-center pt-10">
@@ -114,7 +114,7 @@ export function SetupHero(props: Props) {
                 target="_blank"
               >
                 Country
-                <span className="ml-[6px] icon-[mingcute--github-line]"></span>
+                <span className="ml-[6px] icon-[mingcute--github]"></span>
               </Link>
             </Button>
           </div>
