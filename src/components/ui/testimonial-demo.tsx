@@ -148,10 +148,8 @@ const testimonials = [
 
 export function TestimonialsSectionDemo() {
   return (
-    <div className="flex flex-col items-center gap-6 sm:gap-8 pt-4">
+    <div className="flex flex-col items-center gap-6 sm:gap-8 pt-1">
       <TestimonialsSection
-        title="Trusted by people across India"
-        description="Get your visa at your home without any hassle just like 12k+ happy customers"
         testimonials={testimonials}
       />
       

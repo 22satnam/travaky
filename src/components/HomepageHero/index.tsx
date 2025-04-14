@@ -257,6 +257,8 @@ import { Pricing } from '@/components/pricing'
 import { TestimonialsSectionDemo } from '@/components/ui/testimonial-demo'
 import { FeaturesSectionWithHoverEffects } from '@/components/ui/service'
 import Link from 'next/link'
+import { featureList, faqs,featuresDesc } from '@/content/data'
+
 
 interface StackItemProps {
   countryCode: string
@@ -296,17 +298,13 @@ export const StackItem = ({ countryCode, countryName }: StackItemProps) => {
   )
 }
 
-export default function HomepageHero() {
-  const { t } = useLocale()
-  const featureList = t('featureList')
-  const faqs = t('faqs')
-
-  const processedFeatureList = useMemo(() => {
-    return featureList.map((item: any) => ({
-      ...item,
-      backgroundPhoto: item.backgroundPhoto || '/images/default-country.jpg',
-    }))
-  }, [featureList])
+  export default function HomepageHero() {
+    const processedFeatureList = useMemo(() => {
+      return featureList.map((item) => ({
+        ...item,
+        backgroundPhoto: item.backgroundPhoto || '/images/default-country.jpg',
+      }))
+    }, [])
 
   return (
     <>
@@ -315,7 +313,7 @@ export default function HomepageHero() {
       <SetupHero />
 
       {/* Country Services Cards */}
-      <Section title="Choose your country" description={t('featuresDesc')}>
+      <Section title="Choose your country" description={featuresDesc}>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {processedFeatureList.map((feature, index) => (
             <Link key={index} href={feature.buttonLink} className="block transition-transform hover:scale-105">
@@ -387,8 +385,7 @@ export default function HomepageHero() {
         </div>
       </Section>
 
-      <Section className="flex flex-col items-center justify-center">
-        {/* Updated Testimonials Section Demo using PatchedMarqueeSlider */}
+      <Section title= "Trusted by people across India"  description="Get your visa at your home without any hassle just like 12k+ happy customers" className="flex flex-col items-center justify-center">
         <TestimonialsSectionDemo />
       </Section>
 
