@@ -1,0 +1,442 @@
+// // // components/ui/auth-dialogs.tsx
+// // "use client"
+
+// // import {
+// //   Dialog,
+// //   DialogContent,
+// //   DialogDescription,
+// //   DialogHeader,
+// //   DialogTitle,
+// //   DialogTrigger,
+// // } from "@/components/ui/dialog"
+// // import { Button } from "@/components/ui/button"
+// // import { Input } from "@/components/ui/input"
+// // import { Label } from "@/components/ui/label"
+// // import { signIn } from "next-auth/react"
+// // import { useState } from "react"
+// // import { Eye, EyeOff } from "lucide-react"
+// // import { cn } from "@/lib/utils"
+// // import Link from "next/link"
+
+// // interface AuthDialogProps {
+// //   mode: "login" | "signup"
+// //   toggleMode: () => void
+// // }
+
+// // export function AuthDialog({ mode, toggleMode }: AuthDialogProps) {
+// //   const [email, setEmail] = useState("")
+// //   const [password, setPassword] = useState("")
+// //   const [showPassword, setShowPassword] = useState(false)
+
+// //   const handleSubmit = (e: React.FormEvent) => {
+// //     e.preventDefault()
+// //     console.log({ email, password })
+// //     // TODO: call login/signup api or use signIn from next-auth
+// //   }
+
+// //   return (
+// //     <Dialog>
+// //       <DialogTrigger asChild>
+// //         <Button variant="outline">{mode === "login" ? "Login" : "Signup"}</Button>
+// //       </DialogTrigger>
+// //       <DialogContent className="sm:max-w-md">
+// //         <DialogHeader>
+// //           <DialogTitle className="text-center">
+// //             {mode === "login" ? "Log in to your account" : "Create a new account"}
+// //           </DialogTitle>
+// //           <DialogDescription className="text-center">
+// //             {mode === "login"
+// //               ? "Enter your credentials to continue."
+// //               : "Fill in the details to sign up."}
+// //           </DialogDescription>
+// //         </DialogHeader>
+// //         <form onSubmit={handleSubmit} className="space-y-4">
+// //           <div>
+// //             <Label htmlFor="email">Email</Label>
+// //             <Input
+// //               id="email"
+// //               type="email"
+// //               value={email}
+// //               onChange={(e) => setEmail(e.target.value)}
+// //               required
+// //             />
+// //           </div>
+// //           <div>
+// //             <Label htmlFor="password">Password</Label>
+// //             <div className="relative">
+// //               <Input
+// //                 id="password"
+// //                 type={showPassword ? "text" : "password"}
+// //                 value={password}
+// //                 onChange={(e) => setPassword(e.target.value)}
+// //                 required
+// //               />
+// //               <button
+// //                 type="button"
+// //                 onClick={() => setShowPassword(!showPassword)}
+// //                 className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+// //               >
+// //                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+// //               </button>
+// //             </div>
+// //           </div>
+// //           <Button type="submit" className="w-full">
+// //             {mode === "login" ? "Log In" : "Sign Up"}
+// //           </Button>
+// //         </form>
+// //         <div className="text-center text-sm text-muted-foreground pt-4">
+// //           {mode === "login" ? (
+// //             <>
+// //               Don’t have an account? {" "}
+// //               <button onClick={toggleMode} className="underline">Sign up</button>
+// //             </>
+// //           ) : (
+// //             <>
+// //               Already have an account? {" "}
+// //               <button onClick={toggleMode} className="underline">Log in</button>
+// //             </>
+// //           )}
+// //         </div>
+// //       </DialogContent>
+// //     </Dialog>
+// //   )
+// // }
+// // components/ui/auth-dialog.tsx
+// "use client"
+
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from "@/components/ui/dialog"
+// import { Button } from "@/components/ui/button"
+// import { Input } from "@/components/ui/input"
+// import { Label } from "@/components/ui/label"
+// import { signIn } from "next-auth/react"
+// import { useState, useId } from "react"
+// import { Eye, EyeOff } from "lucide-react"
+// import { cn } from "@/lib/utils"
+
+// export function AuthDialog({ mode }: { mode: "login" | "signup" }) {
+//   const id = useId()
+//   const [email, setEmail] = useState("")
+//   const [password, setPassword] = useState("")
+//   const [fullName, setFullName] = useState("")
+//   const [showPassword, setShowPassword] = useState(false)
+//   const [loading, setLoading] = useState(false)
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault()
+//     setLoading(true)
+
+//     if (mode === "signup") {
+//       await fetch("/api/signup", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ fullName, email, password }),
+//       })
+//     } else {
+//       await fetch("/api/login", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ email, password }),
+//       })
+//     }
+
+//     setLoading(false)
+//   }
+
+//   return (
+//     <Dialog>
+//       <DialogTrigger asChild>
+//         <Button variant="outline">{mode === "login" ? "Login" : "Sign up"}</Button>
+//       </DialogTrigger>
+//       <DialogContent>
+//         <div className="flex flex-col items-center gap-2">
+//           <div
+//             className="flex size-11 shrink-0 items-center justify-center rounded-full border border-border"
+//             aria-hidden="true"
+//           >
+//             <svg
+//               className="stroke-zinc-800 dark:stroke-zinc-100"
+//               xmlns="http://www.w3.org/2000/svg"
+//               width="20"
+//               height="20"
+//               viewBox="0 0 32 32"
+//               aria-hidden="true"
+//             >
+//               <circle cx="16" cy="16" r="12" fill="none" strokeWidth="8" />
+//             </svg>
+//           </div>
+//           <DialogHeader>
+//             <DialogTitle className="sm:text-center">
+//               {mode === "signup" ? "Sign up Origin UI" : "Log in to Travaky"}
+//             </DialogTitle>
+//             <DialogDescription className="sm:text-center">
+//               {mode === "signup"
+//                 ? "We just need a few details to get you started."
+//                 : "Enter your credentials to continue."}
+//             </DialogDescription>
+//           </DialogHeader>
+//         </div>
+
+//         <form className="space-y-5" onSubmit={handleSubmit}>
+//           <div className="space-y-4">
+//             {mode === "signup" && (
+//               <div className="space-y-2">
+//                 <Label htmlFor={`${id}-name`}>Full name</Label>
+//                 <Input
+//                   id={`${id}-name`}
+//                   placeholder="Matt Welsh"
+//                   type="text"
+//                   value={fullName}
+//                   onChange={(e) => setFullName(e.target.value)}
+//                   required
+//                 />
+//               </div>
+//             )}
+//             <div className="space-y-2">
+//               <Label htmlFor={`${id}-email`}>Email</Label>
+//               <Input
+//                 id={`${id}-email`}
+//                 placeholder="hi@yourcompany.com"
+//                 type="email"
+//                 value={email}
+//                 onChange={(e) => setEmail(e.target.value)}
+//                 required
+//               />
+//             </div>
+//             <div className="space-y-2">
+//               <Label htmlFor={`${id}-password`}>Password</Label>
+//               <div className="relative">
+//                 <Input
+//                   id={`${id}-password`}
+//                   placeholder="Enter your password"
+//                   type={showPassword ? "text" : "password"}
+//                   value={password}
+//                   onChange={(e) => setPassword(e.target.value)}
+//                   required
+//                 />
+//                 <button
+//                   type="button"
+//                   onClick={() => setShowPassword(!showPassword)}
+//                   className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+//                 >
+//                   {showPassword ? (
+//                     <EyeOff className="h-4 w-4" />
+//                   ) : (
+//                     <Eye className="h-4 w-4" />
+//                   )}
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//           <Button type="submit" className="w-full" disabled={loading}>
+//             {loading ? "Processing..." : mode === "signup" ? "Sign up" : "Log in"}
+//           </Button>
+//         </form>
+
+//         <div className="flex items-center gap-3 before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
+//           <span className="text-xs text-muted-foreground">Or</span>
+//         </div>
+
+//         <Button
+//           variant="outline"
+//           onClick={() => signIn("google", { callbackUrl: "/" })}
+//           className="w-full"
+//         >
+//           Continue with Google
+//         </Button>
+
+//         <p className="text-center text-xs text-muted-foreground">
+//           By signing up you agree to our {" "}
+//           <a className="underline hover:no-underline" href="#">
+//             Terms
+//           </a>
+//           .
+//         </p>
+//       </DialogContent>
+//     </Dialog>
+//   )
+// }
+
+// components/ui/auth-dialog.tsx
+"use client";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { signIn } from "next-auth/react";
+import { useId, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface AuthDialogProps {
+  mode: "login" | "signup";
+  toggleMode: () => void;
+}
+
+export function AuthDialog({ mode, toggleMode }: AuthDialogProps) {
+  const id = useId();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (mode === "login") {
+      await signIn("credentials", { email, password, callbackUrl: "/" });
+    } else {
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: fullName, email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Signup failed");
+      } else {
+        alert("Signup successful! JWT: " + data.token);
+      }
+    }
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">{mode === "login" ? "Login" : "Signup"}</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <div className="flex flex-col items-center gap-2">
+          <div
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border border-border"
+            aria-hidden="true"
+          >
+            <svg
+              className="stroke-zinc-800 dark:stroke-zinc-100"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 32 32"
+              aria-hidden="true"
+            >
+              <circle cx="16" cy="16" r="12" fill="none" strokeWidth="8" />
+            </svg>
+          </div>
+          <DialogHeader>
+            <DialogTitle className="sm:text-center">
+              {mode === "login" ? "Log in to Travaky" : "Sign up for Travaky"}
+            </DialogTitle>
+            <DialogDescription className="sm:text-center">
+              {mode === "login"
+                ? "Welcome back. Enter your credentials."
+                : "We just need a few details to get you started."}
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {mode === "signup" && (
+            <div className="space-y-2">
+              <Label htmlFor={`${id}-name`}>Full name</Label>
+              <Input
+                id={`${id}-name`}
+                placeholder="Matt Welsh"
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+              />
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label htmlFor={`${id}-email`}>Email</Label>
+            <Input
+              id={`${id}-email`}
+              placeholder="hi@yourcompany.com"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor={`${id}-password`}>Password</Label>
+            <div className="relative">
+              <Input
+                id={`${id}-password`}
+                placeholder="Enter your password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          <Button type="submit" className="w-full">
+            {mode === "login" ? "Log In" : "Sign up"}
+          </Button>
+        </form>
+
+        <div className="flex items-center gap-3 before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
+          <span className="text-xs text-muted-foreground">Or</span>
+        </div>
+
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => signIn("google", { callbackUrl: "/" })}
+        >
+          Continue with Google
+        </Button>
+
+        <p className="text-center text-xs text-muted-foreground">
+          By {mode === "signup" ? "signing up" : "logging in"}, you agree to our{' '}
+          <a className="underline hover:no-underline" href="#">
+            Terms
+          </a>
+          .
+        </p>
+
+        <div className="text-center text-sm text-muted-foreground pt-4">
+          {mode === "login" ? (
+            <>
+              Don’t have an account?{' '}
+              <button onClick={toggleMode} className="underline">
+                Sign up
+              </button>
+            </>
+          ) : (
+            <>
+              Already have an account?{' '}
+              <button onClick={toggleMode} className="underline">
+                Log in
+              </button>
+            </>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

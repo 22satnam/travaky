@@ -1,7 +1,7 @@
 // lib/auth.ts
 import jwt from 'jsonwebtoken'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key' // move to .env for production
+const JWT_SECRET = process.env.JWT_SECRET
 
 export function generateToken(payload: object) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
