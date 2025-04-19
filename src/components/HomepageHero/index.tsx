@@ -976,6 +976,8 @@ import { toast } from 'sonner'
 import { AuthDialog } from '@/components/ui/auth-dialogs'
 import { useAuth } from '@/context/AuthContext'
 import Marquee from 'react-fast-marquee'
+import { Pricing } from '@/components/pricing'
+
 
 interface StackItemProps {
   countryCode: string
@@ -1119,6 +1121,58 @@ export default function HomepageHero() {
       <Section title="Services Offered" description="Explore our range of services to find the perfect fit for your needs.">
         <FeaturesSectionWithHoverEffects />
       </Section>
+      
+      <Section className="flex flex-col items-center justify-center">
+        <Pricing
+          title="Visa Service Packages"
+          description="Choose the best visa support package tailored to your needs!"
+          plans={[
+            {
+              name: "Docs on Call",
+              price: "3550",
+              features: [
+                "Full support over a call",
+                "Visa specialist assists until documentation completion",
+                "All necessary steps explained over the call",
+                "Final documentation packet delivered to your home",
+              ],
+              description: "Full support over a call with visa specialist until documentation is complete.",
+              buttonText: "Get Docs on Call",
+              href: "/apply?plan=docs-on-call",
+              isPopular: false,
+            },
+            {
+              name: "Docs on Door",
+              price: "19890",
+              features: [
+                "In-person visa assistance at home",
+                "Visa expert visits your home for document guidance",
+                "Personalized consultation for all concerns",
+                "Support until application submission at Visa Center",
+                "Dedicated officer at the Visa Center",
+              ],
+              description: "In-person expert comes to your home and supports till visa center submission.",
+              buttonText: "Get Docs on Door",
+              href: "/apply?plan=docs-on-door",
+              isPopular: true,
+            },
+            {
+              name: "VAD (Visa at Doorstep)",
+              price: "28950",
+              features: [
+                "Embassy authorized visa officer comes to your home",
+                "No need to visit the Visa Center",
+                "VFS team visits home for biometrics & submission",
+                "Visa delivered to your home after approval",
+              ],
+              description: "End-to-end premium visa service — you never have to leave home!",
+              buttonText: "Get VAD Now",
+              href: "/apply?plan=vad",
+              isPopular: false,
+            },
+          ]}
+        />
+        </Section>
 
       <Section title="Countries we support" titleProps={{ disabledAnimation: true }}>
         <div className="flex justify-center w-full max-w-7xl h-[80px] my-[30px]">

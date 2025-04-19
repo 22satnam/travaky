@@ -1,7 +1,7 @@
-import * as React from "react"
-import { ToastProvider, useToast as useShadToast } from "@/components/ui/toast"
+"use client";
+
+import { toast } from "sonner";
 
 export const useToast = () => {
-  const { toast } = useShadToast()
-  return { toast }
-}
+  return { toast };
+};
