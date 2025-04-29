@@ -1,0 +1,30 @@
+{
+    "fields": [
+      { "name": "surname",             "pdfName": "surname",                  "type": "text" },
+      { "name": "surnameAtBirth",      "pdfName": "Text2",                    "type": "text" },
+      { "name": "firstname",           "pdfName": "firstname",                "type": "text" },
+      { "name": "dateOfBirth",         "pdfName": "dateofbirth",              "type": "text" },
+      { "name": "countryOfBirth",      "pdfName": "countryofbirth",           "type": "text" },
+      { "name": "placeOfBirth",        "pdfName": "placeofbirth",             "type": "text" },
+      { "name": "homeAddress",         "pdfName": "homeaddress",              "type": "text" },
+  
+      { "name": "genderMale",          "pdfName": "male",                     "type": "checkbox" },
+      { "name": "genderFemale",        "pdfName": "female",                   "type": "checkbox" },
+      { "name": "genderDivers",        "pdfName": "divers",                   "type": "checkbox" },
+  
+      { "name": "civilStatusSingle",   "pdfName": "single",                   "type": "checkbox" },
+      { "name": "civilStatusMarried",  "pdfName": "married",                  "type": "checkbox" },
+  
+      { "name": "passportNumber",      "pdfName": "undefined.passportnumber", "type": "text" },
+      { "name": "dateOfIssue",         "pdfName": "dateofissue",              "type": "text" },
+      { "name": "expiryDate",          "pdfName": "expirydate",               "type": "text" },
+      { "name": "mobileNumber",        "pdfName": "mobilenumber",             "type": "text" },
+      { "name": "currentOccupation",   "pdfName": "currentoccupation",        "type": "text" },
+      { "name": "employerAddress",     "pdfName": "employeraddress",          "type": "text" },
+  
+      { "name": "dateOfArrival",       "pdfName": "dateofarrival",            "type": "text" },
+      { "name": "dateOfDeparture",     "pdfName": "dateofdeparture",          "type": "text" }
+  
+      
+    ]
+  }
