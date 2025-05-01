@@ -1,102 +1,4 @@
-// 'use client'
 
-// import { Input } from '@/components/ui/input'
-// import { Label } from '@/components/ui/label'
-// import { useEffect, useState } from 'react'
-// import { cn } from '@/lib/utils'
-
-// interface Props {
-//   traveler: any
-//   setTravelerData: (data: any) => void
-// }
-
-// export function BasicInfoSection({ traveler, setTravelerData }: Props) {
-//   const [touched, setTouched] = useState<{ [key: string]: boolean }>({})
-
-//   const handleChange = (field: string, value: string) => {
-//     setTravelerData({ ...traveler, [field]: value })
-//     setTouched({ ...touched, [field]: true })
-//   }
-
-//   const validate = (field: string) => {
-//     const value = traveler?.[field]
-//     if (!value && touched[field]) return 'border-red-500'
-//     if (value && touched[field]) return 'border-blue-500'
-//     return 'border-gray-300'
-//   }
-
-//   useEffect(() => {
-//     if (!traveler?.country) {
-//       setTravelerData({ ...traveler, country: 'India' })
-//     }
-//   }, [])
-
-//   return (
-//     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//       <div>
-//         <Label htmlFor="firstName">First Name</Label>
-//         <Input
-//           id="firstName"
-//           placeholder="e.g., Satnam"
-//           value={traveler?.firstName || ''}
-//           onChange={(e) => handleChange('firstName', e.target.value)}
-//           className={cn('mt-1', validate('firstName'))}
-//           required
-//         />
-//       </div>
-
-//       <div>
-//         <Label htmlFor="lastName">Last Name</Label>
-//         <Input
-//           id="lastName"
-//           placeholder="e.g., Singh"
-//           value={traveler?.lastName || ''}
-//           onChange={(e) => handleChange('lastName', e.target.value)}
-//           className={cn('mt-1', validate('lastName'))}
-//           required
-//         />
-//       </div>
-
-//       <div>
-//         <Label htmlFor="email">Email Address</Label>
-//         <Input
-//           id="email"
-//           type="email"
-//           placeholder="e.g., example@email.com"
-//           value={traveler?.email || ''}
-//           onChange={(e) => handleChange('email', e.target.value)}
-//           className={cn('mt-1', validate('email'))}
-//           required
-//         />
-//       </div>
-
-//       <div>
-//         <Label htmlFor="contact">Contact Number</Label>
-//         <Input
-//           id="contact"
-//           type="tel"
-//           placeholder="e.g., +91 9876543210"
-//           value={traveler?.phone || ''}
-//           onChange={(e) => handleChange('phone', e.target.value)}
-//           className={cn('mt-1', validate('phone'))}
-//           required
-//         />
-//       </div>
-
-//       <div className="md:col-span-2">
-//         <Label htmlFor="country">Country</Label>
-//         <Input
-//           id="country"
-//           placeholder="e.g., India"
-//           value={traveler?.country || 'India'}
-//           onChange={(e) => handleChange('country', e.target.value)}
-//           className={cn('mt-1', validate('country'))}
-//           required
-//         />
-//       </div>
-//     </div>
-//   )
-// }
 'use client'
 
 import { Input } from '@/components/ui/input'
@@ -120,11 +22,33 @@ interface Props {
 }
 
 const visaCountries = [
-  { label: 'Switzerland', value: 'switzerland' },
-  { label: 'France', value: 'france' },
-  { label: 'Germany', value: 'germany' },
-  { label: 'Italy', value: 'italy' },
-  { label: 'Spain', value: 'spain' }
+    { label: 'Austria', value: 'austria' },
+    { label: 'Belgium', value: 'belgium' },
+    { label: 'Croatia', value: 'croatia' },
+    { label: 'Czech Republic', value: 'czech-republic' },
+    { label: 'Denmark', value: 'denmark' },
+    { label: 'Estonia', value: 'estonia' },
+    { label: 'Finland', value: 'finland' },
+    { label: 'France', value: 'france' },
+    { label: 'Germany', value: 'germany' },
+    { label: 'Greece', value: 'greece' },
+    { label: 'Hungary', value: 'hungary' },
+    { label: 'Iceland', value: 'iceland' },
+    { label: 'Italy', value: 'italy' },
+    { label: 'Latvia', value: 'latvia' },
+    { label: 'Liechtenstein', value: 'liechtenstein' },
+    { label: 'Lithuania', value: 'lithuania' },
+    { label: 'Luxembourg', value: 'luxembourg' },
+    { label: 'Malta', value: 'malta' },
+    { label: 'Netherlands', value: 'netherlands' },
+    { label: 'Norway', value: 'norway' },
+    { label: 'Poland', value: 'poland' },
+    { label: 'Portugal', value: 'portugal' },
+    { label: 'Slovakia', value: 'slovakia' },
+    { label: 'Slovenia', value: 'slovenia' },
+    { label: 'Spain', value: 'spain' },
+    { label: 'Sweden', value: 'sweden' },
+    { label: 'Switzerland', value: 'switzerland' },
 ]
 
 export function BasicInfoSection({ traveler, setTravelerData }: Props) {
