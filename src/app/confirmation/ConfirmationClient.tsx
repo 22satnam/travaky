@@ -40,6 +40,7 @@ export default function ConfirmationClient() {
     designation: 'Senior Visa Executive',
     countryExpertise: data.country,
     contact: '+91-8888888888',
+    country: data.country
   }
 
   return (
