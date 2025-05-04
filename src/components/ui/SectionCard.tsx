@@ -320,13 +320,6 @@ export default function SectionCard({
         {sectionIndex === 5 && (
           <AppointmentSection data={traveler} setData={setTravelerData} />
         )}
-        {sectionIndex === 6 && (
-          <PaymentSection
-            data={traveler}
-            travelerCount={totalTravelers}
-            onPayment={openPayment!} // ✅ required
-          />
-        )}
       </div>
 
       {sectionIndex < 6 && (
