@@ -1,6 +1,11 @@
 'use client'
 
 import { cn } from '@/lib/utils'
+import {
+  Stepper, StepperItem, StepperTrigger,
+  StepperIndicator, StepperTitle,
+  StepperDescription, StepperSeparator
+} from "@/components/ui/stepper"
 
 interface SectionSidebarProps {
   currentStep: number

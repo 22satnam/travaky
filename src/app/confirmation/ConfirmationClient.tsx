@@ -382,16 +382,14 @@ export default function ConfirmationClient() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-12">
+    <div className="w-full max-w-5xl mx-auto px-4 py-12">
       <div className="bg-card shadow-xl rounded-xl p-8 border space-y-6">
 
         {/* header */}
         <div className="flex items-center gap-3 text-green-600">
           <CheckCircle className="w-6 h-6" />
           <h1 className="text-2xl font-semibold">
-            Booking confirmed for&nbsp;
-            <strong>{data.appointment_date}</strong>&nbsp;at&nbsp;
-            <strong>{data.appointment_time}</strong>
+          Booking confirmed for <strong>{data.appointment_date}</strong> at <strong>{data.appointment_time}</strong>
           </h1>
         </div>
 
