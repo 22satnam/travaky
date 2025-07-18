@@ -222,7 +222,7 @@ export function Footer() {
               <a href="#" className="block transition-colors hover:text-primary">
                 Home
               </a>
-              <a href="#" className="block transition-colors hover:text-primary">
+              <a href="/about" className="block transition-colors hover:text-primary">
                 About Us
               </a>
               <a href="#" className="block transition-colors hover:text-primary">
@@ -231,7 +231,7 @@ export function Footer() {
               <a href="#" className="block transition-colors hover:text-primary">
                 Products
               </a>
-              <a href="#" className="block transition-colors hover:text-primary">
+              <a href="/contact" className="block transition-colors hover:text-primary">
                 Contact
               </a>
             </nav>
@@ -314,10 +314,10 @@ export function Footer() {
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
           <p className="text-sm text-muted-foreground">© 2025 Travaky. All rights reserved.</p>
           <nav className="flex gap-4 text-sm">
-            <a href="#" className="transition-colors hover:text-primary">
+            <a href="/privacy" className="transition-colors hover:text-primary">
               Privacy Policy
             </a>
-            <a href="#" className="transition-colors hover:text-primary">
+            <a href="term" className="transition-colors hover:text-primary">
               Terms of Service
             </a>
             <a href="#" className="transition-colors hover:text-primary">

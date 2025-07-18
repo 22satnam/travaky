@@ -6,6 +6,7 @@ body {
 @import 'tailwindcss';
 @import 'nextra-theme-docs/style.css';
 
+
 @plugin 'tailwindcss-animate';
 @plugin "@iconify/tailwind4";
 
@@ -218,3 +219,4 @@ body {
     cursor: pointer;
   }
 }
+
