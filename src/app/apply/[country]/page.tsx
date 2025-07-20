@@ -2559,243 +2559,1490 @@
 // }
 
 
+// 'use client'
+
+// import { useEffect, useState, useMemo } from 'react'
+// import { useParams, useRouter } from 'next/navigation'
+// import Script from 'next/script'
+
+// import { useAuth } from '@/context/AuthContext'
+// import PricingSidebar      from '@/components/ui/pricing-sidebar'
+// import { TravelerTabs }    from '@/components/ui/traveler-tabs'
+// import { SectionSidebar }  from '@/components/ui/SectionSidebar'
+// import SectionCard         from '@/components/ui/SectionCard'
+// import { ProgressBar }     from '@/components/ui/progress-bar'
+// import { PaymentSection }  from '@/components/form-sections/PaymentSection'
+
+// import { PRICE_PLANS, FEES, PlanName } from '@/config/pricing'
+
+// export default function ApplyFormPage() {
+//   const router      = useRouter()
+//   const { country } = useParams<{ country: string }>()
+//   const { session } = useAuth()
+
+//   /* ───────────────── preload values from /visa page ───────────────── */
+//   const qs          = new URLSearchParams(
+//     typeof window !== 'undefined' ? window.location.search : ''
+//   )
+//   const initialTrav = Number(qs.get('travellers')) || 1
+//   const initialPlan = (qs.get('plan') as PlanName) || 'Docs on Call'
+
+//   /* ─────────────────────────── state ──────────────────────────────── */
+//   const [travelerCount, setTravelerCount] = useState(initialTrav)
+//   const [selectedPlan , setSelectedPlan ] = useState<PlanName>(initialPlan)
+
+//   /* raw form data per traveller */
+//   const [formData, setFormData] = useState<any[]>(
+//     Array(initialTrav).fill({ selectedPlan: initialPlan })
+//   )
+
+//   /* which traveller-scoped sections (0-3) each traveller has finished */
+//   const [stepsByTrav, setStepsByTrav] = useState<number[][]>(
+//     Array.from({ length: initialTrav }, () => [])
+//   )
+
+//   /* which global sections (4-5) are done (only one copy each) */
+//   const [globalSteps, setGlobalSteps] = useState<number[]>([])
+
+//   const [activeSection   , setActiveSection   ] = useState(0) // 0-6
+//   const [currentTraveller, setCurrentTraveller] = useState(0) // tab index
+
+//   const [submitted , setSubmitted ] = useState(false)
+//   const [paymentInfo, setPaymentInfo] = useState<{
+//     selectedPlan:PlanName; sessionId:string; country:string;
+//     email:string; phone:string; pdfUrl?:string; pdfs?:string[];
+//   }|null>(null)
+
+//   const [missingTravs, setMissingTravs] = useState<number[]>([]) // 1-based list
+
+//   /* ─────────────── auth gate ─────────────── */
+//   useEffect(()=>{
+//     if (!session) router.push(`/auth?next=/apply/${country}`)
+//   },[session,router,country])
+
+//   /* keep PricingSidebar plan in-sync with first traveller */
+//   useEffect(()=>{
+//     const p = formData[0]?.selectedPlan as PlanName | undefined
+//     if (p && p !== selectedPlan) setSelectedPlan(p)
+//   }, [formData, selectedPlan])
+
+//   /* ─────────────── helpers ─────────────── */
+//   const updateTraveller = (idx:number,d:any) => {
+//     setFormData(prev=>{
+//       const copy=[...prev]; copy[idx]=d; return copy
+//     })
+//     if (d.selectedPlan) setSelectedPlan(d.selectedPlan as PlanName)
+//   }
+
+//   const handleTravellerChange = (count:number) => {
+//     const delta = count - travelerCount
+//     if (delta>0){
+//       setFormData      (prev=>[...prev, ...Array(delta).fill({ selectedPlan })])
+//       setStepsByTrav   (prev=>[...prev, ...Array(delta).fill([])])
+//     }else{
+//       setFormData    (prev=>prev.slice(0,count))
+//       setStepsByTrav (prev=>prev.slice(0,count))
+//     }
+//     setTravelerCount(count)
+//     if (currentTraveller >= count) setCurrentTraveller(Math.max(0,count-1))
+//   }
+
+//   /* mark section complete */
+//   const markComplete = (sectionIdx:number) => {
+//     if (sectionIdx < 4){                      // traveller-specific
+//       setStepsByTrav(prev=>{
+//         const copy=[...prev]
+//         const s=new Set(copy[currentTraveller]); s.add(sectionIdx)
+//         copy[currentTraveller]=[...s]; return copy
+//       })
+//     }else{                                    // global (4-5)
+//       setGlobalSteps(prev=>(
+//         prev.includes(sectionIdx) ? prev : [...prev,sectionIdx]
+//       ))
+//     }
+//   }
+
+//   /* every traveller finished with 0-3? */
+//   const allTravellersDone = useMemo(
+//     ()=> stepsByTrav.every(st => [0,1,2,3].every(x=>st.includes(x))),
+//     [stepsByTrav]
+//   )
+
+//   /* ─────────────── navigation ─────────────── */
+//   const handleNext = async() => {
+//     /* 0-2 simply advance */
+//     if (activeSection < 3){ setActiveSection(s=>s+1); return }
+
+//     /* leaving TravellerInfo (section-3) → require all travellers done */
+//     if (activeSection === 3){
+//       if (!allTravellersDone){
+//         const incomplete = stepsByTrav
+//           .map((s,i)=> [0,1,2,3].every(x=>s.includes(x)) ? null : i+1)
+//           .filter(Boolean) as number[]
+//         setMissingTravs(incomplete)
+//         setCurrentTraveller(incomplete[0]-1)
+//         alert(`Please finish traveller${incomplete.length>1?'s':''}: ${incomplete.join(', ')}`)
+//         return
+//       }
+//       setMissingTravs([])
+//       setActiveSection(4)          // open Plan Selection
+//       return
+//     }
+
+//     /* Plan Selection (4) → submit once then to next */
+//     if (activeSection === 4){
+//       if (!submitted) await submitToBackend()
+//       setActiveSection(5)
+//       return
+//     }
+
+//     /* 5 → 6 or done */
+//     if (activeSection < 6) setActiveSection(s=>s+1)
+//   }
+
+//   const handleBack = () => { if (activeSection>0) setActiveSection(s=>s-1) }
+
+//   /* ─────────────── API submit ─────────────── */
+//   const submitToBackend = async() => {
+//     if (submitted) return
+//     const payload = {
+//       travelers       : formData,
+//       selectedPlan,
+//       appointmentDate    : formData[0]?.appointmentDate,
+//       appointmentTime    : formData[0]?.appointmentTime,
+//       appointmentAddress : formData[0]?.appointmentAddress,
+//       appointmentPincode : formData[0]?.appointmentPincode,
+//       appointmentContact : formData[0]?.appointmentContact,
+//       email : formData[0]?.email, phone:formData[0]?.phone,
+//       country
+//     }
+//     const res = await fetch('/api/submit-form',{
+//       method:'POST',
+//       headers:{'Content-Type':'application/json'},
+//       body:JSON.stringify(payload)
+//     })
+//     const r = await res.json()
+//     if (r.success && r.sessionId){
+//       setSubmitted(true)
+//       setPaymentInfo({...payload, sessionId:r.sessionId,
+//                       pdfUrl:r.pdfUrl, pdfs:r.pdfs??[]})
+//     }else{ alert(r.error || 'Submission failed') }
+//   }
+
+//   /* ─────────────── payment ─────────────── */
+//   async function openPayment(){
+//     if (!paymentInfo) return
+//     const { sessionId,email,phone } = paymentInfo
+//     const total =
+//       PRICE_PLANS[selectedPlan]*travelerCount +
+//       FEES.appointment*travelerCount +
+//       FEES.service
+//     await loadAndOpenRazorpay({
+//       amount: total*100,
+//       email, contact: phone,
+//       sessionId,
+//       description:`${selectedPlan} plan for ${travelerCount} traveller(s)`
+//     })
+//   }
+
+//   /* ─────────────── sidebar helpers ─────────────── */
+//   const sidebarSteps = useMemo(
+//     ()=> Array.from(new Set([
+//       ...stepsByTrav[currentTraveller],   // traveller progress
+//       ...globalSteps                      // plus global progress
+//     ])),
+//     [stepsByTrav, currentTraveller, globalSteps]
+//   )
+
+//   const isStepDisabled = (step:number) => {
+//     if (step < 4){
+//       if (step === 0) return false
+//       return !stepsByTrav[currentTraveller].includes(step-1)
+//     }
+//     if (!allTravellersDone) return true          // lock 4-5 until ready
+//     if (step === 4) return false
+//     return !globalSteps.includes(step-1)
+//   }
+
+//   /* ─────────────── render ─────────────── */
+//   if (!session) return <p className="py-20 text-center">Redirecting…</p>
+
+//   return (
+//     <>
+//       <Script src="https://checkout.razorpay.com/v1/checkout.js"
+//               strategy="beforeInteractive"/>
+
+//       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6">
+
+//         {/* step list */}
+//         <div className="md:col-span-1">
+//           <SectionSidebar
+//             currentStep={activeSection}
+//             completedSteps={sidebarSteps}
+//             onNavigate={setActiveSection}
+//             isStepDisabled={isStepDisabled}
+//           />
+//         </div>
+
+//         {/* wizard body */}
+//         <div className="md:col-span-3 space-y-4">
+//           {missingTravs.length>0 && activeSection>=4 && (
+//             <div className="p-4 bg-red-100 text-red-700 rounded">
+//               Please finish traveller{missingTravs.length>1?'s':''}: {missingTravs.join(', ')}
+//             </div>
+//           )}
+
+//           {/* steps 0-3 : per traveller */}
+//           {activeSection < 4 ? (
+//             <>
+//               <ProgressBar current={currentTraveller} total={travelerCount}/>
+//               <TravelerTabs
+//                 travelerCount={travelerCount}
+//                 travelerData={formData}
+//                 updateTraveler={updateTraveller}
+//                 currentTraveler={currentTraveller}
+//                 setCurrentTraveler={setCurrentTraveller}
+//               />
+//               <SectionCard
+//                 sectionIndex={activeSection}
+//                 onNext={handleNext}
+//                 onBack={handleBack}
+//                 onComplete={markComplete}
+//                 traveler={formData[currentTraveller]}
+//                 setTravelerData={d=>updateTraveller(currentTraveller,d)}
+//                 travelerIndex={currentTraveller}
+//                 totalTravelers={travelerCount}
+//                 openPayment={openPayment}
+//               />
+//             </>
+//           ) : activeSection < 6 ? (
+//             /* steps 4-5 : single copy */
+//             <SectionCard
+//               sectionIndex={activeSection}
+//               onNext={handleNext}
+//               onBack={handleBack}
+//               onComplete={markComplete}
+//               traveler={formData[0]}
+//               setTravelerData={d=>updateTraveller(0,d)}
+//               travelerIndex={0}
+//               totalTravelers={travelerCount}
+//               openPayment={openPayment}
+//             />
+//           ) : (
+//             /* step 6 – payment */
+//             submitted && paymentInfo && (
+//               <PaymentSection
+//                 selectedPlan={selectedPlan}
+//                 travelerCount={travelerCount}
+//                 onPayment={openPayment}
+//               />
+//             )
+//           )}
+//         </div>
+
+//         {/* pricing sidebar */}
+//         <div className="md:col-span-1 sticky top-20">
+//           <PricingSidebar
+//             variant="apply"
+//             selectedPlan={selectedPlan}
+//             travelerCount={travelerCount}
+//             onCountChange={handleTravellerChange}
+//           />
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
+
+// /* ───────────────── Razorpay helper with redirect ───────────────── */
+// declare global { interface Window { Razorpay?: any } }
+
+// async function loadAndOpenRazorpay(opts: {
+//   amount: number
+//   email: string
+//   contact: string
+//   sessionId: string
+//   description: string
+// }) {
+//   if (typeof window === 'undefined') return
+
+//   if (!window.Razorpay) {
+//     await new Promise(res => {
+//       const sc = document.createElement('script')
+//       sc.src   = 'https://checkout.razorpay.com/v1/checkout.js'
+//       sc.onload = () => res(null)
+//       document.body.appendChild(sc)
+//     })
+//   }
+
+//   new window.Razorpay({
+//     key: 'rzp_test_bBoKqWpCP41T6f',
+//     amount: opts.amount,
+//     currency: 'INR',
+//     description: opts.description,
+//     prefill: { email: opts.email, contact: opts.contact },
+
+//     /* 🔑 on success → mark paid then hard-redirect to /confirmation */
+//     handler: async (resp: { razorpay_payment_id: string }) => {
+//       await fetch('/api/mark-paid', {
+//         method : 'POST',
+//         headers: { 'Content-Type':'application/json' },
+//         body   : JSON.stringify({
+//           paymentId: resp.razorpay_payment_id,
+//           sessionId: opts.sessionId
+//         })
+//       })
+//       window.location.href = `/confirmation?id=${opts.sessionId}`
+//     }
+//   }).open()
+// }
+// src/app/apply/[country]/page.tsx better
+
+// 'use client'
+
+// import { useEffect, useState, useMemo } from 'react'
+// import { useParams, useRouter, useSearchParams } from 'next/navigation'
+// import Script from 'next/script'
+
+// import { useAuth } from '@/context/AuthContext'
+// import PricingSidebar      from '@/components/ui/pricing-sidebar'
+// import { TravelerTabs }    from '@/components/ui/traveler-tabs'
+// import { SectionSidebar }  from '@/components/ui/SectionSidebar'
+// import SectionCard         from '@/components/ui/SectionCard'
+// import { ProgressBar }     from '@/components/ui/progress-bar'
+// import { PaymentSection }  from '@/components/form-sections/PaymentSection'
+// import { toast } from 'sonner'
+
+// import { PRICE_PLANS, FEES, PlanName } from '@/config/pricing'
+
+// export default function ApplyFormPage() {
+//   const router      = useRouter()
+//   const { country } = useParams<{ country: string }>()
+//   const { session } = useAuth()
+//   const searchParams = useSearchParams()
+
+//   const initialTrav = Number(searchParams.get('travellers')) || 1
+//   const initialPlan = (searchParams.get('plan') as PlanName) || 'Docs on Call'
+
+//   const [travelerCount, setTravelerCount] = useState(initialTrav)
+//   const [selectedPlan , setSelectedPlan ] = useState<PlanName>(initialPlan)
+
+//   const [formData, setFormData] = useState<any[]>(
+//     Array(initialTrav).fill({ selectedPlan: initialPlan })
+//   )
+
+//   const [stepsByTrav, setStepsByTrav] = useState<number[][]>(
+//     Array.from({ length: initialTrav }, () => [])
+//   )
+
+//   const [globalSteps, setGlobalSteps] = useState<number[]>([])
+
+//   const [activeSection   , setActiveSection   ] = useState(0)
+//   const [currentTraveller, setCurrentTraveller] = useState(0)
+
+//   const [submitted , setSubmitted ] = useState(false)
+//   const [paymentInfo, setPaymentInfo] = useState<{
+//     selectedPlan:PlanName; sessionId:string; country:string;
+//     email:string; phone:string; pdfUrl?:string; pdfs?:string[];
+//   }|null>(null)
+
+//   const [missingTravs, setMissingTravs] = useState<number[]>([])
+
+//   useEffect(()=>{
+//     if (!session) router.push(`/auth?next=/apply/${country}`)
+//   },[session,router,country])
+
+//   useEffect(()=>{
+//     const p = formData[0]?.selectedPlan as PlanName | undefined
+//     if (p && p !== selectedPlan) setSelectedPlan(p)
+//   }, [formData, selectedPlan])
+
+//   const updateTraveller = (idx:number,d:any) => {
+//     setFormData(prev => {
+//       const copy=[...prev]; copy[idx]=d; return copy
+//     })
+//     if (d.selectedPlan) setSelectedPlan(d.selectedPlan as PlanName)
+//   }
+
+//   const handleTravellerChange = (count:number) => {
+//     const delta = count - travelerCount
+//     if (delta>0){
+//       setFormData      (prev=>[...prev, ...Array(delta).fill({ selectedPlan })])
+//       setStepsByTrav   (prev=>[...prev, ...Array(delta).fill([])])
+//     } else {
+//       setFormData    (prev=>prev.slice(0,count))
+//       setStepsByTrav (prev=>prev.slice(0,count))
+//     }
+//     setTravelerCount(count)
+//     if (currentTraveller >= count) setCurrentTraveller(Math.max(0,count-1))
+//   }
+
+//   const markComplete = (sectionIdx:number) => {
+//     if (sectionIdx < 4){
+//       setStepsByTrav(prev=>{
+//         const copy=[...prev]
+//         const s = new Set(copy[currentTraveller])
+//         s.add(sectionIdx)
+//         copy[currentTraveller] = [...s]
+//         return copy
+//       })
+//     } else {
+//       setGlobalSteps(prev => (
+//         prev.includes(sectionIdx) ? prev : [...prev, sectionIdx]
+//       ))
+//     }
+//   }
+
+//   const allTravellersDone = useMemo(
+//     ()=> stepsByTrav.every(steps => [0,1,2,3].every(s => steps.includes(s))),
+//     [stepsByTrav]
+//   )
+
+//   const handleNext = async() => {
+//     if (activeSection < 3){
+//       setActiveSection(s=>s+1); return
+//     }
+
+//     if (activeSection === 3){
+//       const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'country', 'gender', 'maritalStatus', 'dob', 'passport', 'occupation', 'travelPurpose', 'arrival', 'departure'];
+//       const incompleteTravelers = formData.map((trav, i) => {
+//         const isComplete = requiredFields.every(field => trav[field] && trav[field].toString().trim() !== '');
+//         return isComplete ? null : i + 1;
+//       }).filter(Boolean) as number[];
+
+//       if (incompleteTravelers.length > 0) {
+//         setMissingTravs(incompleteTravelers);
+//         setCurrentTraveller(incompleteTravelers[0] - 1);
+//         toast.error(`Please complete all fields for traveler(s): ${incompleteTravelers.join(', ')}`);
+//         return;
+//       }
+
+//       setMissingTravs([])
+//       setActiveSection(4)
+//       return
+//     }
+
+//     if (activeSection === 4){
+//       if (!submitted) await submitToBackend()
+//       setActiveSection(5)
+//       return
+//     }
+
+//     if (activeSection < 6) setActiveSection(s=>s+1)
+//   }
+
+//   const handleBack = () => { if (activeSection>0) setActiveSection(s=>s-1) }
+
+//   const submitToBackend = async() => {
+//     if (submitted) return
+//     const payload = {
+//       travelers       : formData,
+//       selectedPlan,
+//       appointmentDate    : formData[0]?.appointmentDate,
+//       appointmentTime    : formData[0]?.appointmentTime,
+//       appointmentAddress : formData[0]?.appointmentAddress,
+//       appointmentPincode : formData[0]?.appointmentPincode,
+//       appointmentContact : formData[0]?.appointmentContact,
+//       email : formData[0]?.email, phone:formData[0]?.phone,
+//       country
+//     }
+//     const res = await fetch('/api/submit-form',{
+//       method:'POST',
+//       headers:{'Content-Type':'application/json'},
+//       body:JSON.stringify(payload)
+//     })
+//     const r = await res.json()
+//     if (r.success && r.sessionId){
+//       setSubmitted(true)
+//       setPaymentInfo({...payload, sessionId:r.sessionId,
+//                       pdfUrl:r.pdfUrl, pdfs:r.pdfs??[]})
+//     }else{ alert(r.error || 'Submission failed') }
+//   }
+
+//   async function openPayment(){
+//     if (!paymentInfo) return
+//     const { sessionId,email,phone } = paymentInfo
+//     const total =
+//       PRICE_PLANS[selectedPlan]*travelerCount +
+//       FEES.appointment*travelerCount +
+//       FEES.service
+//     await loadAndOpenRazorpay({
+//       amount: total*100,
+//       email, contact: phone,
+//       sessionId,
+//       description:`${selectedPlan} plan for ${travelerCount} traveller(s)`
+//     })
+//   }
+
+//   if (!session) return <p className="py-20 text-center">Redirecting…</p>
+
+//   return (
+//     <>
+//       <Script src="https://checkout.razorpay.com/v1/checkout.js"
+//               strategy="beforeInteractive"/>
+
+//       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6">
+//         <div className="md:col-span-1">
+//           <SectionSidebar
+//             currentStep={activeSection}
+//             completedSteps={activeSection < 4 ? stepsByTrav[currentTraveller] : globalSteps}
+//             onNavigate={setActiveSection}
+//             isStepDisabled={(step) => {
+//               if (step < 4) {
+//                 return step > 0 && !stepsByTrav[currentTraveller].includes(step - 1);
+//               }
+//               return !allTravellersDone || (step > 4 && !globalSteps.includes(step - 1));
+//             }}
+//           />
+//         </div>
+
+//         <div className="md:col-span-3 space-y-4">
+//           {missingTravs.length>0 && activeSection>=4 && (
+//             <div className="p-4 bg-red-100 text-red-700 rounded">
+//               Please finish traveller{missingTravs.length>1?'s':''}: {missingTravs.join(', ')}
+//             </div>
+//           )}
+
+//           {activeSection < 4 ? (
+//             <>
+//               <ProgressBar current={currentTraveller} total={travelerCount}/>
+//               <TravelerTabs
+//                 travelerCount={travelerCount}
+//                 travelerData={formData}
+//                 updateTraveler={updateTraveller}
+//                 currentTraveler={currentTraveller}
+//                 setCurrentTraveler={setCurrentTraveller}
+//               />
+//               <SectionCard
+//                 sectionIndex={activeSection}
+//                 onNext={handleNext}
+//                 onBack={handleBack}
+//                 onComplete={markComplete}
+//                 traveler={formData[currentTraveller]}
+//                 setTravelerData={d=>updateTraveller(currentTraveller,d)}
+//                 travelerIndex={currentTraveller}
+//                 totalTravelers={travelerCount}
+//                 openPayment={openPayment}
+//               />
+//             </>
+//           ) : activeSection < 6 ? (
+//             <SectionCard
+//               sectionIndex={activeSection}
+//               onNext={handleNext}
+//               onBack={handleBack}
+//               onComplete={markComplete}
+//               traveler={formData[0]}
+//               setTravelerData={d=>updateTraveller(0,d)}
+//               travelerIndex={0}
+//               totalTravelers={travelerCount}
+//               openPayment={openPayment}
+//             />
+//           ) : (
+//             submitted && paymentInfo && (
+//               <PaymentSection
+//                 selectedPlan={selectedPlan}
+//                 travelerCount={travelerCount}
+//                 onPayment={openPayment}
+//               />
+//             )
+//           )}
+//         </div>
+
+//         <div className="md:col-span-1 sticky top-20">
+//           <PricingSidebar
+//             variant="apply"
+//             selectedPlan={selectedPlan}
+//             travelerCount={travelerCount}
+//             onCountChange={handleTravellerChange}
+//           />
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
+
+// declare global{ interface Window{ Razorpay?:any } }
+// async function loadAndOpenRazorpay(opts:any){
+//   if (typeof window==='undefined') return
+//   if (!window.Razorpay){
+//     await new Promise(res=>{
+//       const sc=document.createElement('script')
+//       sc.src='https://checkout.razorpay.com/v1/checkout.js'
+//       sc.onload=()=>res(null); document.body.appendChild(sc)
+//     })
+//   }
+//   new window.Razorpay({ key:'rzp_test_bBoKqWpCP41T6f', ...opts }).open()
+// }
+
+
+// src/app/apply/[country]/page.tsx
+
+// 'use client'
+
+// import { useEffect, useState, useMemo } from 'react'
+// import { useParams, useRouter, useSearchParams } from 'next/navigation'
+// import Script from 'next/script'
+
+// import { useAuth } from '@/context/AuthContext'
+// import PricingSidebar      from '@/components/ui/pricing-sidebar'
+// import { TravelerTabs }    from '@/components/ui/traveler-tabs'
+// import { SectionSidebar }  from '@/components/ui/SectionSidebar'
+// import SectionCard         from '@/components/ui/SectionCard'
+// import { ProgressBar }     from '@/components/ui/progress-bar'
+// import { PaymentSection }  from '@/components/form-sections/PaymentSection'
+// import { toast } from 'sonner'
+
+// import { PRICE_PLANS, FEES, PlanName } from '@/config/pricing'
+
+// export default function ApplyFormPage() {
+//   const router      = useRouter()
+//   const { country } = useParams<{ country: string }>()
+//   const { session } = useAuth()
+//   const searchParams = useSearchParams()
+
+//   const initialTrav = Number(searchParams.get('travellers')) || 1
+//   const initialPlan = (searchParams.get('plan') as PlanName) || 'Docs on Call'
+
+//   const [travelerCount, setTravelerCount] = useState(initialTrav)
+//   const [selectedPlan , setSelectedPlan ] = useState<PlanName>(initialPlan)
+
+//   const [formData, setFormData] = useState<any[]>(
+//     Array(initialTrav).fill({ selectedPlan: initialPlan })
+//   )
+
+//   const [stepsByTrav, setStepsByTrav] = useState<number[][]>(
+//     Array.from({ length: initialTrav }, () => [])
+//   )
+
+//   const [globalSteps, setGlobalSteps] = useState<number[]>([])
+
+//   const [activeSection   , setActiveSection   ] = useState(0)
+//   const [currentTraveller, setCurrentTraveller] = useState(0)
+
+//   const [submitted , setSubmitted ] = useState(false)
+//   const [paymentInfo, setPaymentInfo] = useState<{
+//     selectedPlan:PlanName; sessionId:string; country:string;
+//     email:string; phone:string; pdfUrl?:string; pdfs?:string[];
+//   }|null>(null)
+
+//   const [missingTravs, setMissingTravs] = useState<number[]>([])
+
+//   useEffect(()=>{
+//     if (!session) router.push(`/auth?next=/apply/${country}`)
+//   },[session,router,country])
+
+//   useEffect(()=>{
+//     const p = formData[0]?.selectedPlan as PlanName | undefined
+//     if (p && p !== selectedPlan) setSelectedPlan(p)
+//   }, [formData, selectedPlan])
+  
+//   useEffect(() => {
+//     setTravelerCount(initialTrav);
+//     setSelectedPlan(initialPlan);
+//     setFormData(Array(initialTrav).fill({ selectedPlan: initialPlan }));
+//     setStepsByTrav(Array.from({ length: initialTrav }, () => []));
+//   }, [initialTrav, initialPlan]);
+
+
+//   const updateTraveller = (idx:number,d:any) => {
+//     setFormData(prev => {
+//       const copy=[...prev]; copy[idx]=d; return copy
+//     })
+//     if (d.selectedPlan) setSelectedPlan(d.selectedPlan as PlanName)
+//   }
+
+//   const handleTravellerChange = (count:number) => {
+//     const delta = count - travelerCount
+//     if (delta>0){
+//       setFormData      (prev=>[...prev, ...Array(delta).fill({ selectedPlan })])
+//       setStepsByTrav   (prev=>[...prev, ...Array(delta).fill([])])
+//     } else {
+//       setFormData    (prev=>prev.slice(0,count))
+//       setStepsByTrav (prev=>prev.slice(0,count))
+//     }
+//     setTravelerCount(count)
+//     if (currentTraveller >= count) setCurrentTraveller(Math.max(0,count-1))
+//   }
+
+//   const markComplete = (sectionIdx:number) => {
+//     if (sectionIdx < 4){
+//       setStepsByTrav(prev=>{
+//         const copy=[...prev]
+//         const s = new Set(copy[currentTraveller])
+//         s.add(sectionIdx)
+//         copy[currentTraveller] = [...s]
+//         return copy
+//       })
+//     } else {
+//       setGlobalSteps(prev => (
+//         prev.includes(sectionIdx) ? prev : [...prev, sectionIdx]
+//       ))
+//     }
+//   }
+
+//   const allTravellersDone = useMemo(
+//     ()=> stepsByTrav.every(steps => [0,1,2,3].every(s => steps.includes(s))),
+//     [stepsByTrav]
+//   )
+
+//   const handleNext = async() => {
+//     markComplete(activeSection);
+    
+//     if (activeSection < 3){
+//       setActiveSection(s=>s+1); return
+//     }
+
+//     if (activeSection === 3) {
+//       if (currentTraveller < travelerCount - 1) {
+//           setCurrentTraveller(currentTraveller + 1);
+//           setActiveSection(0);
+//           toast.info(`Please fill in the details for Traveler ${currentTraveller + 2}`);
+//           return;
+//       }
+
+//       const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'gender', 'maritalStatus', 'dob', 'passport', 'occupation', 'travelPurpose', 'arrival', 'departure'];
+//       const incompleteTravelers = formData.map((trav, i) => {
+//         const isComplete = requiredFields.every(field => trav[field] && trav[field].toString().trim() !== '');
+//         return isComplete ? null : i + 1;
+//       }).filter(Boolean) as number[];
+
+//       if (incompleteTravelers.length > 0) {
+//         setMissingTravs(incompleteTravelers);
+//         setCurrentTraveller(incompleteTravelers[0] - 1);
+//         toast.error(`Please complete all fields for traveler(s): ${incompleteTravelers.join(', ')}`);
+//         return;
+//       }
+
+//       setMissingTravs([])
+//       setActiveSection(4)
+//       return
+//     }
+
+//     if (activeSection === 4){
+//       if (!submitted) await submitToBackend()
+//       setActiveSection(5)
+//       return
+//     }
+
+//     if (activeSection < 6) setActiveSection(s=>s+1)
+//   }
+
+//   const handleBack = () => { if (activeSection>0) setActiveSection(s=>s-1) }
+
+//   const submitToBackend = async() => {
+//     if (submitted) return
+//     const payload = {
+//       travelers       : formData,
+//       selectedPlan,
+//       appointmentDate    : formData[0]?.appointmentDate,
+//       appointmentTime    : formData[0]?.appointmentTime,
+//       appointmentAddress : formData[0]?.appointmentAddress,
+//       appointmentPincode : formData[0]?.appointmentPincode,
+//       appointmentContact : formData[0]?.appointmentContact,
+//       email : formData[0]?.email, phone:formData[0]?.phone,
+//       country
+//     }
+//     const res = await fetch('/api/submit-form',{
+//       method:'POST',
+//       headers:{'Content-Type':'application/json'},
+//       body:JSON.stringify(payload)
+//     })
+//     const r = await res.json()
+//     if (r.success && r.sessionId){
+//       setSubmitted(true)
+//       setPaymentInfo({...payload, sessionId:r.sessionId,
+//                       pdfUrl:r.pdfUrl, pdfs:r.pdfs??[]})
+//     }else{ alert(r.error || 'Submission failed') }
+//   }
+
+//   async function openPayment(){
+//     if (!paymentInfo) return
+//     const { sessionId,email,phone } = paymentInfo
+//     const total =
+//       PRICE_PLANS[selectedPlan]*travelerCount +
+//       FEES.appointment*travelerCount +
+//       FEES.service
+//     await loadAndOpenRazorpay({
+//       amount: total*100,
+//       email, contact: phone,
+//       sessionId,
+//       description:`${selectedPlan} plan for ${travelerCount} traveller(s)`
+//     })
+//   }
+
+//   if (!session) return <p className="py-20 text-center">Redirecting…</p>
+
+//   return (
+//     <>
+//       <Script src="https://checkout.razorpay.com/v1/checkout.js"
+//               strategy="beforeInteractive"/>
+
+//       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6 pb-24">
+//         <div className="md:col-span-1">
+//           <SectionSidebar
+//             currentStep={activeSection}
+//             completedSteps={activeSection < 4 ? stepsByTrav[currentTraveller] : globalSteps}
+//             onNavigate={setActiveSection}
+//             isStepDisabled={(step) => {
+//               if (step < 4) {
+//                 return step > 0 && !stepsByTrav[currentTraveller].includes(step - 1);
+//               }
+//               return !allTravellersDone || (step > 4 && !globalSteps.includes(step - 1));
+//             }}
+//           />
+//         </div>
+
+//         <div className="md:col-span-3 space-y-4">
+//           {missingTravs.length>0 && activeSection>=4 && (
+//             <div className="p-4 bg-red-100 text-red-700 rounded">
+//               Please finish traveller{missingTravs.length>1?'s':''}: {missingTravs.join(', ')}
+//             </div>
+//           )}
+
+//           {activeSection < 4 ? (
+//             <>
+//               <ProgressBar current={currentTraveller} total={travelerCount}/>
+//               <TravelerTabs
+//                 travelerCount={travelerCount}
+//                 travelerData={formData}
+//                 updateTraveler={updateTraveller}
+//                 currentTraveler={currentTraveller}
+//                 setCurrentTraveler={setCurrentTraveller}
+//               />
+//               <SectionCard
+//                 sectionIndex={activeSection}
+//                 onNext={handleNext}
+//                 onBack={handleBack}
+//                 onComplete={markComplete}
+//                 traveler={formData[currentTraveller]}
+//                 setTravelerData={d=>updateTraveller(currentTraveller,d)}
+//                 travelerIndex={currentTraveller}
+//                 totalTravelers={travelerCount}
+//                 openPayment={openPayment}
+//               />
+//             </>
+//           ) : activeSection < 6 ? (
+//             <SectionCard
+//               sectionIndex={activeSection}
+//               onNext={handleNext}
+//               onBack={handleBack}
+//               onComplete={markComplete}
+//               traveler={formData[0]}
+//               setTravelerData={d=>updateTraveller(0,d)}
+//               travelerIndex={0}
+//               totalTravelers={travelerCount}
+//               openPayment={openPayment}
+//             />
+//           ) : (
+//             submitted && paymentInfo && (
+//               <PaymentSection
+//                 selectedPlan={selectedPlan}
+//                 travelerCount={travelerCount}
+//                 onPayment={openPayment}
+//               />
+//             )
+//           )}
+//         </div>
+
+//         <div className="md:col-span-1 sticky top-20">
+//           <PricingSidebar
+//             variant="apply"
+//             selectedPlan={selectedPlan}
+//             travelerCount={travelerCount}
+//             onCountChange={handleTravellerChange}
+//           />
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
+
+// declare global{ interface Window{ Razorpay?:any } }
+// async function loadAndOpenRazorpay(opts:any){
+//   if (typeof window==='undefined') return
+//   if (!window.Razorpay){
+//     await new Promise(res=>{
+//       const sc=document.createElement('script')
+//       sc.src='https://checkout.razorpay.com/v1/checkout.js'
+//       sc.onload=()=>res(null); document.body.appendChild(sc)
+//     })
+//   }
+//   new window.Razorpay({
+//     key: 'rzp_test_bBoKqWpCP41T6f',
+//     ...opts,
+//     handler: async (response: { razorpay_payment_id: string }) => {
+//       await fetch('/api/mark-paid', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({
+//           paymentId: response.razorpay_payment_id,
+//           sessionId: opts.sessionId,
+//         }),
+//       });
+//       window.location.href = `/confirmation?id=${opts.sessionId}`;
+//     },
+//   }).open();
+// }
+
+
+// 'use client'
+
+// import { useEffect, useState, useMemo } from 'react'
+// import { useParams, useRouter, useSearchParams } from 'next/navigation'
+// import Script from 'next/script'
+
+// import { useAuth } from '@/context/AuthContext'
+// import PricingSidebar from '@/components/ui/pricing-sidebar'
+// import { TravelerTabs } from '@/components/ui/traveler-tabs'
+// import { SectionSidebar } from '@/components/ui/SectionSidebar'
+// import SectionCard from '@/components/ui/SectionCard'
+// import { ProgressBar } from '@/components/ui/progress-bar'
+// import { PaymentSection } from '@/components/form-sections/PaymentSection'
+// import { toast } from 'sonner'
+
+// import { PRICE_PLANS, FEES, PlanName } from '@/config/pricing'
+
+// export default function ApplyFormPage() {
+//     const router = useRouter()
+//     const { country } = useParams<{ country: string }>()
+//     const { session } = useAuth()
+//     const searchParams = useSearchParams()
+
+//     const initialTrav = Number(searchParams.get('travellers')) || 1
+//     const initialPlan = (searchParams.get('plan') as PlanName) || 'Docs on Call'
+
+//     const [travelerCount, setTravelerCount] = useState(initialTrav)
+//     const [selectedPlan, setSelectedPlan] = useState<PlanName>(initialPlan)
+
+//     // Ensure the country from the URL is part of the initial state
+//     const [formData, setFormData] = useState<any[]>(
+//         Array(initialTrav).fill({ selectedPlan: initialPlan, country: country })
+//     )
+
+//     const [stepsByTrav, setStepsByTrav] = useState<number[][]>(
+//         Array.from({ length: initialTrav }, () => [])
+//     )
+
+//     const [globalSteps, setGlobalSteps] = useState<number[]>([])
+
+//     const [activeSection, setActiveSection] = useState(0)
+//     const [currentTraveller, setCurrentTraveller] = useState(0)
+
+//     const [submitted, setSubmitted] = useState(false)
+//     const [paymentInfo, setPaymentInfo] = useState<{
+//         selectedPlan: PlanName; sessionId: string; country: string;
+//         email: string; phone: string; pdfUrl?: string; pdfs?: string[];
+//     }|null>(null)
+
+//     const [missingTravs, setMissingTravs] = useState<number[]>([])
+
+//     useEffect(() => {
+//         if (!session) router.push(`/auth?next=/apply/${country}`)
+//     }, [session, router, country])
+
+//     useEffect(() => {
+//         const p = formData[0]?.selectedPlan as PlanName | undefined
+//         if (p && p !== selectedPlan) setSelectedPlan(p)
+//     }, [formData, selectedPlan])
+
+//     useEffect(() => {
+//         setTravelerCount(initialTrav);
+//         setSelectedPlan(initialPlan);
+//         // Also ensure new arrays have the country pre-filled
+//         setFormData(Array(initialTrav).fill({ selectedPlan: initialPlan, country: country }));
+//         setStepsByTrav(Array.from({ length: initialTrav }, () => []));
+//     }, [initialTrav, initialPlan, country]);
+
+
+//     const updateTraveller = (idx: number, d: any) => {
+//         setFormData(prev => {
+//             const copy = [...prev];
+//             // Ensure the country slug from the URL is always present
+//             copy[idx] = { ...d, country: country };
+//             return copy
+//         })
+//         if (d.selectedPlan) setSelectedPlan(d.selectedPlan as PlanName)
+//     }
+
+//     const handleTravellerChange = (count: number) => {
+//         const delta = count - travelerCount
+//         if (delta > 0) {
+//             // Add country to new traveler objects
+//             setFormData(prev => [...prev, ...Array(delta).fill({ selectedPlan, country: country })])
+//             setStepsByTrav(prev => [...prev, ...Array(delta).fill([])])
+//         } else {
+//             setFormData(prev => prev.slice(0, count))
+//             setStepsByTrav(prev => prev.slice(0, count))
+//         }
+//         setTravelerCount(count)
+//         if (currentTraveller >= count) setCurrentTraveller(Math.max(0, count - 1))
+//     }
+
+//     const markComplete = (sectionIdx: number) => {
+//         if (sectionIdx < 4) {
+//             setStepsByTrav(prev => {
+//                 const copy = [...prev]
+//                 const s = new Set(copy[currentTraveller])
+//                 s.add(sectionIdx)
+//                 copy[currentTraveller] = [...s]
+//                 return copy
+//             })
+//         } else {
+//             setGlobalSteps(prev => (
+//                 prev.includes(sectionIdx) ? prev : [...prev, sectionIdx]
+//             ))
+//         }
+//     }
+
+//     const allTravellersDone = useMemo(
+//         () => stepsByTrav.every(steps => [0, 1, 2, 3].every(s => steps.includes(s))),
+//         [stepsByTrav]
+//     )
+
+//     const handleNext = async () => {
+//         markComplete(activeSection);
+
+//         if (activeSection < 3) {
+//             setActiveSection(s => s + 1); return
+//         }
+
+//         if (activeSection === 3) {
+//             if (currentTraveller < travelerCount - 1) {
+//                 setCurrentTraveller(currentTraveller + 1);
+//                 setActiveSection(0);
+//                 toast.info(`Please fill in the details for Traveler ${currentTraveller + 2}`);
+//                 return;
+//             }
+
+//             const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'country', 'gender', 'maritalStatus', 'dob', 'passport', 'occupation', 'travelPurpose', 'arrival', 'departure'];
+//             const incompleteTravelers = formData.map((trav, i) => {
+//                 const isComplete = requiredFields.every(field => trav[field] && trav[field].toString().trim() !== '');
+//                 return isComplete ? null : i + 1;
+//             }).filter(Boolean) as number[];
+
+//             if (incompleteTravelers.length > 0) {
+//                 setMissingTravs(incompleteTravelers);
+//                 setCurrentTraveller(incompleteTravelers[0] - 1);
+//                 toast.error(`Please complete all fields for traveler(s): ${incompleteTravelers.join(', ')}`);
+//                 return;
+//             }
+
+//             setMissingTravs([])
+//             setActiveSection(4)
+//             return
+//         }
+
+//         if (activeSection === 4) {
+//             if (!submitted) await submitToBackend()
+//             setActiveSection(5)
+//             return
+//         }
+
+//         if (activeSection < 6) setActiveSection(s => s + 1)
+//     }
+
+//     const handleBack = () => { if (activeSection > 0) setActiveSection(s => s - 1) }
+
+//     const submitToBackend = async () => {
+//         if (submitted) return
+//         const payload = {
+//             travelers: formData,
+//             selectedPlan,
+//             appointmentDate: formData[0]?.appointmentDate,
+//             appointmentTime: formData[0]?.appointmentTime,
+//             appointmentAddress: formData[0]?.appointmentAddress,
+//             appointmentPincode: formData[0]?.appointmentPincode,
+//             appointmentContact: formData[0]?.appointmentContact,
+//             email: formData[0]?.email, phone: formData[0]?.phone,
+//             country
+//         }
+//         const res = await fetch('/api/submit-form', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(payload)
+//         })
+//         const r = await res.json()
+//         if (r.success && r.sessionId) {
+//             setSubmitted(true)
+//             setPaymentInfo({
+//                 ...payload, sessionId: r.sessionId,
+//                 pdfUrl: r.pdfUrl, pdfs: r.pdfs ?? []
+//             })
+//         } else { alert(r.error || 'Submission failed') }
+//     }
+
+//     async function openPayment() {
+//         if (!paymentInfo) return
+//         const { sessionId, email, phone } = paymentInfo
+//         const total =
+//             PRICE_PLANS[selectedPlan] * travelerCount +
+//             FEES.appointment * travelerCount +
+//             FEES.service
+//         await loadAndOpenRazorpay({
+//             amount: total * 100,
+//             email, contact: phone,
+//             sessionId,
+//             description: `${selectedPlan} plan for ${travelerCount} traveller(s)`
+//         })
+//     }
+
+//     if (!session) return <p className="py-20 text-center">Redirecting…</p>
+
+//     return (
+//         <>
+//             <Script src="https://checkout.razorpay.com/v1/checkout.js"
+//                 strategy="beforeInteractive" />
+
+//             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6 pb-24">
+//                 <div className="md:col-span-1">
+//                     <SectionSidebar
+//                         currentStep={activeSection}
+//                         completedSteps={activeSection < 4 ? stepsByTrav[currentTraveller] : globalSteps}
+//                         onNavigate={setActiveSection}
+//                         isStepDisabled={(step) => {
+//                             if (step < 4) {
+//                                 return step > 0 && !stepsByTrav[currentTraveller].includes(step - 1);
+//                             }
+//                             return !allTravellersDone || (step > 4 && !globalSteps.includes(step - 1));
+//                         }}
+//                     />
+//                 </div>
+
+//                 <div className="md:col-span-3 space-y-4">
+//                     {missingTravs.length > 0 && activeSection >= 4 && (
+//                         <div className="p-4 bg-red-100 text-red-700 rounded">
+//                             Please finish traveller{missingTravs.length > 1 ? 's' : ''}: {missingTravs.join(', ')}
+//                         </div>
+//                     )}
+
+//                     {activeSection < 4 ? (
+//                         <>
+//                             <ProgressBar current={currentTraveller} total={travelerCount} />
+//                             <TravelerTabs
+//                                 travelerCount={travelerCount}
+//                                 travelerData={formData}
+//                                 updateTraveler={updateTraveller}
+//                                 currentTraveler={currentTraveller}
+//                                 setCurrentTraveler={setCurrentTraveller}
+//                             />
+//                             <SectionCard
+//                                 sectionIndex={activeSection}
+//                                 onNext={handleNext}
+//                                 onBack={handleBack}
+//                                 onComplete={markComplete}
+//                                 traveler={formData[currentTraveller]}
+//                                 setTravelerData={d => updateTraveller(currentTraveller, d)}
+//                                 travelerIndex={currentTraveller}
+//                                 totalTravelers={travelerCount}
+//                                 openPayment={openPayment}
+//                             />
+//                         </>
+//                     ) : activeSection < 6 ? (
+//                         <SectionCard
+//                             sectionIndex={activeSection}
+//                             onNext={handleNext}
+//                             onBack={handleBack}
+//                             onComplete={markComplete}
+//                             traveler={formData[0]}
+//                             setTravelerData={d => updateTraveller(0, d)}
+//                             travelerIndex={0}
+//                             totalTravelers={travelerCount}
+//                             openPayment={openPayment}
+//                         />
+//                     ) : (
+//                         submitted && paymentInfo && (
+//                             <PaymentSection
+//                                 selectedPlan={selectedPlan}
+//                                 travelerCount={travelerCount}
+//                                 onPayment={openPayment}
+//                             />
+//                         )
+//                     )}
+//                 </div>
+
+//                 <div className="md:col-span-1 sticky top-20">
+//                     <PricingSidebar
+//                         variant="apply"
+//                         selectedPlan={selectedPlan}
+//                         travelerCount={travelerCount}
+//                         onCountChange={handleTravellerChange}
+//                     />
+//                 </div>
+//             </div>
+//         </>
+//     )
+// }
+
+// declare global { interface Window { Razorpay?: any } }
+// async function loadAndOpenRazorpay(opts: any) {
+//     if (typeof window === 'undefined') return
+//     if (!window.Razorpay) {
+//         await new Promise(res => {
+//             const sc = document.createElement('script')
+//             sc.src = 'https://checkout.razorpay.com/v1/checkout.js'
+//             sc.onload = () => res(null); document.body.appendChild(sc)
+//         })
+//     }
+//     new window.Razorpay({
+//         key: 'rzp_test_bBoKqWpCP41T6f',
+//         ...opts,
+//         handler: async (response: { razorpay_payment_id: string }) => {
+//             await fetch('/api/mark-paid', {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({
+//                     paymentId: response.razorpay_payment_id,
+//                     sessionId: opts.sessionId,
+//                 }),
+//             });
+//             window.location.href = `/confirmation?id=${opts.sessionId}`;
+//         },
+//     }).open();
+// }
+
+
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import Script from 'next/script'
+import { toast } from 'sonner'
 
 import { useAuth } from '@/context/AuthContext'
-import PricingSidebar      from '@/components/ui/pricing-sidebar'
-import { TravelerTabs }    from '@/components/ui/traveler-tabs'
-import { SectionSidebar }  from '@/components/ui/SectionSidebar'
-import SectionCard         from '@/components/ui/SectionCard'
-import { ProgressBar }     from '@/components/ui/progress-bar'
-import { PaymentSection }  from '@/components/form-sections/PaymentSection'
+import PricingSidebar from '@/components/ui/pricing-sidebar'
+import { TravelerTabs } from '@/components/ui/traveler-tabs'
+import { SectionSidebar } from '@/components/ui/SectionSidebar'
+import SectionCard from '@/components/ui/SectionCard'
+import { ProgressBar } from '@/components/ui/progress-bar'
+import { PaymentSection } from '@/components/form-sections/PaymentSection'
 
-import { PRICE_PLANS, FEES, PlanName } from '@/config/pricing'
+import { PRICING, calcPrice, PlanName } from '@/config/pricing'
 
+/* ────────────────────────────────────────────────────────── */
 export default function ApplyFormPage() {
-  const router      = useRouter()
-  const { country } = useParams<{ country: string }>()
-  const { session } = useAuth()
+  const router        = useRouter()
+  const { country }   = useParams<{ country: string }>()
+  const { session }   = useAuth()
+  const searchParams  = useSearchParams()
 
-  /* ───────────────── preload values from /visa page ───────────────── */
-  const qs          = new URLSearchParams(
-    typeof window !== 'undefined' ? window.location.search : ''
-  )
-  const initialTrav = Number(qs.get('travellers')) || 1
-  const initialPlan = (qs.get('plan') as PlanName) || 'Docs on Call'
+  const initialTrav   = Number(searchParams.get('travellers')) || 1
+  const initialPlan   = (searchParams.get('plan') as PlanName) || 'Docs on Call'
+  const promoCodeQS   = searchParams.get('promo') ?? null
 
-  /* ─────────────────────────── state ──────────────────────────────── */
+  /* state ---------------------------------------------------- */
   const [travelerCount, setTravelerCount] = useState(initialTrav)
   const [selectedPlan , setSelectedPlan ] = useState<PlanName>(initialPlan)
 
-  /* raw form data per traveller */
   const [formData, setFormData] = useState<any[]>(
-    Array(initialTrav).fill({ selectedPlan: initialPlan })
+    Array(initialTrav).fill({ selectedPlan: initialPlan, country })
   )
 
-  /* which traveller-scoped sections (0-3) each traveller has finished */
   const [stepsByTrav, setStepsByTrav] = useState<number[][]>(
     Array.from({ length: initialTrav }, () => [])
   )
-
-  /* which global sections (4-5) are done (only one copy each) */
   const [globalSteps, setGlobalSteps] = useState<number[]>([])
-
-  const [activeSection   , setActiveSection   ] = useState(0) // 0-6
-  const [currentTraveller, setCurrentTraveller] = useState(0) // tab index
+  const [activeSection   , setActiveSection   ] = useState(0)
+  const [currentTraveller, setCurrentTraveller] = useState(0)
 
   const [submitted , setSubmitted ] = useState(false)
   const [paymentInfo, setPaymentInfo] = useState<{
-    selectedPlan:PlanName; sessionId:string; country:string;
-    email:string; phone:string; pdfUrl?:string; pdfs?:string[];
+    selectedPlan: PlanName; sessionId: string; country: string;
+    email: string; phone: string; pdfUrl?: string; pdfs?: string[];
   }|null>(null)
 
-  const [missingTravs, setMissingTravs] = useState<number[]>([]) // 1-based list
+  const [missingTravs, setMissingTravs] = useState<number[]>([])
 
-  /* ─────────────── auth gate ─────────────── */
-  useEffect(()=>{
+  /* auth redirect ------------------------------------------- */
+  useEffect(() => {
     if (!session) router.push(`/auth?next=/apply/${country}`)
-  },[session,router,country])
+  }, [session, router, country])
 
-  /* keep PricingSidebar plan in-sync with first traveller */
-  useEffect(()=>{
+  /* keep sidebar ↔ first traveller in sync ------------------ */
+  useEffect(() => {
     const p = formData[0]?.selectedPlan as PlanName | undefined
     if (p && p !== selectedPlan) setSelectedPlan(p)
   }, [formData, selectedPlan])
 
-  /* ─────────────── helpers ─────────────── */
-  const updateTraveller = (idx:number,d:any) => {
-    setFormData(prev=>{
-      const copy=[...prev]; copy[idx]=d; return copy
+  /* handle traveller counter change ------------------------- */
+  const handleTravellerChange = (count: number) => {
+    const delta = count - travelerCount
+    if (delta > 0) {
+      setFormData(prev => [
+        ...prev,
+        ...Array(delta).fill({ selectedPlan, country }),
+      ])
+      setStepsByTrav(prev => [...prev, ...Array(delta).fill([])])
+    } else {
+      setFormData(prev => prev.slice(0, count))
+      setStepsByTrav(prev => prev.slice(0, count))
+    }
+    setTravelerCount(count)
+    if (currentTraveller >= count) setCurrentTraveller(Math.max(0, count - 1))
+  }
+
+  /* per-traveller update ------------------------------------ */
+  const updateTraveller = (idx: number, d: any) => {
+    setFormData(prev => {
+      const copy = [...prev]
+      copy[idx] = { ...d, country }
+      return copy
     })
     if (d.selectedPlan) setSelectedPlan(d.selectedPlan as PlanName)
   }
 
-  const handleTravellerChange = (count:number) => {
-    const delta = count - travelerCount
-    if (delta>0){
-      setFormData      (prev=>[...prev, ...Array(delta).fill({ selectedPlan })])
-      setStepsByTrav   (prev=>[...prev, ...Array(delta).fill([])])
-    }else{
-      setFormData    (prev=>prev.slice(0,count))
-      setStepsByTrav (prev=>prev.slice(0,count))
-    }
-    setTravelerCount(count)
-    if (currentTraveller >= count) setCurrentTraveller(Math.max(0,count-1))
-  }
-
-  /* mark section complete */
-  const markComplete = (sectionIdx:number) => {
-    if (sectionIdx < 4){                      // traveller-specific
-      setStepsByTrav(prev=>{
-        const copy=[...prev]
-        const s=new Set(copy[currentTraveller]); s.add(sectionIdx)
-        copy[currentTraveller]=[...s]; return copy
+  /* completion helpers -------------------------------------- */
+  const markComplete = (sectionIdx: number) => {
+    if (sectionIdx < 4) {
+      setStepsByTrav(prev => {
+        const copy = [...prev]
+        copy[currentTraveller] = [...new Set([...copy[currentTraveller], sectionIdx])]
+        return copy
       })
-    }else{                                    // global (4-5)
-      setGlobalSteps(prev=>(
-        prev.includes(sectionIdx) ? prev : [...prev,sectionIdx]
-      ))
+    } else {
+      setGlobalSteps(prev => (prev.includes(sectionIdx) ? prev : [...prev, sectionIdx]))
     }
   }
 
-  /* every traveller finished with 0-3? */
   const allTravellersDone = useMemo(
-    ()=> stepsByTrav.every(st => [0,1,2,3].every(x=>st.includes(x))),
+    () => stepsByTrav.every(s => [0, 1, 2, 3].every(x => s.includes(x))),
     [stepsByTrav]
   )
 
-  /* ─────────────── navigation ─────────────── */
-  const handleNext = async() => {
-    /* 0-2 simply advance */
-    if (activeSection < 3){ setActiveSection(s=>s+1); return }
+  /* next / back navigation ---------------------------------- */
+  const handleNext = async () => {
+    markComplete(activeSection)
 
-    /* leaving TravellerInfo (section-3) → require all travellers done */
-    if (activeSection === 3){
-      if (!allTravellersDone){
-        const incomplete = stepsByTrav
-          .map((s,i)=> [0,1,2,3].every(x=>s.includes(x)) ? null : i+1)
-          .filter(Boolean) as number[]
-        setMissingTravs(incomplete)
-        setCurrentTraveller(incomplete[0]-1)
-        alert(`Please finish traveller${incomplete.length>1?'s':''}: ${incomplete.join(', ')}`)
+    /* per-traveller sections (0-3) */
+    if (activeSection < 3) { setActiveSection(s => s + 1); return }
+
+    /* last per-traveller section finished → move to next traveller */
+    if (activeSection === 3) {
+      if (currentTraveller < travelerCount - 1) {
+        setCurrentTraveller(currentTraveller + 1)
+        setActiveSection(0)
+        toast.info(`Please fill in details for traveller ${currentTraveller + 2}`)
         return
       }
+
+      /* validate completeness (simple presence check) ---------- */
+      const required = [
+        'firstName','lastName','email','phone','country',
+        'gender','maritalStatus','dob','passport',
+        'occupation','travelPurpose','arrival','departure',
+      ]
+      const incomplete = formData
+        .map((t,i)=> required.every(f=>t[f]) ? null : i+1)
+        .filter(Boolean) as number[]
+
+      if (incomplete.length) {
+        setMissingTravs(incomplete)
+        setCurrentTraveller(incomplete[0]-1)
+        toast.error(`Please complete traveller${incomplete.length>1?'s':''}: ${incomplete.join(', ')}`)
+        return
+      }
+
       setMissingTravs([])
-      setActiveSection(4)          // open Plan Selection
+      setActiveSection(4)
       return
     }
 
-    /* Plan Selection (4) → submit once then to next */
-    if (activeSection === 4){
+    /* global “Plan & Fees” (4) → submit once ------------------ */
+    if (activeSection === 4) {
       if (!submitted) await submitToBackend()
       setActiveSection(5)
       return
     }
 
-    /* 5 → 6 or done */
-    if (activeSection < 6) setActiveSection(s=>s+1)
+    /* Appointment / Payment sections ------------------------- */
+    if (activeSection < 6) setActiveSection(s => s + 1)
   }
 
-  const handleBack = () => { if (activeSection>0) setActiveSection(s=>s-1) }
+  const handleBack = () => { if (activeSection > 0) setActiveSection(s => s - 1) }
 
-  /* ─────────────── API submit ─────────────── */
-  const submitToBackend = async() => {
+  /* API submit ---------------------------------------------- */
+  const submitToBackend = async () => {
     if (submitted) return
     const payload = {
-      travelers       : formData,
+      travelers : formData,
       selectedPlan,
       appointmentDate    : formData[0]?.appointmentDate,
       appointmentTime    : formData[0]?.appointmentTime,
       appointmentAddress : formData[0]?.appointmentAddress,
       appointmentPincode : formData[0]?.appointmentPincode,
       appointmentContact : formData[0]?.appointmentContact,
-      email : formData[0]?.email, phone:formData[0]?.phone,
-      country
+      email : formData[0]?.email,  phone: formData[0]?.phone,
+      country,
+      promoCode: promoCodeQS,
     }
-    const res = await fetch('/api/submit-form',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload)
+    const res = await fetch('/api/submit-form', {
+      method : 'POST',
+      headers: { 'Content-Type':'application/json' },
+      body   : JSON.stringify(payload),
     })
     const r = await res.json()
-    if (r.success && r.sessionId){
+    if (r.success && r.sessionId) {
       setSubmitted(true)
-      setPaymentInfo({...payload, sessionId:r.sessionId,
-                      pdfUrl:r.pdfUrl, pdfs:r.pdfs??[]})
-    }else{ alert(r.error || 'Submission failed') }
+      setPaymentInfo({ ...payload, sessionId: r.sessionId,
+                       pdfUrl: r.pdfUrl, pdfs: r.pdfs ?? [] })
+    } else {
+      alert(r.error || 'Submission failed')
+    }
   }
 
-  /* ─────────────── payment ─────────────── */
-  async function openPayment(){
+  /* open Razorpay checkout ---------------------------------- */
+  async function openPayment() {
     if (!paymentInfo) return
-    const { sessionId,email,phone } = paymentInfo
-    const total =
-      PRICE_PLANS[selectedPlan]*travelerCount +
-      FEES.appointment*travelerCount +
-      FEES.service
+    const { sessionId, email, phone } = paymentInfo
+
+    const { total } = calcPrice({
+      plan: selectedPlan,
+      travellers: travelerCount,
+      promoCode : promoCodeQS,
+    })
+
     await loadAndOpenRazorpay({
-      amount: total*100,
+      amount      : total * 100,          /* paise */
       email, contact: phone,
       sessionId,
-      description:`${selectedPlan} plan for ${travelerCount} traveller(s)`
+      description : `${selectedPlan} plan for ${travelerCount} traveller(s)`,
     })
   }
 
-  /* ─────────────── sidebar helpers ─────────────── */
-  const sidebarSteps = useMemo(
-    ()=> Array.from(new Set([
-      ...stepsByTrav[currentTraveller],   // traveller progress
-      ...globalSteps                      // plus global progress
-    ])),
-    [stepsByTrav, currentTraveller, globalSteps]
-  )
-
-  const isStepDisabled = (step:number) => {
-    if (step < 4){
-      if (step === 0) return false
-      return !stepsByTrav[currentTraveller].includes(step-1)
-    }
-    if (!allTravellersDone) return true          // lock 4-5 until ready
-    if (step === 4) return false
-    return !globalSteps.includes(step-1)
-  }
-
-  /* ─────────────── render ─────────────── */
+  /* render --------------------------------------------------- */
   if (!session) return <p className="py-20 text-center">Redirecting…</p>
 
   return (
     <>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js"
-              strategy="beforeInteractive"/>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="beforeInteractive"/>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6">
-
-        {/* step list */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6 pb-24">
+        {/* steps list */}
         <div className="md:col-span-1">
           <SectionSidebar
             currentStep={activeSection}
-            completedSteps={sidebarSteps}
+            completedSteps={activeSection < 4
+              ? stepsByTrav[currentTraveller]
+              : globalSteps}
             onNavigate={setActiveSection}
-            isStepDisabled={isStepDisabled}
+            isStepDisabled={step => {
+              if (step < 4)
+                return step > 0 && !stepsByTrav[currentTraveller].includes(step - 1)
+              return !allTravellersDone || (step > 4 && !globalSteps.includes(step - 1))
+            }}
           />
         </div>
 
         {/* wizard body */}
         <div className="md:col-span-3 space-y-4">
-          {missingTravs.length>0 && activeSection>=4 && (
+          {missingTravs.length > 0 && activeSection >= 4 && (
             <div className="p-4 bg-red-100 text-red-700 rounded">
               Please finish traveller{missingTravs.length>1?'s':''}: {missingTravs.join(', ')}
             </div>
           )}
 
-          {/* steps 0-3 : per traveller */}
           {activeSection < 4 ? (
             <>
-              <ProgressBar current={currentTraveller} total={travelerCount}/>
+              <ProgressBar current={currentTraveller} total={travelerCount} />
               <TravelerTabs
                 travelerCount={travelerCount}
                 travelerData={formData}
@@ -2809,44 +4056,44 @@ export default function ApplyFormPage() {
                 onBack={handleBack}
                 onComplete={markComplete}
                 traveler={formData[currentTraveller]}
-                setTravelerData={d=>updateTraveller(currentTraveller,d)}
+                setTravelerData={d => updateTraveller(currentTraveller, d)}
                 travelerIndex={currentTraveller}
                 totalTravelers={travelerCount}
                 openPayment={openPayment}
               />
             </>
           ) : activeSection < 6 ? (
-            /* steps 4-5 : single copy */
             <SectionCard
               sectionIndex={activeSection}
               onNext={handleNext}
               onBack={handleBack}
               onComplete={markComplete}
               traveler={formData[0]}
-              setTravelerData={d=>updateTraveller(0,d)}
+              setTravelerData={d => updateTraveller(0, d)}
               travelerIndex={0}
               totalTravelers={travelerCount}
               openPayment={openPayment}
             />
           ) : (
-            /* step 6 – payment */
             submitted && paymentInfo && (
               <PaymentSection
                 selectedPlan={selectedPlan}
                 travelerCount={travelerCount}
                 onPayment={openPayment}
+                promoCode={promoCodeQS}
               />
             )
           )}
         </div>
 
-        {/* pricing sidebar */}
+        {/* sidebar price card */}
         <div className="md:col-span-1 sticky top-20">
           <PricingSidebar
             variant="apply"
             selectedPlan={selectedPlan}
             travelerCount={travelerCount}
             onCountChange={handleTravellerChange}
+            promoCode={promoCodeQS}
           />
         </div>
       </div>
@@ -2854,45 +4101,31 @@ export default function ApplyFormPage() {
   )
 }
 
-/* ───────────────── Razorpay helper with redirect ───────────────── */
+/* Razorpay helper ------------------------------------------ */
 declare global { interface Window { Razorpay?: any } }
-
-async function loadAndOpenRazorpay(opts: {
-  amount: number
-  email: string
-  contact: string
-  sessionId: string
-  description: string
-}) {
+async function loadAndOpenRazorpay(opts: any) {
   if (typeof window === 'undefined') return
-
   if (!window.Razorpay) {
     await new Promise(res => {
       const sc = document.createElement('script')
-      sc.src   = 'https://checkout.razorpay.com/v1/checkout.js'
+      sc.src = 'https://checkout.razorpay.com/v1/checkout.js'
       sc.onload = () => res(null)
       document.body.appendChild(sc)
     })
   }
-
   new window.Razorpay({
-    key: 'rzp_test_bBoKqWpCP41T6f',
-    amount: opts.amount,
-    currency: 'INR',
-    description: opts.description,
-    prefill: { email: opts.email, contact: opts.contact },
-
-    /* 🔑 on success → mark paid then hard-redirect to /confirmation */
-    handler: async (resp: { razorpay_payment_id: string }) => {
+    key     : 'rzp_test_bBoKqWpCP41T6f',
+    ...opts,
+    handler : async (response: { razorpay_payment_id: string }) => {
       await fetch('/api/mark-paid', {
         method : 'POST',
         headers: { 'Content-Type':'application/json' },
         body   : JSON.stringify({
-          paymentId: resp.razorpay_payment_id,
-          sessionId: opts.sessionId
-        })
+          paymentId: response.razorpay_payment_id,
+          sessionId: opts.sessionId,
+        }),
       })
       window.location.href = `/confirmation?id=${opts.sessionId}`
-    }
+    },
   }).open()
 }

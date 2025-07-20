@@ -36,6 +36,9 @@ export function PersonalDetailsSection({ traveler, setTravelerData }: Props) {
 
   return (
     <div className="space-y-6">
+      <p className="text-sm text-muted-foreground">
+        Please ensure all details are entered exactly as they appear on your passport.
+      </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Gender */}
         <div>

@@ -38,6 +38,17 @@ export function EmploymentSection({ traveler, setTravelerData }: Props) {
         />
       </div>
 
+            {/* New Company Name Field */}
+      <div>
+        <Label>Company Name</Label>
+        <Input
+          placeholder="e.g., Travaky Inc."
+          value={traveler?.companyName || ''}
+          onChange={(e) => handleChange('companyName', e.target.value)}
+          className={cn('mt-1', validate('companyName'))}
+        />
+      </div>
+
       <div>
         <Label>Company Address</Label>
         <Input

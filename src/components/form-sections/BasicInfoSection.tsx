@@ -3,8 +3,9 @@
 
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useEffect, useState } from 'react'
+import { useEffect, useState} from 'react'
 import { cn } from '@/lib/utils'
+import { useParams } from 'next/navigation'
 import {
   Command,
   CommandEmpty,
@@ -52,6 +53,7 @@ const visaCountries = [
 ]
 
 export function BasicInfoSection({ traveler, setTravelerData }: Props) {
+  const { country: countrySlug } = useParams<{ country: string }>()
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({})
   const [open, setOpen] = useState(false)
 
@@ -126,7 +128,7 @@ export function BasicInfoSection({ traveler, setTravelerData }: Props) {
       </div>
 
       {/* ✅ Country Dropdown Search */}
-      <div className="md:col-span-2">
+      {/* <div className="md:col-span-2">
         <Label htmlFor="country">Select Visa Country</Label>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
@@ -172,6 +174,19 @@ export function BasicInfoSection({ traveler, setTravelerData }: Props) {
             </Command>
           </PopoverContent>
         </Popover>
+      </div> */}
+
+      <div className="md:col-span-2">
+        <Label htmlFor="country">Visa Country</Label>
+        <Input
+          id="country"
+          value={countrySlug.charAt(0).toUpperCase() + countrySlug.slice(1)} // Capitalize for display
+          readOnly
+          className="mt-1 bg-muted cursor-not-allowed"
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          You are applying for a visa to {countrySlug}.
+        </p>
       </div>
     </div>
   )

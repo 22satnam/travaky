@@ -4,6 +4,9 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const timeSlots = ["10:00 AM", "11:00 AM", "12:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"];
 
 interface Props {
   data: any
@@ -38,7 +41,7 @@ export function AppointmentSection({ data, setData }: Props) {
         />
       </div>
 
-      <div>
+      {/* <div>
         <Label>Appointment Time</Label>
         <Input
           type="time"
@@ -47,6 +50,23 @@ export function AppointmentSection({ data, setData }: Props) {
           className={cn('mt-1', validate('appointmentTime'))}
           required
         />
+      </div> */}
+
+       {/* New Time Slot Dropdown */}
+      <div>
+          <Label>Appointment Time</Label>
+          <Select
+            value={data?.appointmentTime || ''}
+            onValueChange={(value) => handleChange('appointmentTime', value)}>
+            <SelectTrigger className={cn('mt-1', validate('appointmentTime'))}>
+              <SelectValue placeholder="Select a time slot" />
+            </SelectTrigger>
+            <SelectContent>
+              {timeSlots.map(slot => (
+                <SelectItem key={slot} value={slot}>{slot}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
       </div>
 
       <div className="md:col-span-2">

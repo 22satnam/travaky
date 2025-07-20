@@ -253,31 +253,97 @@
 // }
 
 
+// 'use client'
+
+// import { useState } from 'react'
+// import { Button } from '@/components/ui/button'
+// import { CheckCircle } from 'lucide-react'
+// import { PRICE_PLANS, FEES, PlanName } from '@/config/pricing'
+
+// interface Props {
+//   selectedPlan : PlanName
+//   travelerCount: number
+//   onPayment    : () => Promise<void>
+// }
+
+// export function PaymentSection({ selectedPlan, travelerCount, onPayment }: Props) {
+//   const [loading, setLoading] = useState(false)
+
+//   const planCost   = PRICE_PLANS[selectedPlan] * travelerCount
+//   const appointFee = FEES.appointment * travelerCount
+//   const serviceFee = FEES.service
+//   const total      = planCost + appointFee + serviceFee   /** ← updated **/
+
+//   const pay = async()=>{
+//     setLoading(true)
+//     try   { await onPayment() }
+//     catch (e:any){ alert('Payment failed: ' + e.message) }
+//     finally { setLoading(false) }
+//   }
+
+//   return (
+//     <div className="space-y-6">
+//       <h3 className="text-xl font-semibold text-center">Payment Gateway</h3>
+
+//       <div className="border rounded-lg p-4 bg-muted space-y-2 text-sm">
+//         <p className="flex justify-between"><span>Plan</span><span>{selectedPlan}</span></p>
+//         <p className="flex justify-between"><span>Travellers</span><span>{travelerCount}</span></p>
+//         <p className="flex justify-between text-muted-foreground">
+//           <span>{selectedPlan}</span><span>₹{planCost}</span></p>
+//         <p className="flex justify-between text-muted-foreground">
+//           <span>Appointment Fee × {travelerCount}</span><span>₹{appointFee}</span></p>
+//         <p className="flex justify-between text-muted-foreground">
+//           <span>Travaky Service Fee</span><span>₹{serviceFee}</span></p>
+
+//         <p className="flex justify-between font-semibold border-t pt-2">
+//           <span>Total Pay Now</span><span>₹{total}</span></p>
+//       </div>
+
+//       <Button className="w-full" disabled={loading} onClick={pay}>
+//         {loading ? 'Processing…' : 'Proceed to Pay'}
+//       </Button>
+
+//       <div className="text-xs text-muted-foreground text-center pt-2">
+//         <CheckCircle className="inline-block w-4 h-4 text-green-600 mr-1"/>
+//         Secure payment via Razorpay
+//       </div>
+//     </div>
+//   )
+// }
+
+
 'use client'
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle } from 'lucide-react'
-import { PRICE_PLANS, FEES, PlanName } from '@/config/pricing'
+import { calcPrice, PlanName } from '@/config/pricing'
 
 interface Props {
   selectedPlan : PlanName
   travelerCount: number
   onPayment    : () => Promise<void>
+  promoCode?   : string | null
 }
 
-export function PaymentSection({ selectedPlan, travelerCount, onPayment }: Props) {
+export function PaymentSection({
+  selectedPlan,
+  travelerCount,
+  onPayment,
+  promoCode = null,
+}: Props) {
   const [loading, setLoading] = useState(false)
 
-  const planCost   = PRICE_PLANS[selectedPlan] * travelerCount
-  const appointFee = FEES.appointment * travelerCount
-  const serviceFee = FEES.service
-  const total      = planCost + appointFee + serviceFee   /** ← updated **/
+  const { breakUp, total, promo } = calcPrice({
+    plan: selectedPlan,
+    travellers: travelerCount,
+    promoCode,
+  })
 
-  const pay = async()=>{
+  const pay = async () => {
     setLoading(true)
     try   { await onPayment() }
-    catch (e:any){ alert('Payment failed: ' + e.message) }
+    catch (e: any) { alert('Payment failed: ' + (e.message ?? e.toString())) }
     finally { setLoading(false) }
   }
 
@@ -286,17 +352,51 @@ export function PaymentSection({ selectedPlan, travelerCount, onPayment }: Props
       <h3 className="text-xl font-semibold text-center">Payment Gateway</h3>
 
       <div className="border rounded-lg p-4 bg-muted space-y-2 text-sm">
-        <p className="flex justify-between"><span>Plan</span><span>{selectedPlan}</span></p>
-        <p className="flex justify-between"><span>Travellers</span><span>{travelerCount}</span></p>
+        <p className="flex justify-between">
+          <span>Plan</span><span>{selectedPlan}</span>
+        </p>
+        <p className="flex justify-between">
+          <span>Travellers</span><span>{travelerCount}</span>
+        </p>
+
         <p className="flex justify-between text-muted-foreground">
-          <span>{selectedPlan}</span><span>₹{planCost}</span></p>
+          <span>{selectedPlan}</span>
+          <span>₹{breakUp.service.toLocaleString()}</span>
+        </p>
+
         <p className="flex justify-between text-muted-foreground">
-          <span>Appointment Fee × {travelerCount}</span><span>₹{appointFee}</span></p>
+          <span>Appointment Fee × {travelerCount}</span>
+          <span>₹{breakUp.appoint.toLocaleString()}</span>
+        </p>
+
         <p className="flex justify-between text-muted-foreground">
-          <span>Travaky Service Fee</span><span>₹{serviceFee}</span></p>
+          <span>Convenience Fee</span>
+          <span>₹{breakUp.conven.toLocaleString()}</span>
+        </p>
+
+        {breakUp.visa > 0 && (
+          <p className="flex justify-between text-muted-foreground">
+            <span>Visa Fee</span>
+            <span>₹{breakUp.visa.toLocaleString()}</span>
+          </p>
+        )}
+
+        {breakUp.discount > 0 && (
+          <p className="flex justify-between text-green-700">
+            <span>{promo}</span>
+            <span>− ₹{breakUp.discount.toLocaleString()}</span>
+          </p>
+        )}
+
+        <p className="flex justify-between text-muted-foreground">
+          <span>GST (18 %)</span>
+          <span>₹{breakUp.gst.toLocaleString()}</span>
+        </p>
 
         <p className="flex justify-between font-semibold border-t pt-2">
-          <span>Total Pay Now</span><span>₹{total}</span></p>
+          <span>Total Pay Now</span>
+          <span>₹{total.toLocaleString()}</span>
+        </p>
       </div>
 
       <Button className="w-full" disabled={loading} onClick={pay}>
@@ -304,7 +404,7 @@ export function PaymentSection({ selectedPlan, travelerCount, onPayment }: Props
       </Button>
 
       <div className="text-xs text-muted-foreground text-center pt-2">
-        <CheckCircle className="inline-block w-4 h-4 text-green-600 mr-1"/>
+        <CheckCircle className="inline-block w-4 h-4 text-green-600 mr-1" />
         Secure payment via Razorpay
       </div>
     </div>
