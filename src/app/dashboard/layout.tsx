@@ -24,16 +24,31 @@
 // }
 
 
-/* dashboard tree wrapper – mounts the sidebar once */
+// /* dashboard tree wrapper – mounts the sidebar once */
+// import { Sidebar } from "@/components/ui/sidebar"
+
+// export const metadata = { title: "Dashboard • Travaky" }
+
+// export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+//   return (
+//     <div className="flex h-screen">
+//       <Sidebar />
+//       <main className="flex-1 overflow-y-auto bg-muted/40 p-6">{children}</main>
+//     </div>
+//   )
+// }
+
+// src/app/dashboard/layout.tsx
+
 import { Sidebar } from "@/components/ui/sidebar"
 
 export const metadata = { title: "Dashboard • Travaky" }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-muted/40">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto bg-muted/40 p-6">{children}</main>
+      <main className="flex-1 overflow-y-auto p-6">{children}</main>
     </div>
   )
 }

@@ -230,24 +230,100 @@
 // }
 
 
-/* Dashboard home — upcoming / completed appointments
- * -------------------------------------------------- */
+// /* Dashboard home — upcoming / completed appointments
+//  * -------------------------------------------------- */
+// import { cookies } from 'next/headers'
+// import { verify }  from 'jsonwebtoken'
+// import { supabaseServer } from '@/lib/supabase/server'
+// import Link from 'next/link'
+
+// export const dynamic = 'force-dynamic'
+
+// export default async function DashboardHome() {
+//   /* ─── async cookies() ─── */
+//   const cookieStore = await cookies()
+//   const jwt   = cookieStore.get('token')?.value
+//   if (!jwt) return <p className="text-red-500">Not signed in.</p>
+
+//   const { id: userId } = verify(jwt, process.env.JWT_SECRET!) as { id: number }
+
+//   /* fetch all paid / confirmed bookings for this user */
+//   const supa = supabaseServer(true)
+//   const { data, error } = await supa
+//     .from('visa_applications')
+//     .select('id,country,appointment_date,status,plan')
+//     .eq('user_id', userId)
+//     .in('status', ['paid', 'confirmed'])
+//     .order('appointment_date')
+
+//   if (error) return <p className="text-red-500">{error.message}</p>
+
+//   const today = new Date().setHours(0, 0, 0, 0)
+//   const upcoming  = (data ?? []).filter(b => new Date(b.appointment_date).getTime() >= today)
+//   const completed = (data ?? []).filter(b => new Date(b.appointment_date).getTime() <  today)
+
+//   const List = ({ rows }:{ rows: typeof data }) => (
+//     <ul className="divide-y rounded-md border bg-card">
+//       {rows.map(b => (
+//         <li key={b.id} className="flex items-center justify-between px-4 py-3">
+//           <div>
+//             <p className="font-medium">{b.country}</p>
+//             <p className="text-xs text-muted-foreground">
+//               {new Date(b.appointment_date).toLocaleDateString()} • {b.plan}
+//             </p>
+//           </div>
+//           <Link href={`/dashboard/bookings?id=${b.id}`} className="underline text-primary text-sm">
+//             View
+//           </Link>
+//         </li>
+//       ))}
+//     </ul>
+//   )
+
+//   return (
+//     <div className="space-y-10">
+//       {upcoming.length ? (
+//         <section>
+//           <h2 className="text-lg font-semibold mb-2">Upcoming appointment</h2>
+//           <List rows={upcoming} />
+//         </section>
+//       ) : (
+//         <section className="rounded-md border bg-card p-6 text-center">
+//           <p className="font-medium mb-1">No upcoming appointment</p>
+//           <Link href="/apply" className="text-primary underline">
+//             Book your first visa →
+//           </Link>
+//         </section>
+//       )}
+
+//       {completed.length > 0 && (
+//         <section>
+//           <h2 className="text-lg font-semibold mb-2">Completed appointments</h2>
+//           <List rows={completed} />
+//         </section>
+//       )}
+//     </div>
+//   )
+// }
+
+
+// src/app/dashboard/page.tsx
+
 import { cookies } from 'next/headers'
 import { verify }  from 'jsonwebtoken'
 import { supabaseServer } from '@/lib/supabase/server'
 import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardHome() {
-  /* ─── async cookies() ─── */
   const cookieStore = await cookies()
   const jwt   = cookieStore.get('token')?.value
   if (!jwt) return <p className="text-red-500">Not signed in.</p>
 
   const { id: userId } = verify(jwt, process.env.JWT_SECRET!) as { id: number }
 
-  /* fetch all paid / confirmed bookings for this user */
   const supa = supabaseServer(true)
   const { data, error } = await supa
     .from('visa_applications')
@@ -263,21 +339,23 @@ export default async function DashboardHome() {
   const completed = (data ?? []).filter(b => new Date(b.appointment_date).getTime() <  today)
 
   const List = ({ rows }:{ rows: typeof data }) => (
-    <ul className="divide-y rounded-md border bg-card">
+    <div className="grid gap-4 md:grid-cols-2">
       {rows.map(b => (
-        <li key={b.id} className="flex items-center justify-between px-4 py-3">
-          <div>
-            <p className="font-medium">{b.country}</p>
-            <p className="text-xs text-muted-foreground">
-              {new Date(b.appointment_date).toLocaleDateString()} • {b.plan}
-            </p>
-          </div>
-          <Link href={`/dashboard/bookings?id=${b.id}`} className="underline text-primary text-sm">
-            View
-          </Link>
-        </li>
+        <Card key={b.id}>
+            <CardHeader>
+                <CardTitle>{b.country}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-sm text-muted-foreground">
+                    {new Date(b.appointment_date).toLocaleDateString()} • {b.plan}
+                </p>
+                <Link href={`/dashboard/bookings?id=${b.id}`} className="text-primary underline text-sm mt-2 inline-block">
+                    View Details
+                </Link>
+            </CardContent>
+        </Card>
       ))}
-    </ul>
+    </div>
   )
 
   return (

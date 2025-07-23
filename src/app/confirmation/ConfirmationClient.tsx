@@ -318,6 +318,176 @@
 // }
 
 
+// 'use client'
+
+// import { useEffect, useState } from 'react'
+// import { useSearchParams } from 'next/navigation'
+// import { ExecutiveCard } from '@/components/ui/ExecutiveCard'
+// import { Users, FileDown, Loader2, CheckCircle } from 'lucide-react'
+// import { Card } from '@/components/ui/card'
+// import { Button } from '@/components/ui/button'
+
+// interface VisaData {
+//   country: string
+//   plan: string
+//   appointment_date: string
+//   appointment_time: string
+//   appointment_address: string
+//   traveler_data: any[]
+//   pdfUrl?: string
+//   pdfs?: string[] | string
+//   invoice_url?: string
+// }
+
+// export default function ConfirmationClient() {
+//   const searchParams = useSearchParams()
+//   const id = searchParams.get('id') ?? ''
+//   const [data, setData] = useState<VisaData | null>(null)
+//   const [loading, setLoading] = useState(true)
+
+//   useEffect(() => {
+//     if (!id) return
+//     ;(async () => {
+//       const res = await fetch(`/api/get-confirmation?id=${id}`)
+//       const j   = await res.json()
+//       setData(j.data ?? null)
+//       setLoading(false)
+//     })()
+//   }, [id])
+
+//   if (loading) {
+//     return (
+//       <p className="flex items-center justify-center gap-2 py-20 text-muted-foreground">
+//         <Loader2 className="animate-spin w-4 h-4" /> Loading confirmation …
+//       </p>
+//     )
+//   }
+//   if (!data) {
+//     return <p className="text-center py-20">Confirmation not found.</p>
+//   }
+
+//   /* normalise PDF array */
+//   let pdfLinks: string[] = []
+//   if (Array.isArray(data.pdfs)) pdfLinks = data.pdfs
+//   else if (typeof data.pdfs === 'string') {
+//     try { pdfLinks = JSON.parse(data.pdfs) } catch {}
+//   } else if (data.pdfUrl) pdfLinks = [data.pdfUrl]
+
+//   const executive = {
+//     name: 'Rakesh Sharma',
+//     designation: 'Senior Visa Executive',
+//     countryExpertise: data.country,
+//     contact: '+91-8888888888',
+//     country: data.country,
+//   }
+
+//   return (
+//     <div className="w-full max-w-5xl mx-auto px-4 py-12">
+//       <div className="bg-card shadow-xl rounded-xl p-8 border space-y-6">
+
+//         {/* header */}
+//         <div className="flex items-center gap-3 text-green-600">
+//           <CheckCircle className="w-6 h-6" />
+//           <h1 className="text-2xl font-semibold">
+//           Booking confirmed for <strong>{data.appointment_date}</strong> at <strong>{data.appointment_time}</strong>
+//           </h1>
+//         </div>
+
+//         <p className="text-muted-foreground text-sm">
+//           Our executive will call you shortly to verify everything.
+//         </p>
+
+//         <ExecutiveCard {...executive} />
+
+//         <hr className="my-4" />
+
+//         {/* PDFs */}
+//         <h2 className="text-lg font-semibold">Traveller Documents</h2>
+
+//         {data.traveler_data.map((trav: any, idx: number) => {
+//           const link = pdfLinks[idx] ?? pdfLinks[0] ?? null
+//           return (
+//             <Card key={idx} className="p-4 mb-4 space-y-2 bg-muted border">
+//               <div className="flex justify-between">
+//                 <div>
+//                   <p className="font-semibold">Traveller {idx + 1}</p>
+//                   <p className="text-sm text-muted-foreground">
+//                     {trav.firstName ?? trav.first_name}{' '}
+//                     {trav.lastName ?? trav.last_name}
+//                   </p>
+//                 </div>
+
+//                 {link ? (
+//                   <a
+//                     href={link}
+//                     className="text-blue-600 underline flex items-center gap-1"
+//                     download target="_blank" rel="noopener"
+//                   >
+//                     <FileDown className="w-4 h-4" /> Download PDF
+//                   </a>
+//                 ) : (
+//                   <span className="text-xs text-muted-foreground">(processing)</span>
+//                 )}
+//               </div>
+
+//               <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground">
+//                 <div><strong>Passport:</strong> {trav.passport ?? trav['Passport Number'] ?? 'N/A'}</div>
+//                 <div><strong>DOB:</strong> {trav.dob ?? trav['Date of Birth'] ?? 'N/A'}</div>
+//                 <div><strong>Nationality:</strong> {trav.nationality || 'N/A'}</div>
+//               </div>
+//             </Card>
+//           )
+//         })}
+
+//         {/* invoice button */}
+//         {data.invoice_url && (
+//           <Button asChild size="lg">
+//             <a href={data.invoice_url} target="_blank" download>
+//               Download Invoice
+//             </a>
+//           </Button>
+//         )}
+
+//         <hr className="my-4" />
+
+//         {/* instructions */}
+//         {data.plan === 'Docs on Call' ? (
+//           <div className="space-y-2 text-sm text-muted-foreground">
+//             <p>✅ Please prepare the following documents:</p>
+//             <ul className="list-disc ml-6">
+//               <li>Original passport (scanned)</li>
+//               <li>Travel itinerary (if available)</li>
+//               <li>Proof of current address</li>
+//             </ul>
+//           </div>
+//         ) : (
+//           <div className="space-y-2 text-sm text-muted-foreground">
+//             <p>✅ Our executive will visit you at:</p>
+//             <p className="font-medium">📍 {data.appointment_address}</p>
+//             <ul className="list-disc ml-6">
+//               <li>Keep all original documents ready</li>
+//               <li>Have a printed copy of this confirmation</li>
+//             </ul>
+//           </div>
+//         )}
+
+//         <div className="mt-6 space-y-2 text-sm">
+//           <a
+//             href="https://chat.whatsapp.com/your-community-link"
+//             target="_blank"
+//             className="inline-flex items-center gap-2 text-green-600 underline"
+//           >
+//             <Users className="w-4 h-4" /> Join our WhatsApp Community
+//           </a>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+
+// src/app/confirmation/ConfirmationClient.tsx
+
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -338,6 +508,30 @@ interface VisaData {
   pdfs?: string[] | string
   invoice_url?: string
 }
+
+const executives = [
+    {
+      name: 'Rakesh Sharma',
+      designation: 'Senior Visa Executive',
+      countryExpertise: 'spain',
+      contact: '+91-9876543210',
+      avatar: 'https://randomuser.me/api/portraits/men/75.jpg'
+    },
+    {
+      name: 'Priya Singh',
+      designation: 'Visa Consultant',
+      countryExpertise: 'france',
+      contact: '+91-9876543211',
+      avatar: 'https://randomuser.me/api/portraits/women/75.jpg'
+    },
+    {
+        name: 'Amit Patel',
+        designation: 'Visa Specialist',
+        countryExpertise: 'germany',
+        contact: '+91-9876543212',
+        avatar: 'https://randomuser.me/api/portraits/men/76.jpg'
+    }
+]
 
 export default function ConfirmationClient() {
   const searchParams = useSearchParams()
@@ -366,20 +560,15 @@ export default function ConfirmationClient() {
     return <p className="text-center py-20">Confirmation not found.</p>
   }
 
-  /* normalise PDF array */
   let pdfLinks: string[] = []
   if (Array.isArray(data.pdfs)) pdfLinks = data.pdfs
   else if (typeof data.pdfs === 'string') {
     try { pdfLinks = JSON.parse(data.pdfs) } catch {}
   } else if (data.pdfUrl) pdfLinks = [data.pdfUrl]
 
-  const executive = {
-    name: 'Rakesh Sharma',
-    designation: 'Senior Visa Executive',
-    countryExpertise: data.country,
-    contact: '+91-8888888888',
-    country: data.country,
-  }
+  const executive = executives.find(e => e.countryExpertise.toLowerCase() === data.country.toLowerCase()) || executives[0];
+  const whatsappLink = `https://wa.me/?text=Hello, I have a booking with session ID ${id}. Please create a support group.`
+
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-12">
@@ -439,14 +628,11 @@ export default function ConfirmationClient() {
           )
         })}
 
-        {/* invoice button */}
-        {data.invoice_url && (
-          <Button asChild size="lg">
-            <a href={data.invoice_url} target="_blank" download>
-              Download Invoice
-            </a>
-          </Button>
-        )}
+        {/* {data.invoice_url && (
+          <a href={data.invoice_url} target="_blank" download className="text-blue-600 underline flex items-center gap-1">
+            <FileDown className="w-4 h-4" /> Download Invoice
+          </a>
+        )} */}
 
         <hr className="my-4" />
 
@@ -473,7 +659,7 @@ export default function ConfirmationClient() {
 
         <div className="mt-6 space-y-2 text-sm">
           <a
-            href="https://chat.whatsapp.com/your-community-link"
+            href={whatsappLink}
             target="_blank"
             className="inline-flex items-center gap-2 text-green-600 underline"
           >

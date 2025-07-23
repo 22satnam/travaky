@@ -61,7 +61,7 @@ export const countryData: CountryData[] = [
       { title: 'Visa Processed',     body: 'We liaise with immigration.' },
       { title: 'Passport Delivered', body: 'Courier brings it back to you.' }
     ],
-    guaranteeLine: 'Get your visa by 26 Jun 2025, 05:30 AM',
+    // guaranteeLine: 'Get your visa by 26 Jun 2025, 05:30 AM',
     pricePlan: 'Docs on Call',
 
     /* 🆕 reassurance extras */
@@ -95,7 +95,7 @@ export const countryData: CountryData[] = [
         rating: 5,
         tag:    'VISA ON TIME',
         date:   '7 Dec',
-        body:   'Got my Germany visa from Dubai—smooth and cheaper than my agent!'
+        body:   'Got my Germany visa from Dubai, smooth and cheaper than my agent!'
       }
     ]
   },
