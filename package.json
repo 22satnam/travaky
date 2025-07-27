@@ -55,6 +55,7 @@
     "flag-icons": "^7.3.2",
     "form-data": "^4.0.2",
     "framer-motion": "^12.10.5",
+    "inter": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.477.0",
     "motion": "^12.6.5",

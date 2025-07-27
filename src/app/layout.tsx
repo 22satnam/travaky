@@ -74,6 +74,7 @@ import './styles/index.css'
 import GlobalLoader from "@/components/ui/GlobalLoader"
 import {Footer} from '@/components/ui/footer-section'
 
+
 /*  Tailwind h-14 = 56 px  (your Navbar’s height)  */
 const NAVBAR_HEIGHT = 56
 
