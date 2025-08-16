@@ -19,7 +19,22 @@ import { AuthDialog } from '@/components/ui/auth-dialogs'
 import { useAuth } from '@/context/AuthContext'
 import Marquee from 'react-fast-marquee'
 import { Pricing } from '@/components/pricing'
+import DestinationSection from './DestinationSection'
+import WhyTravakySection from './WhyTravakySection'
+import  { StatsBanner } from './StatsAndHowSection'
+import PricingSection from './PricingSection'
+import { ChooseDestinationSection } from './ChooseDestinationSection'
+import { HowItWorksSection } from './HowItWorksSection'
+import { GlobalVisaExcellenceSection } from './GlobalVisaExcellenceSection'
+import  FooterSection  from './FooterSection'
+import  FAQSection  from './FAQSection'
+import TestimonialsBlock from './TestimonialsBlock'
+import  VisaRegions  from './VisaRegions'
+import ReadyCta from './ReadyCta'
 
+
+
+/* ── styles ──────────────────────────────────── */
 interface StackItemProps {
   countryCode: string
   countryName: string
@@ -104,8 +119,16 @@ export default function HomepageHero() {
   return (
     <>
       <PanelParticles />
-      <br />
       <SetupHero />
+      <StatsBanner />
+      <HowItWorksSection />
+      <DestinationSection />
+      <WhyTravakySection />
+      <PricingSection />
+      <VisaRegions />
+      <ReadyCta />
+      <TestimonialsBlock />
+      <FAQSection />
 
       <Section title="Choose your country" description={featuresDesc}>
         <div ref={countryRef} className="relative">
@@ -154,7 +177,7 @@ export default function HomepageHero() {
         </div>
       </Section>
 
-      <Section title="Services Offered" description="Explore our range of services to find the perfect fit for your needs.">
+      {/* <Section title="Services Offered" description="Explore our range of services to find the perfect fit for your needs.">
         <FeaturesSectionWithHoverEffects />
       </Section>
 
@@ -240,7 +263,7 @@ export default function HomepageHero() {
 
       <Section className="flex flex-col items-center justify-center">
         <WorldMapDemo />
-      </Section>
+      </Section> */}
 
       <Section title="Frequently Asked Questions" tallPaddingY>
         <Accordion type="single" collapsible className="w-full max-w-5xl">

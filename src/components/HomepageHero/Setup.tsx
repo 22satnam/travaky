@@ -1,77 +1,109 @@
+// src/components/HomepageHero/Setup.tsx
+'use client';
 
-'use client'
-
-import styles from '@/components/HomepageHero/SetupHero.module.css'
-import { MotionWrapperFlash } from '@/components/MotionWrapper/Flash'
-import { Button } from '@/components/ui/button'
-import { FlipWords } from '@/components/ui/flip-words'
-import clsx from 'clsx'
-import Link from 'next/link'
-import { Github } from 'lucide-react'
+import { Button } from '@/components/ui/button';
+import { ArrowRight, CheckCircle } from 'lucide-react';
+import heroImage from '@/assets/hero-image.jpg';
 
 export function SetupHero() {
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <br /><br />
+    <section
+      /* very-light blue background like UI-Hero */
+      className="relative overflow-hidden py-16 md:py-24"
+      style={{
+        background:
+          'linear-gradient(90deg, #F3FAFF 0%, #FFFFFF 50%)', // subtle blue→white
+      }}
+    >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* ───── Left text block ───── */}
+          <div>
+            {/* headline – exact blue (#0094FF) */}
+            <h1 className="mb-6 text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
+                style={{ color: '#0094FF' }}>
+              Visa on Autopilot
+            </h1>
 
-        <h1 className={styles.headline}>
-          <MotionWrapperFlash disabledAnimation={false} className="flex items-center">
-            <span className=""></span>
-          </MotionWrapperFlash>
-          {' '}Visa<br className="sm:hidden" /> At Your<br className="sm:hidden" /> Doorstep
-        </h1>
+            {/* sub-title – dark grey for readability */}
+            <p className="mb-8 max-w-2xl text-xl lg:text-[22px] text-[#5E6B7E]">
+              Fill once. We handle the rest — documents, appointments, and
+              delivery. Get your visa approved with our expert-managed process.
+            </p>
 
-        <Link
-          href="https://opnform.com/forms/visa-application-form-uzkofw"
-          className={clsx([
-            'bg-linear-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-lg',
-            'dark:bg-linear-to-r dark:from-green-400 dark:via-teal-500 dark:to-cyan-500 dark:text-white',
-            'text-sm mt-2 inline-block px-3 py-1 rounded-lg',
-            '[&>span]:font-bold',
-            'animate-pulse',
-            '[animation-duration:2s]',
-          ])}
-        >
-          🔥 <span>Get your visa or Get your money back</span>
-        </Link>
+            {/* trust metrics – green ticks (#10B981) */}
+            <div className="mb-8 flex flex-col sm:flex-row gap-6">
+              {[
+                '99% Approval Rate',
+                '10,000+ Visas Processed',
+                '20+ Cities Pickup',
+              ].map((label) => (
+                <div key={label} className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5" color="#10B981" />
+                  <span className="text-sm font-medium text-[#374151]">
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
 
-        <div className={clsx([styles.subtitle, 'text-neutral-500 dark:text-neutral-300'])}>
-          Getting a visa is now{' '}
-          <FlipWords
-            words={[
-              'fast',
-              'simple',
-              'secure',
-              'flexible',
-              'easy',
-              'hassle-free',
-              'reliable',
-              'seamless',
-              'instant',
-            ]}
-          />
-          <br />
-          with Travaky
-        </div>
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {/* filled gradient button */}
+              <Button
+                size="lg"
+                className="shadow-md"
+                style={{
+                  background:
+                    'linear-gradient(90deg, #00AEEF 0%, #4FA4F3 100%)',
+                  color: '#FFF',
+                }}
+              >
+                Apply Now
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
 
-        <div className="flex justify-center pt-10">
-          <div className="max-w-[500px] flex flex-wrap gap-[20px] max-sm:justify-center">
-            <Button asChild size="lg" className="font-bold group max-sm:w-[100%]">
-              <Link href="https://opnform.com/forms/visa-application-form-uzkofw">
-                Get Started
-                <span className="w-[20px] translate-x-[6px] transition-all group-hover:translate-x-[10px] icon-[mingcute--arrow-right-fill]" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="secondary" className="font-bold group max-sm:w-[100%]">
-              <Link href="https://opnform.com/forms/visa-application-form-uzkofw" target="_blank">
-                Country
-                <Github className="w-4 h-4" />
-              </Link>
-            </Button>
+              {/* outline button in brand blue */}
+              <Button
+                size="lg"
+                variant="outline"
+                style={{
+                  borderColor: '#0094FF',
+                  color: '#0094FF',
+                }}
+                className="hover:bg-[#0094FF] hover:text-white"
+              >
+                Explore Countries
+              </Button>
+            </div>
+          </div>
+
+          {/* ───── Right image & badges ───── */}
+          <div className="relative">
+            <img
+              src={heroImage.src}
+              alt="Visa flow illustration"
+              className="w-full rounded-2xl shadow-lg object-cover"
+            />
+
+            {/* success badge */}
+            <div className="absolute top-4 right-4 rounded-lg bg-white shadow-lg px-4 py-2 text-center">
+              <div className="text-lg font-bold" style={{ color: '#0094FF' }}>
+                98.9%
+              </div>
+              <div className="text-xs text-[#5E6B7E]">Success Rate</div>
+            </div>
+
+            {/* processing badge */}
+            <div className="absolute bottom-4 left-4 rounded-lg bg-white shadow-lg px-4 py-2 text-center">
+              <div className="text-lg font-bold" style={{ color: '#0094FF' }}>
+                2–5 Days
+              </div>
+              <div className="text-xs text-[#5E6B7E]">Average Processing</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  )
+    </section>
+  );
 }
