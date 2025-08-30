@@ -2511,17 +2511,307 @@
 //   )
 // }
 
+// // src/app/visa/[country]/page.tsx
 
-// src/app/visa/[country]/page.tsx
+// 'use client'
 
-// src/app/visa/[country]/page.tsx
-// src/app/visa/[country]/page.tsx
+// import Image from 'next/image'
+// import { useParams, useRouter } from 'next/navigation'
+// import { useState, useMemo, useEffect } from 'react'
+// import PricingSidebar from '@/components/ui/pricing-sidebar'
+// import { countryData } from '@/data/countries'
+// import { PlanName } from '@/config/pricing'
+// import {
+//   Stepper,
+//   StepperItem,
+//   StepperIndicator,
+//   StepperSeparator,
+//   StepperTitle,
+//   StepperTrigger,
+// } from "@/components/ui/stepper";
+// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+// import { ImageSwiper } from '@/components/ui/image-swiper'
+
+// // Helper function to get the date 2 weeks from now
+// const getFutureDate = () => {
+//   const date = new Date();
+//   date.setDate(date.getDate() + 14);
+//   return date.toLocaleDateString('en-US', {
+//     year: 'numeric',
+//     month: 'long',
+//     day: 'numeric',
+//   });
+// };
+
+// // Define a single source for the sample document images
+// const SAMPLE_DOCUMENTS_IMAGES = 'https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=800, https://images.unsplash.com/photo-1527632911563-ee5b6d5344b6?w=800, https://images.unsplash.com/photo-1506973035872-18cda5b9f5de?w=800';
+
+
+// function Section({ title, children }: {
+//   title: string; children: React.ReactNode
+// }) {
+//   return (
+//     <section className="space-y-4">
+//       <h2 className="text-2xl font-semibold">{title}</h2>
+//       {children}
+//     </section>
+//   )
+// }
+
+// function CostCard({ title, items }: {
+//   title: string; items: { label: string; value: string }[]
+// }) {
+//   return (
+//     <Card>
+//       <CardHeader>
+//         <CardTitle>{title}</CardTitle>
+//       </CardHeader>
+//       <CardContent>
+//         <ul className="space-y-2 text-sm">
+//           {items.map(i => (
+//             <li key={i.label} className="flex justify-between">
+//               <span className="text-muted-foreground">{i.label}</span>
+//               <span>{i.value}</span>
+//             </li>
+//           ))}
+//         </ul>
+//       </CardContent>
+//     </Card>
+//   )
+// }
+
+// function SlotAlert({ text }: { text: string }) {
+//   return (
+//     <div className="border rounded-lg p-6 text-center space-y-4 bg-muted/40">
+//       <p className="text-lg font-semibold">Get alerted when slots open!</p>
+//       <p className="text-sm text-muted-foreground">{text}</p>
+//       <input
+//         className="border rounded px-3 py-2 w-60"
+//         placeholder="Your phone number"
+//       />
+//       <button className="bg-indigo-600 text-white px-4 py-2 rounded">
+//         Send alerts
+//       </button>
+//     </div>
+//   )
+// }
+
+
+// export default function VisaInfo() {
+//   const { country } = useParams<{ country: string }>()
+//   const router = useRouter()
+//   const data = countryData.find(c => c.buttonLink.endsWith(`/${country}`))
+//   if (!data) return <p className="p-10">Country not supported.</p>
+
+//   const hero = data.hero ?? Array(4).fill(data.backgroundPhoto)
+//   const plan = (data.pricePlan ?? 'Docs on Call') as PlanName
+//   const [trav, setTrav] = useState(1)
+//   const guaranteeDate = useMemo(() => getFutureDate(), []);
+
+//   useEffect(() => {
+//     const style = document.createElement('style')
+//     style.innerHTML = `.scrollbar-hide::-webkit-scrollbar{display:none}`
+//     document.head.appendChild(style)
+//     return () => {
+//       document.head.removeChild(style)
+//     }
+//   }, [])
+
+
+//   return (
+//     <div className="w-full">
+//       {/* 1️⃣ Hero collage ----------------------------------------- */}
+//       <section className="w-full grid grid-cols-1 md:grid-cols-3 gap-3 px-4 lg:px-12 pb-16">
+//         <div className="relative h-80 md:row-span-2 rounded-lg overflow-hidden">
+//           <Image src={hero[0]} fill alt={data.countryName} className="object-cover" />
+//           <div className="absolute inset-0 bg-black/50" />
+//           <h1 className="absolute bottom-4 left-4 text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+//             {data.countryName} Visa for Indians
+//           </h1>
+//         </div>
+//         {hero.slice(1).map((src, i) => (
+//           <div key={i} className="relative h-40 rounded-lg overflow-hidden">
+//             <Image src={src} fill alt="" className="object-cover" />
+//           </div>
+//         ))}
+//       </section>
+
+//       {/* 2️⃣ Main layout: scrollable left, sticky right ------------ */}
+//       <div className="flex flex-col lg:flex-row px-4 lg:px-12 gap-8">
+//         {/* LEFT column */}
+//         <div
+//           className="w-full lg:w-3/5 max-h-[calc(100vh-6rem)] overflow-y-auto pr-4
+//                      space-y-16 pb-24 scrollbar-hide"
+//           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+//         >
+//           {/* visa facts */}
+//           {data.visaFacts && (
+//             <Section title={`${data.countryName} Visa Information`}>
+//               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+//                 {data.visaFacts.map(f => (
+//                   <Card key={f.label} className="text-center hover:shadow-lg transition-shadow">
+//                     <CardHeader>
+//                       <CardTitle className="text-sm text-muted-foreground">{f.label}</CardTitle>
+//                     </CardHeader>
+//                     <CardContent>
+//                       <p className="text-lg font-semibold">{f.value}</p>
+//                     </CardContent>
+//                   </Card>
+//                 ))}
+//               </div>
+//             </Section>
+//           )}
+
+//           {/* requirements */}
+//           {data.requirements && (
+//             <Section title="Requirements">
+//               <div className="flex flex-wrap gap-3">
+//                 {data.requirements.map(r => (
+//                   <div key={r} className="px-4 py-2 bg-muted rounded-full text-sm font-medium">{r}</div>
+//                 ))}
+//               </div>
+//             </Section>
+//           )}
+
+//           {/* timeline */}
+//           {data.timeline && (
+//             <Section title={`How ${data.countryName} Visa Process Works`}>
+//               <Stepper orientation="vertical" className="ml-4">
+//                 {data.timeline.map((item, i) => (
+//                   <StepperItem key={i} step={i + 1} className="relative items-start [&:not(:last-child)]:flex-1">
+//                     <StepperTrigger className="items-start pb-12 last:pb-0">
+//                       <StepperIndicator />
+//                       <div className="mt-0.5 px-2 text-left">
+//                         <StepperTitle>{item.title}</StepperTitle>
+//                         <p className="text-sm text-muted-foreground">{item.body}</p>
+//                       </div>
+//                     </StepperTrigger>
+//                     {i < data.timeline.length - 1 && (
+//                       <StepperSeparator className="absolute inset-y-0 left-3 top-[calc(1.5rem+0.125rem)] -order-1 m-0 -translate-x-1/2 group-data-[orientation=vertical]/stepper:h-[calc(100%-1.5rem-0.25rem)]" />
+//                     )}
+//                   </StepperItem>
+//                 ))}
+//               </Stepper>
+//             </Section>
+//           )}
+
+//           {/* cost breakdown */}
+//           {data.costBreakdown && (
+//             <Section title={`How Much Does a ${data.countryName} Visa Cost?`}>
+//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//                 <CostCard title="Pay Now on Travaky" items={data.costBreakdown.payNow} />
+//                 {data.costBreakdown.payLater && (
+//                   <CostCard title="Pay Later at Appointment Center" items={data.costBreakdown.payLater} />
+//                 )}
+//               </div>
+//             </Section>
+//           )}
+
+//           {/* slot alert */}
+//           {data.slotAlertText && (
+//             <Section title="Your preferred appointment times aren't available">
+//               <SlotAlert text={data.slotAlertText} />
+//             </Section>
+//           )}
+
+//           {/* what you get */}
+//           {data.whatYouGet && (
+//             <Section title="What you get">
+//               <p className="text-muted-foreground mb-4">
+//                 Travaky will give you a compiled application packet with all necessary documents
+//               </p>
+//               <h3 className="text-xl font-semibold mb-4">{data.whatYouGet.heading}</h3>
+//               <div className="flex items-center justify-center">
+//                 <ImageSwiper images={SAMPLE_DOCUMENTS_IMAGES} />
+//               </div>
+//             </Section>
+//           )}
+
+//           {/* rejection reasons */}
+//           {data.rejectionReasons && (
+//             <Section title={`${data.countryName} Visa Rejection Reasons`}>
+//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//                 {data.rejectionReasons.map(r => (
+//                   <Card key={r.title} className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-900/50">
+//                     <CardHeader className="flex-row items-center gap-4 space-y-0">
+//                       <span className="text-2xl">⚠️</span>
+//                       <CardTitle>{r.title}</CardTitle>
+//                     </CardHeader>
+//                     <CardContent>
+//                       <p className="text-sm text-muted-foreground">{r.body}</p>
+//                     </CardContent>
+//                   </Card>
+//                 ))}
+//               </div>
+//             </Section>
+//           )}
+
+//           {/* reviews */}
+//           {data.reviews && (
+//             <Section title="What our customers say">
+//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//                 {data.reviews.map(r => (
+//                   <Card key={r.name} className="flex flex-col hover:shadow-xl transition-shadow">
+//                     <CardHeader>
+//                       <div className="flex items-center gap-3">
+//                         <Image src={r.avatar} width={40} height={40} alt={r.name} className="rounded-full" />
+//                         <div>
+//                           <p className="font-semibold">{r.name}</p>
+//                           <p className="text-xs text-muted-foreground">{r.date}{r.tag && ` • ${r.tag}`}</p>
+//                         </div>
+//                       </div>
+//                     </CardHeader>
+//                     <CardContent className="flex-grow">
+//                       <div className="flex items-center mb-2">
+//                         {'★'.repeat(r.rating).split('').map((_, i) => <span key={i} className="text-yellow-500">★</span>)}
+//                       </div>
+//                       <p className="text-sm text-muted-foreground">{r.body}</p>
+//                     </CardContent>
+//                   </Card>
+//                 ))}
+//               </div>
+//             </Section>
+//           )}
+
+//           {/* guarantee / reassurance */}
+//           <Section title="Travaky Guarantee">
+//             <p className="text-muted-foreground">
+//               {data.guaranteeLine ? data.guaranteeLine.replace('{date}', guaranteeDate) : `Get your visa by ${guaranteeDate}`}
+//             </p>
+//           </Section>
+
+//           <Section title="Why Travaky?">
+//             <p className="text-muted-foreground">
+//               We’ve processed thousands of {data.countryName} visas with a&nbsp;99 % approval rate.
+//               Our experts handle every detail so you don’t have to worry.
+//             </p>
+//           </Section>
+//         </div>
+
+//         {/* RIGHT column */}
+//         <div className="w-full lg:w-2/5">
+//           <div className="sticky top-24">
+//             <PricingSidebar
+//               variant="info"
+//               selectedPlan={plan}
+//               travelerCount={trav}
+//               onCountChange={setTrav}
+//               onStart={() => router.push(`/apply/${data.slug}?travellers=${trav}&plan=${encodeURIComponent(plan)}`)}
+//             />
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+
 
 'use client'
 
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
-import { useState, useMemo, useEffect } from 'react'
+import { useMemo, useRef, useEffect, useState } from 'react'
 import PricingSidebar from '@/components/ui/pricing-sidebar'
 import { countryData } from '@/data/countries'
 import { PlanName } from '@/config/pricing'
@@ -2532,50 +2822,52 @@ import {
   StepperSeparator,
   StepperTitle,
   StepperTrigger,
-} from "@/components/ui/stepper";
+} from '@/components/ui/stepper'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ImageSwiper } from '@/components/ui/image-swiper'
 
-// Helper function to get the date 2 weeks from now
+/* ───────────────────────────────────────────────────────────── */
+/* Helpers                                                      */
+/* ───────────────────────────────────────────────────────────── */
+
+const SAMPLE_DOCUMENTS_IMAGES =
+  'https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=800, https://images.unsplash.com/photo-1527632911563-ee5b6d5344b6?w=800, https://images.unsplash.com/photo-1506973035872-18cda5b9f5de?w=800'
+
 const getFutureDate = () => {
-  const date = new Date();
-  date.setDate(date.getDate() + 14);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
+  const d = new Date()
+  d.setDate(d.getDate() + 14)
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
 
-// Define a single source for the sample document images
-const SAMPLE_DOCUMENTS_IMAGES = 'https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=800, https://images.unsplash.com/photo-1527632911563-ee5b6d5344b6?w=800, https://images.unsplash.com/photo-1506973035872-18cda5b9f5de?w=800';
-
-
-function Section({ title, children }: {
-  title: string; children: React.ReactNode
-}) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-4">
-      <h2 className="text-2xl font-semibold">{title}</h2>
+      <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+        {title}
+      </h2>
       {children}
     </section>
   )
 }
 
-function CostCard({ title, items }: {
-  title: string; items: { label: string; value: string }[]
+function CostCard({
+  title,
+  items,
+}: {
+  title: string
+  items: { label: string; value: string }[]
 }) {
   return (
-    <Card>
+    <Card className="bg-white/90 backdrop-blur-xl shadow-[0_12px_40px_-10px_rgba(2,12,55,0.25)] ring-1 ring-sky-100">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="font-bold text-slate-900">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <ul className="space-y-2 text-sm">
-          {items.map(i => (
+        <ul className="space-y-3 text-[15px]">
+          {items.map((i) => (
             <li key={i.label} className="flex justify-between">
-              <span className="text-muted-foreground">{i.label}</span>
-              <span>{i.value}</span>
+              <span className="text-slate-500">{i.label}</span>
+              <span className="font-semibold text-slate-900">{i.value}</span>
             </li>
           ))}
         </ul>
@@ -2586,222 +2878,263 @@ function CostCard({ title, items }: {
 
 function SlotAlert({ text }: { text: string }) {
   return (
-    <div className="border rounded-lg p-6 text-center space-y-4 bg-muted/40">
-      <p className="text-lg font-semibold">Get alerted when slots open!</p>
-      <p className="text-sm text-muted-foreground">{text}</p>
-      <input
-        className="border rounded px-3 py-2 w-60"
-        placeholder="Your phone number"
-      />
-      <button className="bg-indigo-600 text-white px-4 py-2 rounded">
-        Send alerts
-      </button>
+    <div className="rounded-2xl p-6 text-center space-y-4 bg-gradient-to-b from-sky-50 to-white ring-1 ring-sky-100 shadow-sm">
+      <p className="text-lg font-semibold text-slate-900">Get alerted when slots open!</p>
+      <p className="text-sm text-slate-600">{text}</p>
+      <div className="flex items-center justify-center gap-2">
+        <input
+          className="border rounded-xl px-3 py-2 w-64 bg-white/80 outline-none focus:ring-2 ring-sky-300"
+          placeholder="Your phone number"
+        />
+        <button className="rounded-xl bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 font-semibold shadow">
+          Send alerts
+        </button>
+      </div>
     </div>
   )
 }
 
+/* ───────────────────────────────────────────────────────────── */
+/* Page                                                         */
+/* ───────────────────────────────────────────────────────────── */
 
 export default function VisaInfo() {
   const { country } = useParams<{ country: string }>()
   const router = useRouter()
-  const data = countryData.find(c => c.buttonLink.endsWith(`/${country}`))
+
+  const data = countryData.find((c) => c.buttonLink.endsWith(`/${country}`))
   if (!data) return <p className="p-10">Country not supported.</p>
 
   const hero = data.hero ?? Array(4).fill(data.backgroundPhoto)
   const plan = (data.pricePlan ?? 'Docs on Call') as PlanName
   const [trav, setTrav] = useState(1)
-  const guaranteeDate = useMemo(() => getFutureDate(), []);
+  const guaranteeDate = useMemo(() => getFutureDate(), [])
 
+  // sticky unstick logic: when the "end" sentinel becomes visible, we unstick the box
+  const stickyWrapRef = useRef<HTMLDivElement>(null)
+  const endSentinelRef = useRef<HTMLDivElement>(null)
+  const [atEnd, setAtEnd] = useState(false)
+
+  useEffect(() => {
+    const el = endSentinelRef.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([entry]) => setAtEnd(entry.isIntersecting),
+      { root: null, threshold: 0, rootMargin: '0px' }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+
+  // ensure global scrollbars are visible for page; we only make the right column sticky
   useEffect(() => {
     const style = document.createElement('style')
     style.innerHTML = `.scrollbar-hide::-webkit-scrollbar{display:none}`
     document.head.appendChild(style)
-    return () => {
-      document.head.removeChild(style)
-    }
+    return () => document.head.removeChild(style)
   }, [])
 
-
   return (
-    <div className="w-full">
-      {/* 1️⃣ Hero collage ----------------------------------------- */}
-      <section className="w-full grid grid-cols-1 md:grid-cols-3 gap-3 px-4 lg:px-12 pb-16">
-        <div className="relative h-80 md:row-span-2 rounded-lg overflow-hidden">
+    <div
+      className="
+        relative
+        bg-[radial-gradient(1200px_600px_at_20%_-100px,rgba(16,89,204,0.10),transparent),radial-gradient(1000px_500px_at_120%_-50px,rgba(14,68,150,0.10),transparent)]
+        bg-white
+      "
+    >
+      {/* Top hero – NOT sticky */}
+      <section className="w-full grid grid-cols-1 md:grid-cols-3 gap-3 px-4 lg:px-12 pt-6 pb-12">
+        <div className="relative h-80 md:row-span-2 rounded-2xl overflow-hidden">
           <Image src={hero[0]} fill alt={data.countryName} className="object-cover" />
-          <div className="absolute inset-0 bg-black/50" />
-          <h1 className="absolute bottom-4 left-4 text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+          <h1 className="absolute bottom-4 left-4 text-4xl md:text-5xl font-extrabold text-white drop-shadow-md">
             {data.countryName} Visa for Indians
           </h1>
         </div>
         {hero.slice(1).map((src, i) => (
-          <div key={i} className="relative h-40 rounded-lg overflow-hidden">
+          <div key={i} className="relative h-40 rounded-2xl overflow-hidden">
             <Image src={src} fill alt="" className="object-cover" />
+            <div className="absolute inset-0 bg-black/10" />
           </div>
         ))}
       </section>
 
-      {/* 2️⃣ Main layout: scrollable left, sticky right ------------ */}
-      <div className="flex flex-col lg:flex-row px-4 lg:px-12 gap-8">
-        {/* LEFT column */}
-        <div
-          className="w-full lg:w-3/5 max-h-[calc(100vh-6rem)] overflow-y-auto pr-4
-                     space-y-16 pb-24 scrollbar-hide"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {/* visa facts */}
-          {data.visaFacts && (
-            <Section title={`${data.countryName} Visa Information`}>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {data.visaFacts.map(f => (
-                  <Card key={f.label} className="text-center hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <CardTitle className="text-sm text-muted-foreground">{f.label}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-lg font-semibold">{f.value}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </Section>
-          )}
+      {/* Main 2-col layout */}
+      <div className="px-4 lg:px-12 pb-24">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* LEFT content (scrolls with the page) */}
+          <div className="w-full lg:w-3/5 space-y-14">
+            {/* Visa facts */}
+            {data.visaFacts && (
+              <Section title={`${data.countryName} Visa Information`}>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {data.visaFacts.map((f) => (
+                    <Card
+                      key={f.label}
+                      className="text-center bg-white/90 backdrop-blur-xl ring-1 ring-sky-100 shadow-[0_10px_30px_-12px_rgba(3,20,80,0.25)] hover:shadow-[0_16px_40px_-12px_rgba(3,20,80,0.28)] transition-shadow"
+                    >
+                      <CardHeader>
+                        <CardTitle className="text-sm text-slate-600">{f.label}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-xl font-extrabold text-slate-900">{f.value}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </Section>
+            )}
 
-          {/* requirements */}
-          {data.requirements && (
-            <Section title="Requirements">
-              <div className="flex flex-wrap gap-3">
-                {data.requirements.map(r => (
-                  <div key={r} className="px-4 py-2 bg-muted rounded-full text-sm font-medium">{r}</div>
-                ))}
-              </div>
-            </Section>
-          )}
+            {/* Requirements */}
+            {data.requirements && (
+              <Section title="Requirements">
+                <div className="flex flex-wrap gap-2">
+                  {data.requirements.map((r) => (
+                    <div
+                      key={r}
+                      className="px-3 py-2 rounded-full text-sm font-medium bg-sky-50 text-sky-800 ring-1 ring-sky-100"
+                    >
+                      {r}
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
 
-          {/* timeline */}
-          {data.timeline && (
-            <Section title={`How ${data.countryName} Visa Process Works`}>
-              <Stepper orientation="vertical" className="ml-4">
-                {data.timeline.map((item, i) => (
-                  <StepperItem key={i} step={i + 1} className="relative items-start [&:not(:last-child)]:flex-1">
-                    <StepperTrigger className="items-start pb-12 last:pb-0">
-                      <StepperIndicator />
-                      <div className="mt-0.5 px-2 text-left">
-                        <StepperTitle>{item.title}</StepperTitle>
-                        <p className="text-sm text-muted-foreground">{item.body}</p>
-                      </div>
-                    </StepperTrigger>
-                    {i < data.timeline.length - 1 && (
-                      <StepperSeparator className="absolute inset-y-0 left-3 top-[calc(1.5rem+0.125rem)] -order-1 m-0 -translate-x-1/2 group-data-[orientation=vertical]/stepper:h-[calc(100%-1.5rem-0.25rem)]" />
-                    )}
-                  </StepperItem>
-                ))}
-              </Stepper>
-            </Section>
-          )}
+            {/* Timeline (Stepper style) */}
+            {data.timeline && (
+              <Section title={`How ${data.countryName} Visa Process Works`}>
+                <div className="bg-white/90 rounded-2xl p-4 md:p-6 ring-1 ring-sky-100 backdrop-blur-xl shadow-sm">
+                  <Stepper orientation="vertical" className="ml-1">
+                    {data.timeline.map((item, i) => (
+                      <StepperItem
+                        key={i}
+                        step={i + 1}
+                        className="relative items-start [&:not(:last-child)]:flex-1"
+                      >
+                        <StepperTrigger className="items-start pb-10 last:pb-0">
+                          <StepperIndicator className="bg-sky-600 text-white ring-4 ring-sky-100" />
+                          <div className="mt-0.5 px-3 text-left">
+                            <StepperTitle className="text-slate-900 font-extrabold">
+                              {item.title}
+                            </StepperTitle>
+                            <p className="text-sm text-slate-600">{item.body}</p>
+                          </div>
+                        </StepperTrigger>
+                        {i < data.timeline.length - 1 && (
+                          <StepperSeparator className="absolute inset-y-0 left-[0.9rem] top-[2.1rem] -order-1 m-0 -translate-x-1/2 h-[calc(100%-2.1rem)] bg-sky-200" />
+                        )}
+                      </StepperItem>
+                    ))}
+                  </Stepper>
+                </div>
+              </Section>
+            )}
 
-          {/* cost breakdown */}
-          {data.costBreakdown && (
-            <Section title={`How Much Does a ${data.countryName} Visa Cost?`}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <CostCard title="Pay Now on Travaky" items={data.costBreakdown.payNow} />
-                {data.costBreakdown.payLater && (
-                  <CostCard title="Pay Later at Appointment Center" items={data.costBreakdown.payLater} />
-                )}
-              </div>
-            </Section>
-          )}
+            {/* Cost */}
+            {data.costBreakdown && (
+              <Section title={`How Much Does a ${data.countryName} Visa Cost?`}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <CostCard title="Pay Now on Travaky" items={data.costBreakdown.payNow} />
+                  {data.costBreakdown.payLater && (
+                    <CostCard
+                      title="Pay Later at Appointment Center"
+                      items={data.costBreakdown.payLater}
+                    />
+                  )}
+                </div>
+              </Section>
+            )}
 
-          {/* slot alert */}
-          {data.slotAlertText && (
-            <Section title="Your preferred appointment times aren't available">
-              <SlotAlert text={data.slotAlertText} />
-            </Section>
-          )}
+            {/* Slot Alert */}
+            {data.slotAlertText && (
+              <Section title="Your preferred appointment times aren't available">
+                <SlotAlert text={data.slotAlertText} />
+              </Section>
+            )}
 
-          {/* what you get */}
-          {data.whatYouGet && (
-            <Section title="What you get">
-              <p className="text-muted-foreground mb-4">
-                Travaky will give you a compiled application packet with all necessary documents
+            {/* What you get */}
+            {data.whatYouGet && (
+              <Section title="What you get">
+                <p className="text-slate-600 mb-3">
+                  Travaky will give you a compiled application packet with all necessary documents.
+                </p>
+                <h3 className="text-xl font-bold text-slate-900 mb-4">
+                  {data.whatYouGet.heading}
+                </h3>
+                <div className="flex items-center justify-center">
+                  <ImageSwiper images={SAMPLE_DOCUMENTS_IMAGES} />
+                </div>
+              </Section>
+            )}
+
+            {/* Rejection reasons */}
+            {data.rejectionReasons && (
+              <Section title={`${data.countryName} Visa Rejection Reasons`}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {data.rejectionReasons.map((r) => (
+                    <Card
+                      key={r.title}
+                      className="bg-red-50/80 dark:bg-red-900/15 ring-1 ring-red-200/60"
+                    >
+                      <CardHeader className="flex-row items-center gap-4 space-y-0">
+                        <span className="text-2xl">⚠️</span>
+                        <CardTitle className="text-red-800">{r.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-red-800/80">{r.body}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </Section>
+            )}
+
+            {/* Guarantee */}
+            <Section title="Travaky Guarantee">
+              <p className="text-slate-600">
+                {data.guaranteeLine
+                  ? data.guaranteeLine.replace('{date}', guaranteeDate)
+                  : `Get your visa by ${guaranteeDate}`}
               </p>
-              <h3 className="text-xl font-semibold mb-4">{data.whatYouGet.heading}</h3>
-              <div className="flex items-center justify-center">
-                <ImageSwiper images={SAMPLE_DOCUMENTS_IMAGES} />
-              </div>
             </Section>
-          )}
 
-          {/* rejection reasons */}
-          {data.rejectionReasons && (
-            <Section title={`${data.countryName} Visa Rejection Reasons`}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {data.rejectionReasons.map(r => (
-                  <Card key={r.title} className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-900/50">
-                    <CardHeader className="flex-row items-center gap-4 space-y-0">
-                      <span className="text-2xl">⚠️</span>
-                      <CardTitle>{r.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground">{r.body}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+            {/* Why Travaky */}
+            <Section title="Why Travaky?">
+              <p className="text-slate-600">
+                We’ve processed thousands of {data.countryName} visas with a 99% approval rate. Our
+                experts handle every detail so you don’t have to worry.
+              </p>
             </Section>
-          )}
 
-          {/* reviews */}
-          {data.reviews && (
-            <Section title="What our customers say">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {data.reviews.map(r => (
-                  <Card key={r.name} className="flex flex-col hover:shadow-xl transition-shadow">
-                    <CardHeader>
-                      <div className="flex items-center gap-3">
-                        <Image src={r.avatar} width={40} height={40} alt={r.name} className="rounded-full" />
-                        <div>
-                          <p className="font-semibold">{r.name}</p>
-                          <p className="text-xs text-muted-foreground">{r.date}{r.tag && ` • ${r.tag}`}</p>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                      <div className="flex items-center mb-2">
-                        {'★'.repeat(r.rating).split('').map((_, i) => <span key={i} className="text-yellow-500">★</span>)}
-                      </div>
-                      <p className="text-sm text-muted-foreground">{r.body}</p>
-                    </CardContent>
-                  </Card>
-                ))}
+            {/* Sentinel that triggers unstick (footer becomes reachable) */}
+            <div ref={endSentinelRef} className="h-1 w-full" />
+          </div>
+
+          {/* RIGHT — Travellers box that sticks until the bottom sentinel */}
+          <div className="w-full lg:w-2/5 lg:pl-1">
+            <div
+              ref={stickyWrapRef}
+              className={
+                atEnd
+                  ? '' // unstick near the bottom so footer can slide in
+                  : 'lg:sticky lg:top-24'
+              }
+            >
+              <div className="rounded-2xl bg-white shadow-[0_18px_60px_-16px_rgba(5,30,90,0.35)] ring-1 ring-sky-100 overflow-hidden">
+                <PricingSidebar
+                  variant="info"
+                  selectedPlan={plan}
+                  travelerCount={trav}
+                  onCountChange={setTrav}
+                  onStart={() =>
+                    router.push(
+                      `/apply/${data.slug}?travellers=${trav}&plan=${encodeURIComponent(plan)}`,
+                    )
+                  }
+                />
               </div>
-            </Section>
-          )}
-
-          {/* guarantee / reassurance */}
-          <Section title="Travaky Guarantee">
-            <p className="text-muted-foreground">
-              {data.guaranteeLine ? data.guaranteeLine.replace('{date}', guaranteeDate) : `Get your visa by ${guaranteeDate}`}
-            </p>
-          </Section>
-
-          <Section title="Why Travaky?">
-            <p className="text-muted-foreground">
-              We’ve processed thousands of {data.countryName} visas with a&nbsp;99 % approval rate.
-              Our experts handle every detail so you don’t have to worry.
-            </p>
-          </Section>
-        </div>
-
-        {/* RIGHT column */}
-        <div className="w-full lg:w-2/5">
-          <div className="sticky top-24">
-            <PricingSidebar
-              variant="info"
-              selectedPlan={plan}
-              travelerCount={trav}
-              onCountChange={setTrav}
-              onStart={() => router.push(`/apply/${data.slug}?travellers=${trav}&plan=${encodeURIComponent(plan)}`)}
-            />
+            </div>
           </div>
         </div>
       </div>

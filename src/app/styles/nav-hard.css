@@ -1,0 +1,80 @@
+/* Load after everything else. These classes are only used by the navbar. */
+
+.tvk-nav { 
+  position: fixed; inset: 0 auto auto 0; right: 0; top: 0;
+  height: 64px; z-index: 70;
+  background-color: hsl(var(--background) / 0.80) !important;
+  backdrop-filter: blur(12px) saturate(1.25);
+  -webkit-backdrop-filter: blur(12px) saturate(1.25);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.tvk-nav__wrap { 
+  max-width: 80rem; /* 1280px (max-w-7xl) */
+  height: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem; /* px-4 */
+}
+@media (min-width: 640px){ .tvk-nav__wrap{ padding-inline: 1.5rem; } } /* sm:px-6 */
+@media (min-width: 1024px){ .tvk-nav__wrap{ padding-inline: 2rem; } } /* lg:px-8 */
+
+.tvk-nav__row { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+
+.tvk-nav__brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+
+.tvk-nav__logo { width: 65px; height: 65px; object-fit: contain; border-radius: 9999px; }
+
+.tvk-nav__word {
+  font-weight: 700; font-size: 1.5rem; line-height: 1; letter-spacing: -0.01em;
+  /* gradient wordmark – forced so it cannot be overridden */
+  background-image: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary-600))) !important;
+  background-clip: text !important; -webkit-background-clip: text !important;
+  color: transparent !important; -webkit-text-fill-color: transparent !important;
+}
+
+.tvk-nav__links { display: none; }
+@media (min-width: 768px){ .tvk-nav__links{ display: block; } }
+
+.tvk-nav__list { display: flex; align-items: baseline; gap: 2rem; margin-left: 2.5rem; }
+
+.tvk-nav__link {
+  font-weight: 500; text-decoration: none;
+  color: hsl(var(--foreground)) !important;
+  transition: color .2s ease;
+}
+.tvk-nav__link.muted { color: hsl(var(--muted-foreground)) !important; }
+.tvk-nav__link:hover { color: hsl(var(--primary)) !important; }
+
+.tvk-nav__actions { display: none; }
+@media (min-width: 768px){ .tvk-nav__actions{ display: flex; align-items: center; gap: 1rem; } }
+
+/* Login text button – turns blue on hover (exact ui_hero) */
+.tvk-btn--ghost {
+  background: transparent !important; border: 0 !important; padding: .5rem .75rem; 
+  font-weight: 500; color: hsl(var(--muted-foreground)) !important;
+}
+.tvk-btn--ghost:hover { color: hsl(var(--primary)) !important; }
+
+/* Sign Up pill – richer blue on hover (exact ui_hero) */
+.tvk-btn--pill {
+  border: 0 !important; border-radius: 9999px !important; 
+  padding: .5rem .875rem; font-weight: 500;
+  background: hsl(var(--primary)) !important; color: hsl(var(--primary-foreground)) !important;
+  transition: background-color .15s ease;
+}
+.tvk-btn--pill:hover { background: hsl(var(--primary-600)) !important; }
+
+/* Mobile menu button: show on mobile, hide on md+ */
+.tvk-nav__burger{ display: inline-flex; align-items: center; background: transparent; border: 0; padding: .5rem; }
+.tvk-nav__burger svg { color: hsl(var(--muted-foreground)); }
+@media (min-width: 768px){ .tvk-nav__burger{ display: none !important; } }  /* ensure hidden on desktop */
+
+/* Mobile panel */
+.tvk-nav__panel { border-top: 1px solid hsl(var(--border)); 
+  background: hsl(var(--background) / .95); backdrop-filter: blur(12px); }
+.tvk-nav__panel a { display:block; padding: .5rem .75rem; font-weight:600;
+  color: hsl(var(--muted-foreground)) !important; text-decoration:none; }
+.tvk-nav__panel a:hover { color: hsl(var(--primary)) !important; }
+
+/* Ensure the navbar glass always wins against prose/docs themes */
+nav[role="navigation"], .tvk-nav { background-color: hsl(var(--background) / 0.80) !important; }

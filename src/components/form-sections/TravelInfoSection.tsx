@@ -85,7 +85,7 @@ export function TravelInfoSection({ traveler, setTravelerData }: Props) {
           className="mt-1 text-muted-foreground bg-muted cursor-not-allowed"
         />
       </div>
-
+{/* 
       <div className="md:col-span-2 flex items-center gap-2">
         <Checkbox
           id="accommodation"
@@ -93,7 +93,7 @@ export function TravelInfoSection({ traveler, setTravelerData }: Props) {
           onCheckedChange={(val) => handleChange('accommodationRequired', val)}
         />
         <Label htmlFor="accommodation">Accommodation Required</Label>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -1,0 +1,69 @@
+/* Do NOT use @layer here. This must load last and win via cascade + !important. */
+
+/* Exact UI_Hero tokens with !important so they beat any earlier definitions */
+:root {
+  /* bluish canvas */
+  --background: 248 250% 99% !important;
+  --foreground: 210 22% 15% !important;
+
+  --card: 0 0% 100% !important;
+  --card-foreground: 210 22% 15% !important;
+
+  --popover: 0 0% 100% !important;
+  --popover-foreground: 210 22% 15% !important;
+
+  /* Deep Navy brand + full scale */
+  --primary: 210 100% 20% !important;
+  --primary-foreground: 0 0% 100% !important;
+  --primary-50: 210 100% 98% !important;
+  --primary-100: 210 100% 95% !important;
+  --primary-200: 210 100% 88% !important;
+  --primary-300: 210 100% 78% !important;
+  --primary-400: 210 100% 65% !important;
+  --primary-500: 210 100% 50% !important;
+  --primary-600: 210 100% 40% !important;
+  --primary-700: 210 100% 30% !important;
+  --primary-800: 210 100% 20% !important;
+  --primary-900: 210 100% 12% !important;
+
+  /* Secondary / muted / accent */
+  --secondary: 210 10% 96% !important;
+  --secondary-foreground: 210 22% 15% !important;
+
+  --muted: 210 10% 96% !important;
+  --muted-foreground: 210 15% 45% !important;
+
+  --accent: 199 100% 50% !important;
+  --accent-foreground: 0 0% 100% !important;
+
+  --destructive: 0 84.2% 60.2% !important;
+  --destructive-foreground: 210 40% 98% !important;
+
+  --border: 214.3 31.8% 91.4% !important;
+  --input: 214.3 31.8% 91.4% !important;
+  --ring: 199 89% 48% !important;
+
+  --radius: 0.75rem !important;
+
+  /* shadows (used by hero CTAs) */
+  --shadow-sm: 0 1px 2px 0 hsl(210 100% 20% / 0.08) !important;
+  --shadow-md: 0 4px 6px -1px hsl(210 100% 20% / 0.15), 0 2px 4px -1px hsl(210 100% 20% / 0.08) !important;
+  --shadow-lg: 0 10px 15px -3px hsl(210 100% 20% / 0.15), 0 4px 6px -2px hsl(210 100% 20% / 0.08) !important;
+  --shadow-xl: 0 20px 25px -5px hsl(210 100% 20% / 0.2), 0 10px 10px -5px hsl(210 100% 20% / 0.08) !important;
+  --shadow-glow: 0 0 40px hsl(199 100% 50% / 0.25) !important;
+  --shadow-stamp: 0 8px 32px hsl(210 100% 20% / 0.3), inset 0 2px 4px hsl(0 0% 100% / 0.1) !important;
+}
+
+/* Force the bluish background on the canvas itself */
+html, body {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Safety: ensure gradient text is transparent even if globals style H1s */
+.force-clip {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+}

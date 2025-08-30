@@ -1,5 +1,23 @@
-html, body {
+/* html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-  }
+  } */
+
+
+/* src/app/globals.css */
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+/* Preserve your existing variables/colors; we only force the font family */
+:root {
+  /* keep your color tokens as-is; UI-Hero color mapping should already match your theme */
+}
+
+html, body {
+  @apply h-full;
+}
+
+body {
+  font-family: var(--font-plus-jakarta), ui-sans-serif, system-ui;
+}

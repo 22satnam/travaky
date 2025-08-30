@@ -28,6 +28,10 @@ export interface CountryData extends CountryExtra {
   visaVariable: string
   cost: string
   buttonLink: string
+
+  leadDays?: number               // e.g. 12 → "Visa by 14 Mar"
+  visaLabel?: string              // e.g. "Sticker visa" | "E-Visa"
+  priceINR?: number               // optional numeric price; UI still prefers `cost` if present
 }
 
 /* ---------- sample country filled with the extras ----------------*/
@@ -40,6 +44,11 @@ export const countryData: CountryData[] = [
     visaVariable: 'quick approval',
     cost: '₹8 500',
     buttonLink: '/visa/germany',
+
+      // NEW
+    leadDays: 12,
+    visaLabel: 'Sticker visa',
+    priceINR: 8500,
 
     /* previous extras */
     hero: [
@@ -107,6 +116,9 @@ export const countryData: CountryData[] = [
       visaVariable: "instant appointment",
       cost: "₹7500",
       buttonLink: "/visa/france",
+      leadDays: 10,
+      visaLabel: "Sticker visa",
+      priceINR: 7500,
     },
     // Netherlands
     {
@@ -116,6 +128,10 @@ export const countryData: CountryData[] = [
       visaVariable: "online booking",
       cost: "₹8100",
       buttonLink: "/visa/netherlands",
+      leadDays: 10,
+      visaLabel: "Sticker visa",
+      priceINR: 7500,
+
     },
     // Germany
     { 
@@ -125,6 +141,10 @@ export const countryData: CountryData[] = [
       visaVariable: "quick approval",
       cost: "₹8500",
       buttonLink: "/visa/germany",
+      leadDays: 10,
+      visaLabel: "Sticker visa",
+      priceINR: 7500,
+
     },
     // Spain
     {
@@ -134,6 +154,10 @@ export const countryData: CountryData[] = [
       visaVariable: "priority slots",
       cost: "₹8000",
       buttonLink: "/visa/spain",
+      leadDays: 10,
+      visaLabel: "Sticker visa",
+      priceINR: 7500,
+
     },
     // Greece
     {
@@ -143,6 +167,9 @@ export const countryData: CountryData[] = [
       visaVariable: "priority slots",
       cost: "₹8200",
       buttonLink: "/visa/greece",
+      leadDays: 10,
+      visaLabel: "Sticker visa",
+      priceINR: 7500,
     },
     // Austria
     {
@@ -152,15 +179,21 @@ export const countryData: CountryData[] = [
       visaVariable: "easy process",
       cost: "₹8000",
       buttonLink: "/visa/austria",
+      leadDays: 10,
+      visaLabel: "Sticker visa",
+      priceINR: 7500,
     },
     // Czech Republic
     {
-      slug: "czech-republic",
+      slug: "czechrepublic",
       countryName: "Czech Republic",
       backgroundPhoto: "https://images.unsplash.com/photo-1458150945447-7fb764c11a92?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3plY2glMjByZXB1YmxpY3xlbnwwfHwwfHx8MA%3D%3D",
       visaVariable: "simple process",
       cost: "₹8200",
-      buttonLink: "/visa/czech-republic",
+      buttonLink: "/visa/czechrepublic",
+      leadDays: 10,
+      visaLabel: "Sticker visa",
+      priceINR: 7500,
     },
     // Italy
     {
@@ -320,4 +353,3 @@ export const countryData: CountryData[] = [
     }
     // Add all the other countries from your data
   ]
-  

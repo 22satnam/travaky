@@ -81,7 +81,7 @@ export function BasicInfoSection({ traveler, setTravelerData }: Props) {
         <Label htmlFor="firstName">First Name</Label>
         <Input
           id="firstName"
-          placeholder="e.g., Satnam"
+          placeholder="e.g., Ram"
           value={traveler?.firstName || ''}
           onChange={(e) => handleChange('firstName', e.target.value)}
           className={cn('mt-1', validate('firstName'))}
@@ -106,7 +106,7 @@ export function BasicInfoSection({ traveler, setTravelerData }: Props) {
         <Input
           id="email"
           type="email"
-          placeholder="e.g., example@email.com"
+          placeholder="e.g., xyz@email.com"
           value={traveler?.email || ''}
           onChange={(e) => handleChange('email', e.target.value)}
           className={cn('mt-1', validate('email'))}

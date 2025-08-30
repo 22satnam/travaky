@@ -1,0 +1,44 @@
+@layer utilities {
+
+  .force-clip {
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+  }
+
+  /* fade-in */
+  @keyframes ui-hero-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in { animation: ui-hero-fade-in 700ms ease-out both; }
+
+  /* slide-up */
+  @keyframes ui-hero-slide-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-slide-up { animation: ui-hero-slide-up 800ms 120ms ease-out both; }
+
+  /* glow on the globe icon */
+  @keyframes ui-hero-glow {
+    0%,100% { filter: drop-shadow(0 0 0 rgba(0,0,0,0)); opacity: 1; }
+    50%     { filter: drop-shadow(0 0 8px rgba(59,130,246,0.5)); opacity: 0.9; }
+  }
+  .animate-glow { animation: ui-hero-glow 1.8s ease-in-out infinite; }
+
+  /* wave on the emoji */
+  @keyframes ui-hero-wave {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(12deg); }
+    100% { transform: rotate(0deg); }
+  }
+  .animate-wave { display: inline-block; animation: ui-hero-wave 1.6s ease-in-out infinite; }
+
+  /* shadow tokens used by the hero CTA */
+  :root {
+    --shadow-xl: 0 20px 50px rgba(0,0,0,.10);
+    --shadow-glow: 0 10px 30px rgba(59,130,246,.35);
+  }
+}

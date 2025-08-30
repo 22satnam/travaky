@@ -1,0 +1,687 @@
+/* Load this AFTER all other CSS. Only targets the hero. */
+
+/* Stop Nextra/Prose from recoloring headings & buttons inside the hero */
+.prose .ui-hero :where(h1,h2,h3,h4,h5,h6,button,a,span,svg),
+.nextra-content .ui-hero :where(h1,h2,h3,h4,h5,h6,button,a,span,svg) {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+/* Exact gradient text like ui_hero */
+.ui-hero .gradient-text {
+  background-image: linear-gradient(to right, hsl(var(--primary)), hsl(var(--accent))) !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+}
+
+/* Headline weight/spacing to match ui_hero */
+.ui-hero h1 {
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Primary CTA gradient exactly like ui_hero */
+.ui-hero .primary-cta {
+  background-image: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary-600))) !important;
+  color: #fff !important;
+  background-color: transparent !important;
+  box-shadow: var(--shadow-xl) !important;
+}
+.ui-hero .primary-cta:hover {
+  background-image: linear-gradient(to right, hsl(var(--primary-600)), hsl(var(--primary-700))) !important;
+  box-shadow: var(--shadow-glow) !important;
+}
+
+/* Outline CTA exactly like ui_hero */
+.ui-hero .outline-cta {
+  border: 2px solid hsl(var(--primary)) !important;
+  color: hsl(var(--primary)) !important;
+  background: transparent !important;
+}
+.ui-hero .outline-cta:hover {
+  background: hsl(var(--primary)) !important;
+  color: #fff !important;
+}
+
+/* Keep the bluish canvas (already from tokens), but ensure no theme flips it */
+html, body {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+
+/* Navbar glass should always look the same, even if prose/docs CSS is loaded */
+nav[role="navigation"], .nextra-nav, .navglass, nav.fixed {
+  background-color: hsl(var(--background) / 0.8) !important;
+  backdrop-filter: blur(12px) saturate(1.3);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+
+/* === HERO hard styles (ui_hero exact look) === */
+
+/* Bluish glows behind the headline */
+.ui-hero .hero-glow{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(900px 360px at 50% 35%, hsl(var(--primary-100) / .55), transparent 60%),
+    radial-gradient(320px 220px at 20% 25%, hsl(var(--accent) / .20), transparent 60%),
+    radial-gradient(360px 240px at 80% 60%, hsl(var(--primary-300) / .12), transparent 60%);
+  pointer-events:none;
+  filter: blur(2px);
+}
+
+/* Right media card */
+.ui-hero .hero-card{
+  background: hsl(var(--card));
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-xl);
+}
+
+/* Subtle inner glow on the card edges */
+.ui-hero .hero-card-overlay{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(600px 300px at 70% 20%, rgba(255,255,255,.12), transparent 60%),
+    linear-gradient(180deg, transparent 80%, rgba(0,0,0,.03));
+}
+
+/* KPI Pills */
+.ui-hero .hero-kpi{
+  display:flex; flex-direction:column; gap:4px;
+  padding:.75rem 1rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
+}
+
+
+
+/* --- HERO exact look helpers ------------------------------------------- */
+
+/* soft bluish glows around heading area */
+.ui-hero .hero-glow{
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(900px 360px at 50% 35%, hsl(var(--primary-100) / .55), transparent 60%),
+    radial-gradient(320px 220px at 20% 25%, hsl(var(--accent) / .20), transparent 60%),
+    radial-gradient(360px 240px at 80% 60%, hsl(var(--primary-300) / .12), transparent 60%);
+  filter: blur(2px);
+}
+
+/* -------- Badge (matches screenshot) -------- */
+.ui-hero .hero-badge{
+  position: relative;
+  display:inline-flex; align-items:center; gap:.75rem;
+  padding:.9rem 1.25rem;
+  border-radius:9999px;
+  background: linear-gradient(90deg, hsl(var(--primary-200) / .35), hsl(var(--primary-200) / .18));
+  border:1px solid hsl(var(--primary-300) / .55);
+  box-shadow:
+    0 1px 0 hsl(var(--primary-200) / .6) inset,
+    0 0 0 1px hsl(var(--primary-200) / .25);
+  backdrop-filter: blur(6px) saturate(1.05);
+  color: hsl(var(--foreground));
+}
+.ui-hero .hero-badge::before{
+  /* left glow that trails out of the pill */
+  content:""; position:absolute; left:-18px; top:50%; transform:translateY(-50%);
+  width:140px; height:120px; border-radius:9999px;
+  background: radial-gradient(80px 80px at 30% 50%, hsl(var(--primary-200) / .45), transparent 70%);
+  filter: blur(16px);
+  pointer-events:none;
+}
+.ui-hero .hero-badge .icon-wrap{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:9999px;
+  background: radial-gradient(circle at 30% 30%, hsl(var(--accent) / .45), transparent 70%);
+  color: hsl(var(--accent));
+  box-shadow: inset 0 0 0 1px hsl(var(--accent) / .35);
+}
+.ui-hero .hero-badge .label{
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+/* -------- Media card & overlay -------- */
+.ui-hero .hero-card{
+  background: hsl(var(--card));
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-xl);
+}
+.ui-hero .hero-card-overlay{
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(600px 300px at 70% 20%, rgba(255,255,255,.12), transparent 60%),
+    linear-gradient(180deg, transparent 80%, rgba(0,0,0,.03));
+}
+
+/* -------- KPI bubbles (logo-blue color) -------- */
+.ui-hero .kpi-bubble{
+  --kpi-bg: hsl(var(--card));
+  --kpi-border: hsl(var(--border));
+  --kpi-shadow: 0 12px 40px hsl(var(--primary-500) / .15);
+  isolation:isolate;
+  display:flex; flex-direction:column; gap:4px;
+  padding:.85rem 1.1rem;
+  background: var(--kpi-bg);
+  border: 1px solid var(--kpi-border);
+  border-radius: 1rem;
+  box-shadow: var(--kpi-shadow);
+}
+.ui-hero .kpi-bubble .kpi-num{
+  font-weight: 800; line-height:1; letter-spacing:-0.01em;
+  color: hsl(var(--accent));            /* same family as logo blue */
+  font-size: 1.75rem;
+}
+.ui-hero .kpi-bubble .kpi-sub{
+  font-size:.8rem; color:hsl(var(--muted-foreground));
+}
+
+/* tweak variants if needed later */
+.ui-hero .kpi-success .kpi-num{ color: hsl(var(--accent)); }
+.ui-hero .kpi-time .kpi-num{ color: hsl(var(--primary-500)); }
+
+
+
+/* ===== HERO POLISH ===================================================== */
+
+/* compact trust layout on mobile (not long scroll) */
+.ui-hero .hero-trust{
+  display:grid; grid-template-columns: 1fr 1fr; gap:.75rem 1.25rem;
+}
+@media (min-width: 768px){
+  .ui-hero .hero-trust{ display:flex; flex-wrap:wrap; gap:1.25rem 2.5rem; }
+}
+.ui-hero .trust-item{ display:inline-flex; align-items:center; gap:.5rem; color:hsl(var(--foreground) / .85); font-weight:600; }
+.ui-hero .trust-item .asterisk{ margin-left:2px; font-size:.75em; vertical-align:top; }
+
+/* "Coming soon" badge used in the E-Visa button */
+.ui-hero .soon-badge{
+  display:inline-flex; align-items:center; padding:.15rem .5rem; margin-left:.25rem;
+  font-size:.70rem; line-height:1; border-radius:9999px;
+  background:hsl(var(--secondary)); color:hsl(var(--secondary-foreground));
+  border:1px solid hsl(var(--border));
+}
+
+/* feathered video edges + overlay so media blends with page */
+.ui-hero .feather-edges{
+  -webkit-mask-image: radial-gradient(140% 110% at 50% 50%, #000 70%, transparent 100%);
+  mask-image: radial-gradient(140% 110% at 50% 50%, #000 70%, transparent 100%);
+}
+.ui-hero .hero-media-wrap::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(120% 80% at 70% 30%, hsl(var(--primary-50) / .35), transparent 60%),
+    linear-gradient(180deg, hsl(var(--background) / 0), hsl(var(--background) / .08));
+}
+.ui-hero .feather-blend{
+  box-shadow:
+    0 1px 0 hsl(var(--card) / .6) inset,
+    0 20px 40px hsl(var(--primary-500) / .10),
+    var(--shadow-xl);
+}
+
+/* Keep previous badge, kpi and overlay rules from earlier sections... (already in file) */
+
+/* ===================== VISA JOURNEY v3 ===================== */
+
+/* --- Passport (cleaner tilt & lighting) --- */
+.vj3-passport{ perspective: 1200px; }
+.vj3-passport__inner{
+  position: relative;
+  width: clamp(260px, 60vw, 560px);
+  height: clamp(160px, 32vw, 280px);
+  border-radius: 22px;
+  background: linear-gradient(160deg, hsl(var(--primary-800)), hsl(var(--primary-600)));
+  border: 1px solid hsl(var(--primary-300) / .25);
+  transform: rotateZ(-3deg);
+  box-shadow:
+    inset 0 1px 0 hsl(var(--primary-100) / .25),
+    0 22px 60px hsl(var(--primary-700) / .35);
+  overflow: hidden;
+}
+.vj3-passport__inner::after{
+  content:""; position:absolute; inset:0;
+  background: radial-gradient(55% 60% at 80% 12%, rgba(255,255,255,.16), transparent 60%);
+  pointer-events:none;
+}
+.vj3-icon{
+  position:absolute; left:50%; top:26%;
+  transform: translate(-50%, -50%);
+  display:grid; place-items:center;
+  width:74px; height:74px; border-radius:9999px;
+  background: radial-gradient(circle at 35% 30%, hsl(var(--primary-900) / .35), transparent 70%);
+  border: 1px solid hsl(var(--primary-300) / .20);
+}
+.vj3-title{
+  position:absolute; top:48%; left:50%; transform:translateX(-50%);
+  font-weight: 800; letter-spacing:.04em; color:white;
+  font-size: clamp(20px, 2.3vw, 26px);
+}
+.vj3-sub{
+  position:absolute; top:60%; left:50%; transform:translateX(-50%);
+  color: hsl(0 0% 100% / .9); font-weight: 600; letter-spacing:.04em;
+}
+.vj3-no{
+  position:absolute; top:72%; left:50%; transform:translateX(-50%);
+  color: hsl(0 0% 100% / .75); font-size:.9rem; letter-spacing:.05em;
+}
+
+/* red sticker */
+.vj3-sticker{
+  position:absolute; right:40px; top:34px; rotate: 16deg;
+  background: linear-gradient(180deg, hsl(3 90% 58%), hsl(3 82% 52%));
+  color: white; padding:.65rem .9rem; border-radius:16px;
+  box-shadow: 0 12px 30px hsl(3 80% 40% / .45), inset 0 1px 0 hsl(0 0% 100% / .35);
+  border: 1px solid hsl(3 82% 40% / .6);
+  text-align:center;
+}
+.vj3-sticker__title{ font-weight: 800; line-height:1; letter-spacing:.02em; }
+.vj3-sticker__date{ font-size:.75rem; opacity:.9; margin-top:.15rem; }
+
+/* big pill badge */
+.vj3-pill{
+  display:inline-flex; align-items:center; gap:.6rem;
+  padding:.9rem 1.25rem; border-radius:9999px;
+  background: linear-gradient(90deg, hsl(var(--primary-500)), hsl(var(--accent)));
+  border: 1px solid hsl(var(--primary-300) / .55);
+  box-shadow: 0 8px 26px hsl(var(--primary-500) / .25);
+  color: white; font-weight: 800;
+}
+.vj3-pill__icon{
+  display:grid; place-items:center;
+  width:28px; height:28px; border-radius:9999px;
+  background: white; color: hsl(var(--primary-600));
+  box-shadow: inset 0 0 0 1px hsl(var(--primary-400) / .4);
+}
+
+/* heading visibility */
+.vj3-heading{
+  font-size: clamp(28px, 5.6vw, 48px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: hsl(var(--foreground));
+}
+
+/* --- Animated dotted curve --- */
+.vj3-line-wrap{ position:relative; height: 240px; }
+.vj3-line{ position:absolute; inset:0; }
+.vj3-line__path{
+  stroke: hsl(var(--primary-300)); /* lighter than Travaky */
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 6 12;
+  animation: vj3-dash 6s linear infinite;
+  fill: none;
+}
+@keyframes vj3-dash{
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -240; }
+}
+
+/* Dots sitting above the curve */
+.vj3-dot{
+  position:absolute; transform: translate(-50%, -50%);
+  width: 84px; height: 84px; border-radius:9999px;
+  display:grid; place-items:center;
+  color: white;
+  background:
+    radial-gradient(60% 60% at 35% 35%, hsl(var(--primary-200) / .45), transparent 70%),
+    linear-gradient(180deg, hsl(var(--primary-800)), hsl(var(--primary-700)));
+  border: 1px solid hsl(var(--primary-300) / .45);
+  box-shadow: 0 10px 26px hsl(var(--primary-700) / .25);
+}
+.vj3-dot--success{
+  background:
+    radial-gradient(60% 60% at 35% 35%, hsl(140 70% 60% / .45), transparent 70%),
+    linear-gradient(180deg, hsl(142 71% 45%), hsl(142 78% 36%));
+  border-color: hsl(142 62% 35%);
+  box-shadow: 0 10px 26px hsl(142 60% 35% / .25);
+}
+.vj3-num{ font-weight: 800; font-size: 1.25rem; }
+
+/* Step cards */
+.vj3-card{
+  text-align:center;
+  padding-inline: .5rem;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.vj3-card:hover{
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+.vj3-card__icon{
+  margin-inline:auto; margin-bottom:.6rem;
+  width: 44px; height: 44px; border-radius: 9999px;
+  display:grid; place-items:center;
+  background: hsl(var(--secondary));
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow-sm);
+}
+.vj3-card__title{ font-weight: 800; color:hsl(var(--foreground) / .95); }
+.vj3-card__sub{ margin-top:.25rem; color:hsl(var(--muted-foreground)); }
+
+/* Mobile: compact 2x2, hide the big curve (we show mini dots above each card) */
+@media (max-width: 767px){
+  .vj3-line-wrap{ display:none; }
+  .vj3-dot{ width: 64px; height:64px; }
+}
+
+
+/* ============ Journey line: polished start/end, lighter brand tone ============ */
+.vj3-line-wrap{ position:relative; height: 240px; }
+.vj3-line{ position:absolute; inset:0; overflow:visible; }
+.vj3-line__path{
+  stroke: hsl(var(--primary-300));          /* lighter than brand */
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 6 12;
+  animation: vj3-dash 6s linear infinite;
+  fill: none;
+}
+@keyframes vj3-dash { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -240; } }
+
+/* Dots on the curve */
+.vj3-dot{
+  position:absolute; transform: translate(-50%, -50%);
+  width: 84px; height: 84px; border-radius:9999px;
+  display:grid; place-items:center;
+  color: white;
+  background:
+    radial-gradient(60% 60% at 35% 35%, hsl(var(--primary-200) / .45), transparent 70%),
+    linear-gradient(180deg, hsl(var(--primary-800)), hsl(var(--primary-700)));
+  border: 1px solid hsl(var(--primary-300) / .45);
+  box-shadow: 0 12px 30px hsl(var(--primary-700) / .18);
+}
+.vj3-dot--success{
+  background:
+    radial-gradient(60% 60% at 35% 35%, hsl(140 70% 60% / .45), transparent 70%),
+    linear-gradient(180deg, hsl(142 71% 45%), hsl(142 78% 36%));
+  border-color: hsl(142 62% 35%);
+  box-shadow: 0 12px 30px hsl(142 60% 35% / .18);
+}
+.vj3-num{ font-weight: 800; font-size: 1.25rem; }
+
+/* Mobile: hide curve; keep dots per card */
+@media (max-width: 767px){
+  .vj3-line-wrap{ display:none; }
+  .vj3-dot{ width: 64px; height: 64px; }
+}
+
+/* ====== Passport / Pill / Headings (from previous pass — keep) ====== */
+.vj3-passport{ perspective: 1200px; }
+.vj3-passport__inner{
+  position: relative;
+  width: clamp(260px, 60vw, 560px);
+  height: clamp(160px, 32vw, 280px);
+  border-radius: 22px;
+  background: linear-gradient(160deg, hsl(var(--primary-800)), hsl(var(--primary-600)));
+  border: 1px solid hsl(var(--primary-300) / .25);
+  transform: rotateZ(-3deg);
+  box-shadow:
+    inset 0 1px 0 hsl(var(--primary-100) / .25),
+    0 22px 60px hsl(var(--primary-700) / .35);
+  overflow: hidden;
+}
+.vj3-passport__inner::after{
+  content:""; position:absolute; inset:0;
+  background: radial-gradient(55% 60% at 80% 12%, rgba(255,255,255,.16), transparent 60%);
+  pointer-events:none;
+}
+.vj3-icon{
+  position:absolute; left:50%; top:26%;
+  transform: translate(-50%, -50%);
+  display:grid; place-items:center;
+  width:74px; height:74px; border-radius:9999px;
+  background: radial-gradient(circle at 35% 30%, hsl(var(--primary-900) / .35), transparent 70%);
+  border: 1px solid hsl(var(--primary-300) / .20);
+}
+.vj3-title{
+  position:absolute; top:48%; left:50%; transform:translateX(-50%);
+  font-weight: 800; letter-spacing:.04em; color:white;
+  font-size: clamp(20px, 2.3vw, 26px);
+}
+.vj3-sub{
+  position:absolute; top:60%; left:50%; transform:translateX(-50%);
+  color: hsl(0 0% 100% / .9); font-weight: 600; letter-spacing:.04em;
+}
+.vj3-no{
+  position:absolute; top:72%; left:50%; transform:translateX(-50%);
+  color: hsl(0 0% 100% / .75); font-size:.9rem; letter-spacing:.05em;
+}
+.vj3-sticker{
+  position:absolute; right:40px; top:34px; rotate: 16deg;
+  background: linear-gradient(180deg, hsl(3 90% 58%), hsl(3 82% 52%));
+  color: white; padding:.65rem .9rem; border-radius:16px;
+  box-shadow: 0 12px 30px hsl(3 80% 40% / .45), inset 0 1px 0 hsl(0 0% 100% / .35);
+  border: 1px solid hsl(3 82% 40% / .6);
+  text-align:center;
+}
+.vj3-sticker__title{ font-weight: 800; line-height:1; letter-spacing:.02em; }
+.vj3-sticker__date{ font-size:.75rem; opacity:.9; margin-top:.15rem; }
+
+.vj3-pill{
+  display:inline-flex; align-items:center; gap:.6rem;
+  padding:.9rem 1.25rem; border-radius:9999px;
+  background: linear-gradient(90deg, hsl(var(--primary-500)), hsl(var(--accent)));
+  border: 1px solid hsl(var(--primary-300) / .55);
+  box-shadow: 0 8px 26px hsl(var(--primary-500) / .25);
+  color: white; font-weight: 800;
+}
+.vj3-pill__icon{
+  display:grid; place-items:center;
+  width:28px; height:28px; border-radius:9999px;
+  background: white; color: hsl(var(--primary-600));
+  box-shadow: inset 0 0 0 1px hsl(var(--primary-400) / .4);
+}
+.vj3-heading{
+  font-size: clamp(28px, 5.6vw, 48px);
+  font-weight: 800; line-height: 1.1; letter-spacing: -0.01em;
+  color: hsl(var(--foreground));
+}
+
+
+/* GIF inside the circular badge */
+.vj3-dot--img{
+  background: white;                     /* clean white chip to showcase the GIF */
+  border-color: hsl(var(--border));
+  box-shadow: 0 12px 26px hsl(var(--foreground) / .06);
+}
+.vj3-gif{
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+}
+/* ========= Travaky card hover: brand ring + bluish hero glow ========= */
+.card-visa{
+  position: relative;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+/* gradient ring on hover — matches navbar brand (primary → primary-600) */
+.card-visa::before{
+  content: "";
+  position: absolute; inset: -1px; border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary-600)));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0; pointer-events: none; transition: opacity .2s ease;
+}
+
+/* soft bluish halo like the hero video */
+.card-visa::after{
+  content: "";
+  position: absolute; inset: 10% 6% auto 6%;
+  height: 120px;
+  border-radius: 999px;
+  background:
+    radial-gradient(160px 60px at 50% 0%,
+      hsl(var(--primary-300) / .28),
+      transparent 70%);
+  filter: blur(14px);
+  opacity: 0; transition: opacity .25s ease;
+  pointer-events: none; z-index: 0;
+}
+
+.card-visa:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.card-visa:hover::before { opacity: 1; }
+.card-visa:hover::after  { opacity: 1; }
+
+/* keep rounded top corners on the image */
+.card-visa .object-cover{
+  border-top-left-radius: 16px; border-top-right-radius: 16px;
+}
+
+/* palette-accurate emphasis */
+.card-visa .meta-strong { color: hsl(var(--primary)); font-weight: 800; }
+
+
+
+/* --- How It Works: icon tokens (on-brand, not bland) --- */
+.icon-token{
+  --_size: 56px;
+  width: var(--_size);
+  height: var(--_size);
+  display: grid;
+  place-content: center;
+  border-radius: 9999px;
+  color: hsl(var(--primary-foreground));
+  position: relative;
+  box-shadow:
+    0 10px 18px hsl(var(--primary-800) / .18),
+    inset 0 1px 0 hsl(0 0% 100% / .35);
+  border: 1px solid hsl(var(--border) / .6);
+}
+@media (min-width: 768px){
+  .icon-token{ --_size: 60px; }
+}
+.icon-token--primary{
+  background:
+    radial-gradient(90px 36px at 24% 12%, hsl(var(--primary-300) / .30), transparent 60%),
+    linear-gradient(145deg, hsl(var(--primary-500)), hsl(var(--primary-600)));
+}
+.icon-token--success{
+  background:
+    radial-gradient(90px 36px at 24% 12%, hsl(142 70% 45% / .30), transparent 60%),
+    linear-gradient(145deg, hsl(142 70% 48%), hsl(142 70% 42%));
+  color: white;
+  box-shadow:
+    0 10px 18px hsl(142 70% 20% / .22),
+    inset 0 1px 0 hsl(0 0% 100% / .35);
+}
+
+/* Reuse your card hover ring + bluish glow */
+.card-visa{
+  position: relative;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow-sm);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card-visa::before{
+  content: "";
+  position: absolute; inset: -1px; border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary-600)));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0; transition: opacity .2s ease;
+  pointer-events: none;
+}
+.card-visa::after{
+  content: "";
+  position: absolute; inset: 12% 8% auto 8%;
+  height: 92px;
+  border-radius: 999px;
+  background:
+    radial-gradient(140px 50px at 50% 0%,
+      hsl(var(--primary-300) / .22),
+      transparent 70%);
+  filter: blur(12px);
+  opacity: 0; transition: opacity .25s ease;
+  pointer-events: none; z-index: 0;
+}
+.card-visa:hover{ box-shadow: var(--shadow-lg); }
+.card-visa:hover::before{ opacity: 1; }
+.card-visa:hover::after{  opacity: 1; }
+
+/* Slim, subtle connectors */
+.how-connector{
+  position: absolute;
+  top: 50%;
+  right: -14px;
+  width: 36px;
+  height: 2px;
+  background: linear-gradient(to right,
+    hsl(var(--primary-300) / .35),
+    hsl(var(--primary-300)));
+  transform: translateY(-50%);
+  opacity: .9;
+  border-radius: 999px;
+}
+.how-connector::after{
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  width: 6px; height: 6px;
+  border-right: 2px solid hsl(var(--primary-300));
+  border-top: 2px solid hsl(var(--primary-300));
+  transform: translateY(-50%) rotate(45deg);
+  border-radius: 1px;
+}
+
+
+/* extra icon tones */
+.icon-token--violet{
+  background:
+    radial-gradient(90px 36px at 24% 12%, hsl(262 83% 58% / .30), transparent 60%),
+    linear-gradient(145deg, hsl(262 83% 58%), hsl(262 83% 52%));
+  color: white;
+  box-shadow:
+    0 10px 18px hsl(262 70% 30% / .22),
+    inset 0 1px 0 hsl(0 0% 100% / .35);
+}
+.icon-token--amber{
+  background:
+    radial-gradient(90px 36px at 24% 12%, hsl(38 92% 55% / .30), transparent 60%),
+    linear-gradient(145deg, hsl(38 92% 60%), hsl(32 95% 54%));
+  color: hsl(22 80% 14%);
+  box-shadow:
+    0 10px 18px hsl(35 85% 28% / .18),
+    inset 0 1px 0 hsl(0 0% 100% / .35);
+}
+
+/* subtle soft emphasis for a featured card */
+.feature-card--featured{
+  background:
+    linear-gradient(0deg, hsl(142 70% 96% / .75), transparent 50%) border-box,
+    hsl(var(--card));
+}
+
+/* availability dot */
+.dot-available{
+  width: 8px; height: 8px; border-radius: 999px;
+  background: hsl(142 70% 45%);
+  box-shadow: 0 0 0 2px hsl(142 70% 45% / .15);
+}

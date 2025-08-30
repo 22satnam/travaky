@@ -1,0 +1,37 @@
+/* Travaky Apply styles (white + light-blue hero vibe, no glass) */
+.tvk-apply-bg {
+  background:
+    radial-gradient(1350px 700px at 50% -250px, #EEF5FF 0%, #ffffff 35%, #ffffff 100%) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tvk-apply-bg {
+    background:
+      radial-gradient(1350px 700px at 50% -250px, #031b47 0%, #020b1e 45%, #01060e 100%) !important;
+  }
+}
+
+.tvk-apply-card {
+  border-radius: 16px !important;
+  border: 1px solid rgba(2, 22, 70, 0.08) !important;
+  background: #ffffff !important;
+  box-shadow: 0 18px 60px -8px rgba(2, 22, 70, 0.08) !important;
+}
+
+.tvk-apply-primary {
+  border-radius: 14px !important;
+  padding: 10px 16px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  background: #0b61d6 !important;
+  box-shadow: 0 10px 24px -6px rgba(11, 97, 214, 0.35) !important;
+}
+.tvk-apply-primary:hover { opacity: .95 !important; }
+
+.tvk-apply-ghost {
+  border-radius: 14px !important;
+  padding: 10px 16px !important;
+  font-weight: 700 !important;
+  background: #fff !important;
+  border: 1px solid rgba(2, 22, 70, 0.15) !important;
+}

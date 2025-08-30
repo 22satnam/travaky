@@ -1,0 +1,88 @@
+/* src/app/styles/ui-hero-tokens.css
+   Lock UI_Hero palette across light/dark so visuals are identical. */
+@layer base {
+  :root {
+    /* base surfaces */
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+    /* cards */
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    /* popovers */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    /* UI_Hero primary (exactly as used in header/buttons/etc) */
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    /* secondary/muted */
+    --secondary: 210 10% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 10% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    /* accents */
+    --accent: 199 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    /* destructive */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* borders / inputs / rings */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 199 89% 48%;
+
+    /* sidebar (if you use shadcn sidebar vars anywhere) */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222.2 47.4% 11.2%;
+    --sidebar-primary: 210 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 10% 96%;
+    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 199 89% 48%;
+  }
+
+  /* Mirror the same values in .dark so visuals NEVER change */
+  .dark {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 10% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 10% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 199 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 199 89% 48%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222.2 47.4% 11.2%;
+    --sidebar-primary: 210 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 10% 96%;
+    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 199 89% 48%;
+  }
+}

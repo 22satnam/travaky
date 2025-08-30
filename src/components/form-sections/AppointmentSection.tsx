@@ -6,7 +6,8 @@ import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const timeSlots = ["10:00 AM", "11:00 AM", "12:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"];
+const VFSCity = ["Mumbai", "New Delhi", "Banglore", "Chennai", "Hyderabad", "Jalandhar", "Kolkata", "Ahmedabad", "Pune", "Gurgaon", "Kochi", "Chandigarh", 
+  "Lucknow", "Jaipur", "Goa", "Thiruvananthapuram", "Pudducherry"];
 
 interface Props {
   data: any
@@ -53,7 +54,7 @@ export function AppointmentSection({ data, setData }: Props) {
       </div> */}
 
        {/* New Time Slot Dropdown */}
-      <div>
+      {/* <div>
           <Label>Appointment Time</Label>
           <Select
             value={data?.appointmentTime || ''}
@@ -67,17 +68,30 @@ export function AppointmentSection({ data, setData }: Props) {
               ))}
             </SelectContent>
           </Select>
-      </div>
+      </div> */}
 
-      <div className="md:col-span-2">
-        <Label>Appointment Address</Label>
-        <Input
+      <div>
+        <Label>Appointment City</Label>
+        {/* <Input
           placeholder="e.g., 123 Main St, Delhi"
           value={data?.appointmentAddress || ''}
           onChange={(e) => handleChange('appointmentAddress', e.target.value)}
           className={cn('mt-1', validate('appointmentAddress'))}
           required
-        />
+        /> */}
+        <Select
+          value={data?.appointmentAddress || ''}
+          onValueChange={(value) => handleChange('appointmentAddress', value)}>
+          <SelectTrigger className={cn('mt-1', validate('appointmentAddress'))}>
+            <SelectValue placeholder="Select a city for appointment" />
+          </SelectTrigger>
+          <SelectContent>
+            {VFSCity.map(City => (
+              <SelectItem key={City} value={City}>{City}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
       </div>
 
       <div>
