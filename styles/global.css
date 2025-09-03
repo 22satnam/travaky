@@ -11,7 +11,15 @@
 
 /* Preserve your existing variables/colors; we only force the font family */
 :root {
-  /* keep your color tokens as-is; UI-Hero color mapping should already match your theme */
+  
+   --shadow-card: 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 12px 32px rgba(0,0,0,0.10);
+  --shadow-primary: 0 6px 20px rgba(59,130,246,0.35);
+  --shadow-glow: 0 0 0 2px rgba(59,130,246,0.15), 0 0 40px rgba(59,130,246,0.25);
+}
+@layer components {
+  .hover-lift { @apply transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-card-hover; }
+  .hover-glow { @apply transition-all duration-300 ease-out hover:shadow-glow; }
 }
 
 html, body {

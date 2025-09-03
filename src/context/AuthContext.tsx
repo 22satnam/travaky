@@ -246,6 +246,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
+import {supabase} from '@/lib/supabase/client'
 
 type Session = { id: number; email: string; role?: string } | null
 interface Ctx { session: Session; refreshSession: () => void; logout: () => Promise<void> }
@@ -269,6 +270,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         : null,
     )
   }
+
+  async function bridgeToSupabase(appJwt: string) {
+  const res = await fetch('/api/auth/supabase-token', {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${appJwt}` },
+  })
+  if (!res.ok) return
+  const data = await res.json()
+  await supabase.auth.setSession({
+    access_token: data.access_token,
+    refresh_token: data.access_token, // not used, but required by type
+  })
+}
 
   const logout = async () => {
     await fetch('/api/logout', { credentials: 'include' })

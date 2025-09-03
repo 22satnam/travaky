@@ -5,9 +5,12 @@ body {
 
 @import 'tailwindcss';
 
-
+/* 
 @plugin 'tailwindcss-animate';
-@plugin "@iconify/tailwind4";
+@plugin "@iconify/tailwind4"; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -106,6 +109,10 @@ body {
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --shadow-card: 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 12px 32px rgba(0,0,0,0.10);
+  --shadow-primary: 0 6px 20px rgba(59,130,246,0.35);
+  --shadow-glow: 0 0 0 2px rgba(59,130,246,0.15), 0 0 40px rgba(59,130,246,0.25);
 }
 
 /*
@@ -204,7 +211,66 @@ body {
   --chart-5: 27 87% 67%;
 
   --radius: 0.75rem;
+  --gradient-section: radial-gradient(1200px 600px at 100% -20%, hsl(var(--primary)/0.08) 0%, transparent 60%),
+                      linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--card)) 100%);
 }
+
+/* ==== Dashboard helper utilities (variant-free @apply) ==== */
+@layer components {
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  .hover-lift:hover {
+    @apply shadow-card-hover;
+    transform: scale(1.02);
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300 ease-out;
+  }
+  .hover-glow:hover {
+    @apply shadow-glow;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  .slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  .section-card {
+  /* set background directly instead of using a tailwind utility */
+  background-image: var(--gradient-section);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+
+  /* keep your existing tailwind utilities */
+  @apply rounded-2xl p-6 shadow-card;
+}
+
+  .dashboard-grid {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+  }
+  @media (max-width: 768px) {
+    .dashboard-grid {
+      @apply grid-cols-1 gap-4;
+    }
+  }
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
 
 .dark {
   --background: 210 100% 4%;

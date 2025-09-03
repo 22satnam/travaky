@@ -329,6 +329,7 @@ import GlobalLoader from "@/components/ui/GlobalLoader"
 import ThemeLightLock from "./ThemeLightLock"
 import { AuthDialogProvider } from '@/context/AuthDialogProvider'
 import Footer from "@/components/ui/footer-section"
+import QueryProvider from '@/providers/react-query'
 // import AuthDialogs  from "@/context/AuthDialogs"
 // import { AuthProvider } from "@/context/AuthContext"
 // import { LoadingProvider } from '@/context/LoadingContext'
@@ -367,8 +368,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main
               // style={!inDashboard ? { paddingTop: NAVBAR_HEIGHT } : undefined}
               className="flex-1 flex flex-col"
-            >
-              {children}
+            ><QueryProvider>{children}</QueryProvider>
             </main>
             <Footer />
             {/* GlobalLoader is non-blocking so page content is still interactive */}

@@ -356,19 +356,50 @@
 //   // Tailwind v4: plugins can be loaded via @plugin in CSS (you already do this)
 // }
 
-
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
   content: [
-    "./src/**/*.{ts,tsx,js,jsx}",
-    "./components/**/*.{ts,tsx,js,jsx}",
-    "./app/**/*.{ts,tsx,js,jsx}",
+    './src/**/*.{ts,tsx,js,jsx}',
+    './components/**/*.{ts,tsx,js,jsx}',
+    './app/**/*.{ts,tsx,js,jsx}',
   ],
   theme: {
     container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
     extend: {
+    boxShadow: {
+        // custom names used by your CSS
+        card: 'var(--shadow-card, 0 8px 24px rgba(0,0,0,0.06))',
+        'card-hover': 'var(--shadow-card-hover, 0 12px 32px rgba(0,0,0,0.10))',
+        primary: 'var(--shadow-primary, 0 6px 20px rgba(59,130,246,0.35))',
+        glow: 'var(--shadow-glow, 0 0 0 2px rgba(59,130,246,0.15), 0 0 40px rgba(59,130,246,0.25))',
+        // if you really need these sizes too, keep them here (don’t make a second boxShadow object)
+        sm: 'var(--shadow-sm)',
+        DEFAULT: 'var(--shadow-md)',
+        md: 'var(--shadow-md)',
+        lg: 'var(--shadow-lg)',
+        xl: 'var(--shadow-xl)',
+        stamp: 'var(--shadow-stamp)',
+      },
       colors: {
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-background))',
+          foreground: 'hsl(var(--sidebar-foreground))',
+          primary: 'hsl(var(--sidebar-primary))',
+          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+          accent: 'hsl(var(--sidebar-accent))',
+          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          border: 'hsl(var(--sidebar-border))',
+          ring: 'hsl(var(--sidebar-ring))',
+        },
+
+      backgroundImage: {
+      'gradient-primary': 'var(--gradient-primary)',
+      'gradient-card': 'var(--gradient-card)',
+      'gradient-hero': 'var(--gradient-hero)',
+      'gradient-section': 'var(--gradient-section)',
+      'gradient-hover': 'var(--gradient-hover)',
+    },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -413,6 +444,6 @@ export default {
         sans: ["var(--font-sans)", "Plus Jakarta Sans", "ui-sans-serif", "system-ui"],
       },
     },
+     plugins: [require('tailwindcss-animate')],
   },
-  // no plugins here – you already load them with @plugin in CSS (v4 style)
-}
+};
