@@ -16,23 +16,25 @@ const netherlands : CountryMapping = {
     companyAddress:  ["Text15"],
     arrival:         ["Text21"],
     departure:       ["Text22"],
-     gender: {
-      Male:   ["Text5"],
-      Female: ["Text5"],
-      Other:  ["Text5"],
+  },
+  checkboxFields: {
+    gender: {
+      Male:   "Text5",
+      Female: "Text5",
+      Other:  "Text5",
     },
     maritalStatus: {
-      Single:   ["Text6"],
-      Married:  ["Text6"],
-      Divorced: ["Text6"],
-      Widow:    ["Text6"],
-      Other:    ["Text6"],
+      Single:   "Text6",
+      Married:  "Text6",
+      Divorced: "Text6",
+      Widow:    "Text6",
+      Other:    "Text6",
     },
- purposeOfTravel: {
-      Tourism:  ["Text16"],
-      Business: ["Text16"],
-      Visitor:  ["Text16"],
-   },
+    purposeOfTravel: {
+      Tourism:  "Text16",
+      Business: "Text16",
+      Visitor:  "Text16",
+    },
   },
 }
 export default netherlands

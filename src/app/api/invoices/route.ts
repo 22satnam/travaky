@@ -336,7 +336,7 @@ export async function GET(_: NextRequest) {
 
   /* ── filter in JS ── */
   const mine = (data ?? []).filter(
-    inv => inv.visa_applications?.user_id === userId
+    (inv: any) => inv.visa_applications?.user_id === userId
   )
 
   return NextResponse.json(mine)

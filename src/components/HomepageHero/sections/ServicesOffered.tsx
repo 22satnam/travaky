@@ -56,7 +56,7 @@ const INR = (n: number) => `₹${new Intl.NumberFormat('en-IN').format(n)}`
 
 export default function ServicesOffered() {
   const router = useRouter()
-  const { requireAuth } = useRequireAuth()
+  const requireAuth = useRequireAuth()
 
   const cards = useMemo(() => {
     return PLAN_NAMES.map((plan) => {
@@ -85,7 +85,7 @@ export default function ServicesOffered() {
     })
   }, [])
 
-  const go = (href: string) => requireAuth(() => router.push(href))
+  const go = (href: string) => requireAuth(href)
 
   return (
     <section id="services" className="relative py-12 sm:py-16">

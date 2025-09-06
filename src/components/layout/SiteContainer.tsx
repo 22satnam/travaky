@@ -8,14 +8,15 @@ import clsx from "clsx"
  * Usage:  <SiteContainer as="section">…</SiteContainer>
  */
 export default function SiteContainer({
-  as: Tag = "div",
+  as = "div",
   className,
   children,
 }: {
-  as?: keyof JSX.IntrinsicElements
+  as?: keyof React.JSX.IntrinsicElements
   className?: string
   children: React.ReactNode
 }) {
+  const Tag = as as any
   return (
     <Tag
       className={clsx(

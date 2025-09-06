@@ -250,6 +250,10 @@ type Mode = 'login' | 'signup'
 type AuthDialogAPI = {
   open: (next?: string, mode?: Mode) => void
   close: () => void
+  isOpen: boolean
+  mode: Mode
+  next: string
+  switchMode: () => void
 }
 
 const AuthDialogCtx = createContext<AuthDialogAPI | null>(null)
@@ -273,6 +277,10 @@ export function AuthDialogProvider({ children }: { children: React.ReactNode }) 
   const router = useRouter()
   const { refreshSession } = useAuth()
 
+  const toggleMode = useCallback(() => {
+    setMode((m) => (m === 'login' ? 'signup' : 'login'))
+  }, [])
+
   const api: AuthDialogAPI = useMemo(
     () => ({
       open: (next, m) => {
@@ -281,13 +289,13 @@ export function AuthDialogProvider({ children }: { children: React.ReactNode }) 
         setOpen(true)
       },
       close: () => setOpen(false),
+      isOpen: open,
+      mode,
+      next: nextHref,
+      switchMode: toggleMode,
     }),
-    []
+    [open, mode, nextHref, toggleMode]
   )
-
-  const toggleMode = useCallback(() => {
-    setMode((m) => (m === 'login' ? 'signup' : 'login'))
-  }, [])
 
   return (
     <AuthDialogCtx.Provider value={api}>

@@ -61,7 +61,7 @@ export async function getUser(req?: Request): Promise<User | null> {
   if (req) {
     authHeader = req.headers.get('authorization') || ''
   } else {
-    const h = headers()
+    const h = await headers()
     authHeader = h.get('authorization') || ''
   }
 
@@ -69,7 +69,7 @@ export async function getUser(req?: Request): Promise<User | null> {
   if (authHeader.startsWith('Bearer ')) token = authHeader.slice(7)
 
   if (!token) {
-    const c = cookies()
+    const c = await cookies()
     token = c.get('app_session')?.value || ''
   }
 

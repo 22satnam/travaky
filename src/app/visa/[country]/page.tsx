@@ -2931,7 +2931,11 @@ export default function VisaInfo() {
     const style = document.createElement('style')
     style.innerHTML = `.scrollbar-hide::-webkit-scrollbar{display:none}`
     document.head.appendChild(style)
-    return () => document.head.removeChild(style)
+    return () => {
+      if (document.head.contains(style)) {
+        document.head.removeChild(style)
+      }
+    }
   }, [])
 
   return (
@@ -3021,7 +3025,7 @@ export default function VisaInfo() {
                             <p className="text-sm text-slate-600">{item.body}</p>
                           </div>
                         </StepperTrigger>
-                        {i < data.timeline.length - 1 && (
+                        {i < (data.timeline?.length || 0) - 1 && (
                           <StepperSeparator className="absolute inset-y-0 left-[0.9rem] top-[2.1rem] -order-1 m-0 -translate-x-1/2 h-[calc(100%-2.1rem)] bg-sky-200" />
                         )}
                       </StepperItem>

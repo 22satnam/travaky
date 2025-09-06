@@ -1,9 +1,27 @@
 "use client"
 
-import HomepageHero from '@/components/HomepageHero'
+import { Suspense } from 'react'
+import dynamic from 'next/dynamic'
+
+const HomepageHero = dynamic(() => import('@/components/HomepageHero'), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+  )
+})
 
 export default function HomePage() {
-  return <HomepageHero />
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    }>
+      <HomepageHero />
+    </Suspense>
+  )
 }
 
 

@@ -32,7 +32,7 @@ export function useRealtime(table: string, mutate: ()=>void) {
     )
     const ch = supabase
       .channel(table)
-      .on('postgres_changes', { event: '*', table }, () => mutate())
+      .on('postgres_changes', { event: '*', schema: 'public', table }, () => mutate())
       .subscribe()
     return () => { supabase.removeChannel(ch) }
   }, [table, mutate])

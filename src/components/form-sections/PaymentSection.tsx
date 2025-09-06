@@ -441,7 +441,7 @@ export function PaymentSection({
 
   const offer = PRICING.offers[selectedPlan]
 
-  const { breakUp, total, promo } = useMemo(
+  const { breakUp, total, appliedOffer } = useMemo(
     () =>
       calcPrice({
         plan: selectedPlan,
@@ -540,10 +540,10 @@ export function PaymentSection({
             </div>
           )}
 
-          {breakUp.discount > 0 && (
+          {appliedOffer && (
             <div className="flex justify-between text-emerald-700">
-              <span>{promo ?? 'Discount'}</span>
-              <span>− ₹{breakUp.discount.toLocaleString('en-IN')}</span>
+              <span>{appliedOffer.label ?? 'Discount'}</span>
+              <span>− Applied</span>
             </div>
           )}
 

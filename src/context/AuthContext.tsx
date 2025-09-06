@@ -249,7 +249,14 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import {supabase} from '@/lib/supabase/client'
 
 type Session = { id: number; email: string; role?: string } | null
-interface Ctx { session: Session; refreshSession: () => void; logout: () => Promise<void> }
+interface Ctx { 
+  session: Session; 
+  setSession: (session: Session) => void; 
+  refreshSession: () => void; 
+  logout: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string) => Promise<void>;
+}
 
 const AuthContext = createContext<Ctx | null>(null)
 
@@ -289,9 +296,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setSession(null)
   }
 
+  const login = async (email: string, password: string) => {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    const json = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(json.error || 'Login failed')
+    await refreshSession()
+  }
+
+  const signup = async (email: string, password: string) => {
+    const res = await fetch('/api/signup', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    const json = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(json.error || 'Signup failed')
+    await refreshSession()
+  }
+
   useEffect(() => { refreshSession() }, [])
 
-  return <AuthContext.Provider value={{ session, refreshSession, logout }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ session, setSession, refreshSession, logout, login, signup }}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => {

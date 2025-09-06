@@ -1,4 +1,4 @@
-import { Footer } from "@/components/ui/footer-section"
+import Footer from "@/components/ui/footer-section"
 
 export default function Home() {
   return (

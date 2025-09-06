@@ -643,7 +643,7 @@ function MobileSidebar() {
 
 function SidebarLink({
   href, label, icon, onClick,
-}: { href:string; label:string; icon:JSX.Element; onClick?:()=>void }) {
+}: { href:string; label:string; icon:React.JSX.Element; onClick?:()=>void }) {
   const pathname = usePathname()
   const active   = pathname === href
   const { open } = useSidebar()

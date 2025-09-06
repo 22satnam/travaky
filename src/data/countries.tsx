@@ -1,4 +1,4 @@
-import { PRICE_PLANS } from '@/config/pricing'
+import { PRICING } from '@/config/pricing'
 
 /* ---------- new optional reassurance fields -------------------- */
 interface CostItem          { label: string; value: string }
@@ -11,7 +11,7 @@ export interface CountryExtra {
   requirements?:  string[]
   timeline?:      { title: string; body: string }[]
   guaranteeLine?: string
-  pricePlan?:     keyof typeof PRICE_PLANS
+  pricePlan?:     keyof typeof PRICING.mrp
 
   /* 🆕 reassurance blocks */
   costBreakdown?: { payNow: CostItem[]; payLater?: CostItem[] }

@@ -33,12 +33,12 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from './AppSidebar'
 import { DashboardHeader } from "./DashboardHeader";
 import { TrackApplication } from "./TrackApplication";
-import { MyDocuments } from "./MyDocuments";
-import { PaymentInvoices } from "./PaymentInvoices";
-import { SupportHelp } from "./SupportHelp";
+import MyDocuments from "./MyDocuments";
+import PaymentInvoices from "./PaymentInvoices";
+import SupportHelp from "./SupportHelp";
 
 export const DashboardLayout = () => {
-  const [activeSection, setActiveSection] = useState("tracking");
+  const [activeSection, setActiveSection] = useState<"tracking" | "documents" | "invoices" | "support">("tracking");
 
   const renderContent = () => {
     switch (activeSection) {

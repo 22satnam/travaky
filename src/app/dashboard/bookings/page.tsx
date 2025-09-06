@@ -113,6 +113,7 @@
 
 'use client'
 
+import { Suspense } from 'react'
 import useSWR from 'swr'
 import DataTable from '@/components/ui/table/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
@@ -131,7 +132,7 @@ type Booking = {
 
 const fetcher = (u: string) => fetch(u).then(r => r.json())
 
-export default function BookingsPage() {
+function BookingsContent() {
   const router       = useRouter()
   const search       = useSearchParams()
   const modalId      = search.get('id')
@@ -192,5 +193,13 @@ export default function BookingsPage() {
         />
       )}
     </>
+  )
+}
+
+export default function BookingsPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center py-10"><Loader2 className="animate-spin" /></div>}>
+      <BookingsContent />
+    </Suspense>
   )
 }

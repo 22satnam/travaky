@@ -2567,14 +2567,9 @@
 //       )}
 //     </>
 //   )
-// }
-
-
-
-
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -2585,7 +2580,7 @@ import { AuthDialog } from '@/components/ui/auth-dialogs'
 
 const NAVBAR_HEIGHT = 64
 
-export default function Navbar() {
+function NavbarContent() {
   const router = useRouter()
   const pathname = usePathname()
   const qs = useSearchParams()
@@ -2767,5 +2762,29 @@ export default function Navbar() {
         />
       )}
     </>
+  )
+}
+
+export default function Navbar() {
+  return (
+    <Suspense fallback={
+      <nav className="tvk-nav" role="navigation">
+        <div className="tvk-nav__wrap">
+          <div className="tvk-nav__row">
+            <div className="tvk-nav__brand">
+              <div className="h-12 w-12 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-6 w-20 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+            <div className="tvk-nav__actions">
+              <div className="h-8 w-16 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+        <div style={{ height: 64 }} aria-hidden />
+      </nav>
+    }>
+      <NavbarContent />
+    </Suspense>
   )
 }

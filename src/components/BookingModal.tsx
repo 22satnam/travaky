@@ -5,7 +5,7 @@ import {
   DialogHeader, DialogTitle,
 } from '@/components/ui/dialog'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { useBooking } from '@/hooks/useBooking'     // whatever hook you already use
+import { useBooking } from '@/hooks/useBooking'
 
 export default function BookingModal({ id, onClose }:{ id:number; onClose:()=>void }) {
   const { booking, isLoading, error } = useBooking(id)

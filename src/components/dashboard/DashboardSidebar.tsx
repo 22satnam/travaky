@@ -1,74 +1,45 @@
-// // 'use client'
+'use client'
 
-// // import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
-// // import { useState } from 'react'
-// // import { usePathname } from 'next/navigation'
-// // import { cn } from '@/lib/utils'
-// // import { userSections } from '@/config/dashboardSections'
-// // import { adminSections } from '@/config/adminSections'
-// // import { useAuth } from '@/context/AuthContext'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { userSections } from '@/config/dashboardSections'
+import { adminSections } from '@/config/adminSections'
+import { useAuth } from '@/context/AuthContext'
 
-// // interface DashboardSidebarProps { customEntries?: typeof AdminSection[] }
+/**
+ * Simple dashboard sidebar component
+ */
+export default function DashboardSidebar({ customEntries }: { customEntries?: typeof adminSections }) {
+  const { session } = useAuth()
+  const items = customEntries ?? (session?.role === 'admin' ? adminSections : userSections)
+  const pathname = usePathname()
 
-// // export default function DashboardSidebar({ customEntries }:DashboardSidebarProps) {
-// //   const { session } = useAuth()
-// //   const items = customEntries ?? (session?.role === 'admin' ? adminSections : userSections)
-// //   const [open, setOpen] = useState(false)
-// //   const pathname = usePathname()
-
-// //   return (
-// //     <Sidebar open={open} setOpen={setOpen}>
-// //       <SidebarBody className="justify-between gap-10">
-// //         <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-// //           <div className="mt-8 flex flex-col gap-2">
-// //             {items.map(item => (
-// //               <SidebarLink
-// //                 key={item.key}
-// //                 link={{...item, href: item.path}}
-// //                 className={cn(
-// //                   pathname.startsWith(item.path) && 'font-semibold text-primary'
-// //                 )}
-// //               />
-// //             ))}
-// //           </div>
-// //         </div>
-// //       </SidebarBody>
-// //     </Sidebar>
-// //   )
-// // }
-
-
-// 'use client'
-
-// import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
-// import { usePathname } from 'next/navigation'
-// import { cn } from '@/lib/utils'
-// import { userSections } from '@/config/dashboardSections'
-// import { adminSections } from '@/config/adminSections'
-// import { useAuth } from '@/context/AuthContext'
-
-// /**
-//  * Permanently open desktop sidebar (no width animation) to stop the rapid
-//  * open–close flicker that was happening every time the cursor crossed the edge.
-//  */
-// export default function DashboardSidebar({ customEntries }: { customEntries?: typeof adminSections }) {
-//   const { session } = useAuth()
-//   const items     = customEntries ?? (session?.role === 'admin' ? adminSections : userSections)
-//   const pathname  = usePathname()
-
-//   return (
-//     <Sidebar open animate={false}>
-//       <SidebarBody className="justify-between gap-10">
-//         <nav className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden mt-8 gap-2">
-//           {items.map(item => (
-//             <SidebarLink
-//               key={item.key}
-//               link={{ ...item, href: item.path }}
-//               className={cn(pathname.startsWith(item.path) && 'font-semibold text-primary')}
-//             />
-//           ))}
-//         </nav>
-//       </SidebarBody>
-//     </Sidebar>
-//   )
-// }
+  return (
+    <aside className="w-64 bg-muted/40 border-r flex flex-col">
+      <div className="p-4">
+        <h2 className="text-lg font-semibold">Dashboard</h2>
+      </div>
+      <nav className="flex-1 px-4 pb-4">
+        <ul className="space-y-2">
+          {items.map(item => (
+            <li key={item.key}>
+              <Link
+                href={item.path}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
+                  pathname.startsWith(item.path)
+                    ? 'bg-primary text-primary-foreground font-medium'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                )}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  )
+}

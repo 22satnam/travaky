@@ -277,12 +277,12 @@ export default async function DocumentsPage() {
   /* group by booking and inject invoice row */
   type Row = typeof data[number]
   const grouped: Record<number, Row[]> = {}
-  data.forEach(d => {
+  data.forEach((d: any) => {
     const bid = d.visa_applications.id
     grouped[bid] = grouped[bid] ? [...grouped[bid], d] : [d]
   })
   Object.entries(grouped).forEach(([bid, docs]) => {
-    const invUrl = docs[0].visa_applications.invoice_url
+    const invUrl = (docs[0] as any).visa_applications.invoice_url
     if (invUrl && !docs.some(x => x.label === 'Invoice')) {
       docs.push({
         id   : `inv-${bid}`,
@@ -301,10 +301,10 @@ export default async function DocumentsPage() {
         <section key={bookingId} className="border rounded-lg bg-white dark:bg-neutral-900">
           <header className="px-6 py-4 border-b flex items-center justify-between">
             <h2 className="font-semibold text-sm">
-              Booking #{bookingId} – {docs[0].visa_applications.country}
+              Booking #{bookingId} – {(docs[0] as any).visa_applications.country}
             </h2>
             <span className="text-xs text-muted-foreground">
-              {new Date(docs[0].visa_applications.appointment_date).toLocaleDateString()}
+              {new Date((docs[0] as any).visa_applications.appointment_date).toLocaleDateString()}
             </span>
           </header>
 

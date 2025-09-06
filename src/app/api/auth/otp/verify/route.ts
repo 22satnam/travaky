@@ -141,7 +141,7 @@ export async function POST(req: Request) {
     if (!userId) return NextResponse.json({ ok: false, error: 'User not found' }, { status: 404 });
 
     const token = signAuthToken({ uid: userId });
-    cookies().set('travaky_token', token, { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 60 * 60 * 24 * 7 });
+    (await cookies()).set('travaky_token', token, { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 60 * 60 * 24 * 7 });
 
     return NextResponse.json({ ok: true, userId });
   } catch (e: any) {

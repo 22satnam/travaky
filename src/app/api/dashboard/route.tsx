@@ -13,7 +13,7 @@ function supabaseServer() {
 
 export async function GET() {
   try {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const userId = cookieStore.get('travaky_user_id')?.value // adapt if your AuthContext exposes a different cookie/key
     if (!userId) {
       return NextResponse.json({ stats: { total: 0, approved: 0, in_progress: 0, rejected: 0 }, recent: [], drafts: [] })

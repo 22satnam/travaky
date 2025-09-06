@@ -64,7 +64,7 @@ export async function POST(req: Request) {
     }
 
     const token = signAuthToken({ uid: userId });
-    cookies().set('travaky_token', token, { httpOnly:true, sameSite:'lax', path:'/', maxAge:60*60*24*7 });
+    (await cookies()).set('travaky_token', token, { httpOnly:true, sameSite:'lax', path:'/', maxAge:60*60*24*7 });
 
     return NextResponse.json({ ok:true, userId });
   } catch (e:any) {

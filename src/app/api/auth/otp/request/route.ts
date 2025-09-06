@@ -36,7 +36,7 @@ import { z } from 'zod';
 import { randomSixDigit, hash } from '@/lib/crypto';
 import { supabase } from '@/lib/db';
 import { sendOtpSMS, sendOtpWhatsApp } from '@/lib/twilio';
-
+export const runtime = 'nodejs'
 const Body = z.object({
   phone: z.string().min(8),
   channel: z.enum(['sms','whatsapp']),

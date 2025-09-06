@@ -1,5 +1,4 @@
-
-import { Footer } from '@/components/ui/footer-section'
+import Footer from '@/components/ui/footer-section'
 
 export function CustomFooter() {
   return (

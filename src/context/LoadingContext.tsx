@@ -54,7 +54,7 @@ interface LoadingCtx {
   hide: () => void
 }
 
-const Ctx = createContext<LoadinggingCtx | null>(null)
+const Ctx = createContext<LoadingCtx | null>(null)
 
 export function useLoading() {
   const ctx = useContext(Ctx)

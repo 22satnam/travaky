@@ -372,7 +372,7 @@ export default function PricingSidebar({
   onStart,
   promoCode = null,
 }: Props) {
-  const { breakUp, total, promo } = calcPrice({
+  const { breakUp, total, appliedOffer } = calcPrice({
     plan: selectedPlan,
     travellers: travelerCount,
     promoCode,
@@ -429,10 +429,10 @@ export default function PricingSidebar({
           </>
         )}
 
-        {breakUp.discount > 0 && (
+        {appliedOffer && (
           <p className="flex justify-between text-green-700">
-            <span>{promo}</span>
-            <span>− ₹{breakUp.discount.toLocaleString()}</span>
+            <span>{appliedOffer.label}</span>
+            <span>− Applied</span>
           </p>
         )}
 

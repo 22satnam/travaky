@@ -849,7 +849,7 @@
 
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { ExecutiveCard } from '@/components/ui/ExecutiveCard'
@@ -924,7 +924,7 @@ interface VisaData {
 
 /* ────────────────────────────────────────────────────────── */
 
-export default function ConfirmationPage() {
+function ConfirmationContent() {
   const qs = useSearchParams()
   const sessionId = qs.get('id') ?? 'default'
   const storageKey = `travaky:call_eta:${sessionId}`
@@ -1204,5 +1204,13 @@ function TimerRing({ percent }: { percent: number }) {
         </linearGradient>
       </defs>
     </svg>
+  )
+}
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center py-10"><Loader2 className="animate-spin" /></div>}>
+      <ConfirmationContent />
+    </Suspense>
   )
 }

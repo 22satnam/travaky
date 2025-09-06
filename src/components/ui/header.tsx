@@ -1560,7 +1560,7 @@ function Header1() {
         <AuthDialog
           mode={mode}
           toggleMode={() => setMode(mode === 'login' ? 'signup' : 'login')}
-          onAuthSuccess={handleAuthSuccess}
+          onSuccess={handleAuthSuccess}
           onClose={() => setShowAuthModal(false)}
         />
       )}
