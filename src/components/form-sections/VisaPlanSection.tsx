@@ -110,8 +110,9 @@ export function VisaPlanSection({ plan, setPlan }: Props) {
               type="button"
               onClick={() => setPlan(p)}
               className={cn(
-                'text-left rounded-2xl border bg-white/95 p-5 shadow-[0_10px_30px_-12px_rgba(9,30,66,.25)] transition',
-                selected ? 'border-primary ring-2 ring-primary/20' : 'hover:shadow-[0_18px_40px_-16px_rgba(9,30,66,.28)]'
+                // Solid, non-glassy cards that never overflow
+                'tvk-plan-card text-left rounded-2xl border bg-white p-5 shadow-[0_10px_30px_-12px_rgba(9,30,66,.18)] transition overflow-hidden',
+                selected ? 'border-primary ring-2 ring-primary/20' : 'hover:shadow-[0_18px_40px_-16px_rgba(9,30,66,.24)]'
               )}
             >
               <div className="flex items-start justify-between gap-3">
@@ -128,11 +129,13 @@ export function VisaPlanSection({ plan, setPlan }: Props) {
                   )}
                 </div>
 
-                <div className="text-right">
+                <div className="text-right leading-tight">
                   <div className="text-lg font-extrabold text-primary">₹{today.toLocaleString('en-IN')}</div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-slate-600">
                     <del>₹{mrp.toLocaleString('en-IN')}</del>
-                    {savingsPct > 0 && <span className="ml-2 text-emerald-600 font-semibold">Save {savingsPct}%</span>}
+                    {savingsPct > 0 && (
+                      <span className="ml-2 text-emerald-600 font-semibold">Save {savingsPct}%</span>
+                    )}
                   </div>
                 </div>
               </div>

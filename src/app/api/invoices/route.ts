@@ -307,39 +307,66 @@ import { verify }  from 'jsonwebtoken'
 import { createClient } from '@supabase/supabase-js'
 
 export async function GET(_: NextRequest) {
-  /* ── auth ── */
-  const cookieStore = await cookies()
-  const token = cookieStore.get('token')?.value
-  if (!token)
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  try {
+    /* ── auth ── */
+    const cookieStore = await cookies()
+    const token = cookieStore.get('token')?.value
+    if (!token) {
+      if (process.env.NODE_ENV !== 'production') return NextResponse.json([])
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
-  const { id: userId } = verify(token, process.env.JWT_SECRET!) as { id: number }
+    const { id: userId } = verify(token, process.env.JWT_SECRET!) as { id: number }
 
-  /* ── db ── */
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
+    /* ── db ── */
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
 
-  const { data, error } = await supabase
-    .from('invoices')
-    .select(
-      `id, pdf_url, amount, status, created_at,
-       visa_applications(id, user_id, country, appointment_date)`
-    )                     // ↑ include user_id so we can filter here
-    .order('id', { ascending: false })
+    const { data, error } = await supabase
+      .from('invoices')
+      .select(
+        `id, 
+         booking_id,
+         pdf_url, 
+         amount, 
+         status, 
+         issued_at,
+         visa_applications(id, user_id, country, reference_id)`
+      )
+      .order('issued_at', { ascending: false })
 
-  if (error) {
-    console.error('[api/invoices] DB error →', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) {
+      console.error('Database error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    console.log('Found invoices:', data?.length || 0)
+
+
+    /* ── filter and transform ── */
+    const userInvoices = (data ?? [])
+      .filter((inv: any) => inv.visa_applications?.user_id === userId)
+      .map((inv: any) => ({
+        id: inv.id.toString(),
+        booking_id: inv.booking_id?.toString() || '',
+        amount: inv.amount || 0,
+        status: inv.status || 'pending',
+        issued_at: inv.issued_at,
+        pdf_url: inv.pdf_url,
+        application: inv.visa_applications ? {
+          country: inv.visa_applications.country || 'Unknown',
+          reference_code: inv.visa_applications.reference_id || `TVK-${inv.visa_applications.id}`,
+          visa_type: 'Tourist' // Default since not in schema
+        } : null
+      }))
+
+    return NextResponse.json(userInvoices)
+  } catch (error: any) {
+    console.error('API error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
-
-  /* ── filter in JS ── */
-  const mine = (data ?? []).filter(
-    (inv: any) => inv.visa_applications?.user_id === userId
-  )
-
-  return NextResponse.json(mine)
 }
 
 /* no POST/PUT/DELETE here — keep those in /api/invoice (singular) */

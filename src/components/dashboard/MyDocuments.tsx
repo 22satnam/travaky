@@ -89,37 +89,200 @@
 // };
 
 'use client'
-import { supabase } from '@/lib/supabase/client'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useRealtimeTable } from '@/hooks/useRealtimeTable'
+import { useEffect, useState } from 'react'
+import { FileText, Download, Upload, Receipt, AlertCircle, CheckCircle2, Clock, Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+interface Document {
+  id: string
+  name: string
+  url?: string
+  status: string
+  created_at: string
+  application_id: string
+  user_id: string
+}
 
 export default function MyDocuments() {
-  const qc = useQueryClient()
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['documents'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('documents')
-        .select('*')
-        .order('uploaded_at', { ascending: false })
-      if (error) throw error
-      return data as { id:number; name:string; file_url:string; status:string; uploaded_at:string }[]
+  const [documents, setDocuments] = useState<Document[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState<Record<string, boolean>>({})
+
+  async function fetchDocuments() {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const response = await fetch('/api/documents', {
+        credentials: 'include'
+      })
+      if (!response.ok) {
+        throw new Error('Failed to fetch documents')
+      }
+      const json = await response.json()
+      console.log('Documents API response:', json)
+      setDocuments(json)
+    } catch (err: any) {
+      console.error('Error fetching documents:', err)
+      setError(err.message || 'Failed to fetch documents')
+      setDocuments([])
+    } finally {
+      setLoading(false)
     }
-  })
-  useRealtimeTable({ table: 'documents', invalidateKeys: [['documents']], queryClient: qc })
+  }
 
-  if (isLoading) return null
-  if (error)     return null
+  useEffect(() => {
+    fetchDocuments()
+  }, [])
 
-  // Keep your existing UI
-  return (
-    <div>
-      {(data || []).map(d => (
-        <div key={d.id} className="your-row-classes">
-          <a href={d.file_url} target="_blank" rel="noreferrer">{d.name}</a>
-          <span>{d.status}</span>
+  const getStatusIcon = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'approved':
+      case 'verified':
+        return <CheckCircle2 className="h-4 w-4 text-green-600" />
+      case 'pending':
+      case 'under_review':
+        return <Clock className="h-4 w-4 text-yellow-600" />
+      case 'rejected':
+        return <AlertCircle className="h-4 w-4 text-red-600" />
+      default:
+        return <FileText className="h-4 w-4 text-muted-foreground" />
+    }
+  }
+
+  const getStatusBadge = (status: string) => {
+    const statusMap: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
+      approved: { label: 'Approved', variant: 'default' },
+      verified: { label: 'Verified', variant: 'default' },
+      pending: { label: 'Pending', variant: 'secondary' },
+      under_review: { label: 'Under Review', variant: 'secondary' },
+      rejected: { label: 'Rejected', variant: 'destructive' },
+      requested: { label: 'Requested', variant: 'outline' },
+    }
+    const config = statusMap[status.toLowerCase()] || { label: status, variant: 'secondary' as const }
+    return <Badge variant={config.variant}>{config.label}</Badge>
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    })
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="flex items-center gap-3">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          <span className="text-muted-foreground">Loading your documents...</span>
         </div>
-      ))}
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">Failed to load documents</h3>
+          <p className="text-muted-foreground mb-4">{error}</p>
+          <Button onClick={fetchDocuments}>Try Again</Button>
+        </div>
+      </div>
+    )
+  }
+
+  if (documents.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+        <h3 className="text-lg font-semibold mb-2">No documents yet</h3>
+        <p className="text-muted-foreground mb-6 max-w-md">
+          Your uploaded documents and generated PDFs will appear here once you start an application.
+        </p>
+        <Button asChild>
+          <a href="/apply">Start New Application</a>
+        </Button>
+      </div>
+    )
+  }
+
+  // Group by application_id
+  const groups = documents.reduce<Record<string, Document[]>>((acc, d) => {
+    const key = d.application_id || 'unknown'
+    acc[key] = acc[key] ? [...acc[key], d] : [d]
+    return acc
+  }, {})
+
+  const toggle = (id: string) => setOpen(prev => ({ ...prev, [id]: !prev[id] }))
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">My Documents</h2>
+          <p className="text-muted-foreground">Manage your uploaded documents and generated PDFs</p>
+        </div>
+        <Badge variant="secondary">{documents.length} Document{documents.length > 1 ? 's' : ''}</Badge>
+      </div>
+
+      <div className="space-y-4">
+        {Object.entries(groups).map(([appId, docs]) => (
+          <Card key={appId} className="border">
+            <CardHeader className="py-3 cursor-pointer" onClick={() => toggle(appId)}>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">Booking #{appId}</CardTitle>
+                <Badge variant="outline">{docs.length} item{docs.length>1?'s':''}</Badge>
+              </div>
+              <CardDescription>Documents related to this booking</CardDescription>
+            </CardHeader>
+            {open[appId] !== false && (
+              <CardContent className="p-0">
+                <div className="divide-y">
+                  {docs.map(doc => (
+                    <div key={doc.id} className="flex items-start justify-between px-6 py-4">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-md bg-secondary">
+                          {doc.name.toLowerCase().includes('receipt') || doc.name.toLowerCase().includes('invoice') ? (
+                            <Receipt className="h-4 w-4 text-secondary-foreground" />
+                          ) : (
+                            <FileText className="h-4 w-4 text-secondary-foreground" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium">{doc.name}</div>
+                          <div className="text-sm text-muted-foreground flex items-center gap-3">
+                            <span>Uploaded {formatDate(doc.created_at)}</span>
+                            <span className="flex items-center gap-1">{getStatusIcon(doc.status)} {getStatusBadge(doc.status)}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        {doc.url && (
+                          <Button asChild variant="outline" size="sm">
+                            <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                              <Download className="h-4 w-4 mr-2" />
+                              Download
+                            </a>
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            )}
+          </Card>
+        ))}
+      </div>
     </div>
   )
 }
+
+export { MyDocuments }

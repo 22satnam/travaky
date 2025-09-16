@@ -231,7 +231,7 @@ export function TravelerTabs({
               key={i}
               onClick={() => setCurrentTraveler(i)}
               className={`relative px-4 py-2 rounded border flex items-center gap-1 transition-all duration-150
-                ${i === currentTraveler ? 'bg-primary text-white' : 'bg-muted text-foreground hover:bg-accent'}`}
+                ${i === currentTraveler ? 'bg-primary text-white' : 'bg-white text-foreground hover:bg-accent'}`}
             >
               Traveler {i + 1}
               {filled ? (

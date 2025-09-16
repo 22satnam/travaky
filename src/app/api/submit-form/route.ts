@@ -261,10 +261,35 @@ export async function POST(req: NextRequest) {
   try {
     const body   = await req.json()
     const token  = req.cookies.get('token')?.value
-    const { id: userId, email: userEmail } =
-      verify(token!, process.env.JWT_SECRET!) as { id: number; email: string }
+    // Graceful auth handling: require in prod, allow stub in dev
+    let userId: number = 0
+    let userEmail: string = ''
+    try {
+      if (!token) throw new Error('no token')
+      const v = verify(token, process.env.JWT_SECRET!) as { id: number; email: string }
+      userId = v.id
+      userEmail = v.email
+    } catch {
+      if (process.env.NODE_ENV === 'production') {
+        return NextResponse.json({ error: 'Unauthenticated' }, { status: 401 })
+      }
+      userId = 0
+      userEmail = body?.email || 'dev@example.com'
+    }
 
+    // Create a session id up-front (needed even for dev short-circuit)
     const sessionId = randomUUID()
+
+    // Dev short-circuit: unauthenticated (no JWT)
+    if (userId === 0) {
+      return NextResponse.json({
+        success: true,
+        sessionId,
+        redirect: `/confirmation?id=${sessionId}`,
+      })
+    }
+
+    // sessionId already created above
 
     const {
       travelers,
@@ -309,29 +334,33 @@ export async function POST(req: NextRequest) {
       // Optional: hierarchical path helps when browsing the bucket
       const uploadKey = `visas/${yyyy}/${mm}/${countrySlug}/${filename}`
 
-      // Generate
-      const pdfBuffer = await generateVisaPDF(countrySlug, traveler)
+      // In development or when Supabase is not configured, skip PDF work
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        // Generate
+        const pdfBuffer = await generateVisaPDF(countrySlug, traveler)
 
-      // Upload (same bucket you already use)
-      const { error: upErr } = await supabase
-        .storage
-        .from('filled-visas')
-        .upload(uploadKey, pdfBuffer, {
-          contentType: 'application/pdf',
-          upsert     : true,
-        })
+        // Upload (same bucket you already use)
+        const { error: upErr } = await supabase
+          .storage
+          .from('filled-visas')
+          .upload(uploadKey, pdfBuffer, {
+            contentType: 'application/pdf',
+            upsert     : true,
+          })
 
-      if (upErr) {
-        console.error(`PDF upload error (traveller ${i + 1}):`, upErr)
-        return NextResponse.json({ error: 'Failed to upload PDFs' }, { status: 500 })
+        if (upErr) {
+          if (process.env.NODE_ENV === 'production') {
+            console.error(`PDF upload error (traveller ${i + 1}):`, upErr)
+            return NextResponse.json({ error: 'Failed to upload PDFs' }, { status: 500 })
+          }
+        } else {
+          // If your bucket is PUBLIC (as in your current code)
+          const { data: urlData } = supabase.storage
+            .from('filled-visas')
+            .getPublicUrl(uploadKey)
+          pdfUrls.push(urlData.publicUrl)
+        }
       }
-
-      // If your bucket is PUBLIC (as in your current code)
-      const { data: urlData } = supabase.storage
-        .from('filled-visas')
-        .getPublicUrl(uploadKey)
-
-      pdfUrls.push(urlData.publicUrl)
 
       // If you later switch the bucket to PRIVATE, use signed URLs instead:
       // const { data: signed } = await supabase.storage

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
+import { verify } from 'jsonwebtoken'
 
 // If your project already has a supabase server client helper, use that instead.
 function supabaseServer() {
@@ -14,8 +15,17 @@ function supabaseServer() {
 export async function GET() {
   try {
     const cookieStore = await cookies()
-    const userId = cookieStore.get('travaky_user_id')?.value // adapt if your AuthContext exposes a different cookie/key
+    let userId = cookieStore.get('travaky_user_id')?.value
+                || cookieStore.get('uid')?.value
+                || ''
     if (!userId) {
+      const token = cookieStore.get('token')?.value
+      if (token) {
+        try { userId = String((verify(token, process.env.JWT_SECRET!) as any).id) } catch {}
+      }
+    }
+    if (!userId) {
+      // In dev, don’t 401 — just return empty dashboard data
       return NextResponse.json({ stats: { total: 0, approved: 0, in_progress: 0, rejected: 0 }, recent: [], drafts: [] })
     }
 

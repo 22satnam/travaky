@@ -4,16 +4,16 @@ import { AuthDialog } from '@/components/auth/AuthDialog'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
-export default function SignupPage() {
+export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Join Travaky
+            Welcome back
           </h1>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Start your visa journey with secure OTP verification
+            Sign in to your Travaky account with secure OTP verification
           </p>
         </div>
 
@@ -21,7 +21,7 @@ export default function SignupPage() {
           <div className="space-y-6">
             <div className="text-center">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Create your account
+                Sign in to your account
               </h2>
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 Choose your preferred verification method
@@ -29,10 +29,10 @@ export default function SignupPage() {
             </div>
 
             <AuthDialog 
-              mode="signup" 
+              mode="login" 
               trigger={
                 <Button className="w-full h-12 text-lg">
-                  Get Started
+                  Sign In
                 </Button>
               }
               onSuccess={() => {
@@ -41,12 +41,12 @@ export default function SignupPage() {
             />
 
             <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-              Already have an account?{' '}
+              Don't have an account?{' '}
               <AuthDialog 
-                mode="login" 
+                mode="signup" 
                 trigger={
                   <button className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
-                    Sign in
+                    Sign up
                   </button>
                 }
                 onSuccess={() => {

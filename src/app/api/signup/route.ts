@@ -74,7 +74,8 @@ export async function POST(req: Request) {
                      process.env.JWT_SECRET!, { expiresIn: '7d' })
 
   const res = NextResponse.json({ success: true, redirectTo: redirectTo || '/dashboard' })
-  const cookie = { httpOnly: true, secure: true, sameSite: 'lax' as const, path: '/', maxAge: 60*60*24*7 }
+  // Secure cookies only in production so localhost works over http
+  const cookie = { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' as const, path: '/', maxAge: 60*60*24*7 }
   res.cookies.set('token', token, cookie)
   res.cookies.set('uid',   String(data.id), cookie)
   res.cookies.set('email', encodeURIComponent(data.email), cookie)

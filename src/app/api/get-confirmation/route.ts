@@ -51,6 +51,22 @@ export async function GET(req: NextRequest) {
     .single()
 
   if (error || !data) {
+    // In development, we may skip DB writes (stub mode) and still want the page to render
+    if (process.env.NODE_ENV !== 'production') {
+      return NextResponse.json({
+        success: true,
+        data: {
+          session_id: id,
+          country: '—',
+          plan: undefined,
+          appointment_date: undefined,
+          appointmentAddress: undefined,
+          traveler_data: [],
+          pdfs: [],
+          status: 'unpaid',
+        },
+      })
+    }
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
 

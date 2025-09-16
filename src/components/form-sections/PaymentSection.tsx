@@ -501,7 +501,7 @@ export function PaymentSection({
      
 
       {/* The card (message lives inside) */}
-      <div className="rounded-2xl border bg-white/95 shadow-[0_10px_30px_-12px_rgba(9,30,66,.25)]">
+      <div className="rounded-2xl border bg-white shadow-[0_10px_30px_-12px_rgba(9,30,66,.25)]">
         {/* message area */}
         {(error || okMsg) && (
           <div className={`px-4 py-3 rounded-t-2xl text-sm ${error ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'}`}>

@@ -331,7 +331,9 @@ function InnerSidebar({
       }}
       className={cn(
         'w-full text-left px-4 py-2 rounded-lg transition-colors',
-        activeSection === id ? 'bg-primary/10 text-primary' : 'hover:bg-muted'
+        activeSection === id
+          ? 'bg-primary text-primary-foreground shadow-md ring-1 ring-primary/40'
+          : 'hover:bg-primary/5 hover:text-primary'
       )}
     >
       {label}
@@ -339,7 +341,7 @@ function InnerSidebar({
   )
 
   return (
-    <Sidebar className="p-4">
+    <Sidebar className="pt-2 pb-4 px-3">
       <div className="space-y-2">
         <NavItem id="tracking" label="Application Tracking" />
         <NavItem id="documents" label="My Documents" />

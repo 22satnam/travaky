@@ -364,11 +364,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <LoadingProvider>
             <AuthDialogProvider>
-            {!inDashboard && <Navbar />}
+            {/* Always show the site navbar, including on dashboard */}
+            <Navbar />
             <main
-              // style={!inDashboard ? { paddingTop: NAVBAR_HEIGHT } : undefined}
+              style={{ paddingTop: NAVBAR_HEIGHT }}
               className="flex-1 flex flex-col"
-            ><QueryProvider>{children}</QueryProvider>
+            >
+              <QueryProvider>{children}</QueryProvider>
             </main>
             <Footer />
             {/* GlobalLoader is non-blocking so page content is still interactive */}
